@@ -29,17 +29,23 @@ private:
 
 //    QProcess *p;
     QProcess *p = new QProcess(this);
-    void init_process();
-    void excuteCmd(QString filePath);
+    void excuteCmd(QStringList params);
     void excuteCmd(QString filePath, QStringList params);
 
 private slots:
-    void on_pushButton_run_clicked();
-    void on_pushButton_stat_clicked();
-    void on_pushButton_record_clicked();
-    void on_pushButton_flamegraph_clicked();
 
     void on_readoutput();
     void on_readerror();
+
+    void on_pushButton_run_clicked();
+
+    void on_pushButton_devices_clicked();
+    void on_pushButton_root_clicked();
+    void on_pushButton_remount_clicked();
+    void on_pushButton_oemunlock_clicked();
+
+    void on_pushButton_stat_clicked();
+    void on_pushButton_record_clicked();
+    void on_pushButton_flamegraph_clicked();
 };
 #endif // MAINWINDOW_H
