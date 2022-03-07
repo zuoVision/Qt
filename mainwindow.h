@@ -9,6 +9,7 @@
 #include <QLineEdit>
 #include <QByteArray>
 #include <QMessageBox>
+#include <QFile>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,10 +28,10 @@ public:
 private:
     Ui::MainWindow *ui;
 
-//    QProcess *p;
     QProcess *p = new QProcess(this);
     void excuteCmd(QStringList params);
     void excuteCmd(QString filePath, QStringList params);
+    QStringList cmd;
 
 private slots:
 
@@ -46,6 +47,7 @@ private slots:
 
     void on_pushButton_stat_clicked();
     void on_pushButton_record_clicked();
+    void on_pushButton_report_clicked();
     void on_pushButton_flamegraph_clicked();
 };
 #endif // MAINWINDOW_H

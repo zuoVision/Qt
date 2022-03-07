@@ -1,13 +1,13 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#define PYTHON2_7 "/usr/bin/python2.7"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-//    init_process();
 
     connect(p , SIGNAL(readyReadStandardOutput()) , this , SLOT(on_readoutput()));
     connect(p , SIGNAL(readyReadStandardError()) , this , SLOT(on_readerror()));
@@ -20,74 +20,24 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::init_process()
+void MainWindow::excuteCmd(QStringList params)
 {
-    QProcessEnvironment env;
-//    env.insert("PYTHONPATH", "D:/ProgramData/Anaconda3/envs/pytorch_cuda/Lib");
-//    env.insert("PYTHONHOME", "D:/ProgramData/Anaconda3/envs/pytorch_cuda");
-//    p->setProcessEnvironment(env);
-//    QString pythonPath = "";
-
+    QString program;
+    program = "bash";
+    p->start(program,params);
+    //等待程序执行完
+    p->waitForReadyRead();
+    ui->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    cmd.clear();
 }
 
 void MainWindow::excuteCmd(QString filePath, QStringList params)
 {
     p->start(filePath,params);
-    p->waitForFinished(-1);
-    QString p_stdoutput = p->readAllStandardOutput();
-    QString p_stderr = p->readAllStandardError();
-    ui->textEdit->append(p_stdoutput);
-    ui->textEdit->append(p_stderr);
-}
-
-void MainWindow::on_pushButton_run_clicked()
-{
-    if (ui->lineEdit_cmd->text().isEmpty()){
-        ui->textEdit->append("Please input your command !");
-        return;
-    }
-    ui->textEdit->append("zuozhe$ "+ui->lineEdit_cmd->text());
-    ui->lineEdit_cmd->clear();
-
-
-}
-
-void MainWindow::on_pushButton_stat_clicked()
-{
-    p = new QProcess();
-    QStringList cmd;
-    cmd  << "test.py" ;
-    p->start(" /usr/bin/python3.8",cmd );
-    qDebug() << cmd;
-    p->waitForStarted();
-    p->waitForFinished();
-    ui->textEdit->append(p->readAllStandardOutput());
-
-
-}
-
-void MainWindow::on_pushButton_record_clicked()
-{
-    QStringList cmd;
-    cmd << "E:/Workstation/QtProject/build-one_click_generation-Desktop_Qt_5_12_9_MinGW_64_bit-Debug/debug/test.py";
-    p->start("E:/Application/Install/x86_64-8.1.0-release-posix-seh-rt_v6-rev0/mingw64/opt/bin/python2.7.exe",
-                      cmd);
-
     //等待程序执行完
     p->waitForReadyRead();
-//    QByteArray arr =  p->readAllStandardOutput();
-
-}
-
-void MainWindow::on_pushButton_flamegraph_clicked()
-{
-    QString fileName = QCoreApplication::applicationDirPath() + "/graph111.svg";
-    if(QDesktopServices::openUrl(fileName)){
-        ui->textEdit->append("Open FlameGraph Success !\n"+fileName);
-    }else {
-        ui->textEdit->append("Open FlameGraph Failed !!!\n "+fileName);
-    }
-
+    ui->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
+    cmd.clear();
 }
 
 void MainWindow::on_readoutput()
@@ -97,5 +47,115 @@ void MainWindow::on_readoutput()
 
 void MainWindow::on_readerror()
 {
-    QMessageBox::critical(0,"Error",p->readAllStandardError().data());
+    ui->textEdit->append(p->readAllStandardError().data());
+}
+
+void MainWindow::on_pushButton_run_clicked()
+{
+    if (ui->lineEdit_cmd->text().isEmpty()){
+        ui->textEdit->append("Please input your command !");
+        return;
+    }
+    ui->textEdit->append(QCoreApplication::applicationFilePath()+"$ "+ui->lineEdit_cmd->text());
+    QStringList params;
+    params << "-c" << ui->lineEdit_cmd->text();
+    excuteCmd(params);
+
+    ui->lineEdit_cmd->clear();
+}
+
+void MainWindow::on_pushButton_devices_clicked()
+{
+
+    cmd << "-c" << "adb devices";
+    excuteCmd(cmd);
+}
+
+void MainWindow::on_pushButton_root_clicked()
+{
+    cmd << "-c" << "adb root";
+    excuteCmd(cmd);
+}
+
+void MainWindow::on_pushButton_remount_clicked()
+{
+    cmd << "-c" << "adb remount";
+    excuteCmd(cmd);
+}
+
+void MainWindow::on_pushButton_oemunlock_clicked()
+{
+    ui->textEdit->append("please make sure 'oem unlocking' set on ...");
+
+    cmd << "-c" << "adb reboot bootloader;"
+                      "fastboot flashing unlock;"
+                      "fastboot reboot ;"
+                      "adb wait-for-device;"
+                      "adb root;"
+                      "adb disable-verity;"
+                      "adb remount;"
+                      "adb reboot ;"
+                      "adb wait-for-device;"
+                      "adb root,adb remount";
+    excuteCmd(cmd);
+}
+
+void MainWindow::on_pushButton_stat_clicked()
+{
+    ui->textEdit->append("<font color=\"#0000ff\">********** Simpleperf Stat **********</font> ");
+    ui->textEdit->append("test");
+}
+
+void MainWindow::on_pushButton_record_clicked()
+{
+    ui->textEdit->append("<font color=\"#0000ff\">********** Simpleperf Record **********</font> ");
+
+// 1. python
+//    QStringList cmd ;
+//    cmd << QCoreApplication::applicationDirPath() + "/scripts/app_profiler.py"
+//        << "-p" << "com.tcl.camera";
+//    excuteCmd(PYTHON2_7,cmd);
+
+//    2.bash
+
+    cmd <<"-c" << "python scripts/app_profiler.py -p com.tcl.camera";
+    excuteCmd(cmd);
+
+
+    cmd << "-c" << "adb pull /data/local/tmp/perf.data";
+    excuteCmd(cmd);
+    ui->textEdit->append("<font color=\"#00cc00\">Simpleperf Record Finished\n</font>");
+}
+
+void MainWindow::on_pushButton_report_clicked()
+{
+    ui->textEdit->append("<font color=\"#0000ff\">********** Simpleperf Report **********</font> ");
+
+    cmd <<"-c" << "python scripts/report_sample.py > out.perf";
+    excuteCmd(cmd);
+    ui->textEdit->append(QCoreApplication::applicationDirPath()+"out.perf Done!");
+    ui->textEdit->append("<font color=\"#00cc00\">Simpleperf Report Finished\n</font> ");
+}
+
+void MainWindow::on_pushButton_flamegraph_clicked()
+{
+    ui->textEdit->append("<font color=\"#0000ff\">********** FlameGraph **********\n</font> ");
+
+    QString graphName = "/graph.svg";
+    QString fileName = QCoreApplication::applicationDirPath() + graphName;
+
+
+    cmd <<"-c" << "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
+    excuteCmd(cmd);
+
+    cmd <<"-c" << "FlameGraph/flamegraph.pl out.folded > graph.svg";
+    excuteCmd(cmd);
+
+    if(QDesktopServices::openUrl(fileName)){
+        ui->textEdit->append(fileName);
+        ui->textEdit->append("<font color=\"#00cc00\">FlameGraph Opened  </font>");
+    }else {
+        ui->textEdit->append("<font color=\"#ee0000\">Open FlameGraph Failed !</font> ");
+    }
+
 }
