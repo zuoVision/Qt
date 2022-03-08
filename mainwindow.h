@@ -22,21 +22,24 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
+    QString hostName;
 
 
 private:
     Ui::MainWindow *ui;
-
+    void initEnv();
     QProcess *p = new QProcess(this);
-    void excuteCmd(QStringList params);
-    void excuteCmd(QString filePath, QStringList params);
     QStringList cmd;
+
+    void excuteCmd(QStringList params);
+    void excuteCmd(QString programPath, QStringList params);
+
+    void init_p();
 
 private slots:
 
-    void on_readoutput();
-    void on_readerror();
+//    void on_readoutput();
+//    void on_readerror();
 
     void on_pushButton_run_clicked();
 

@@ -2,17 +2,16 @@
 #include "ui_mainwindow.h"
 
 #define PYTHON2_7 "/usr/bin/python2.7"
+#define BASH "bash"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    initEnv();
 
-    connect(p , SIGNAL(readyReadStandardOutput()) , this , SLOT(on_readoutput()));
-    connect(p , SIGNAL(readyReadStandardError()) , this , SLOT(on_readerror()));
-    //cmd回车-> run button click
-    connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),ui->pushButton_run,SLOT(click()));
+
 }
 
 MainWindow::~MainWindow()
@@ -20,13 +19,23 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::initEnv()
+{
+    //    connect(p , SIGNAL(readyReadStandardOutput()) , this , SLOT(on_readoutput()));
+    //    connect(p , SIGNAL(readyReadStandardError()) , this , SLOT(on_readerror()));
+    //cmd回车-> run button click
+    connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),ui->pushButton_run,SLOT(click()));
+
+    init_p();
+}
+
 void MainWindow::excuteCmd(QStringList params)
 {
-    QString program;
-    program = "bash";
-    p->start(program,params);
+    p->start(BASH,params);
     //等待程序执行完
     p->waitForReadyRead();
+    ui->textEdit->append(p->readAllStandardOutput());
+    ui->textEdit->append(p->readAllStandardError());
     ui->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
     cmd.clear();
 }
@@ -40,15 +49,17 @@ void MainWindow::excuteCmd(QString filePath, QStringList params)
     cmd.clear();
 }
 
-void MainWindow::on_readoutput()
+void MainWindow::init_p()
 {
-    ui->textEdit->append(p->readAllStandardOutput().data());
+    cmd << "-c" << "whoami";
+    p->start(BASH,cmd);
+    p->waitForFinished();
+    hostName = QString(p->readAllStandardOutput().simplified()) + ":$ "; //.simplified()去掉换行符等特殊字符
+    ui->textEdit->append(hostName);
+    cmd.clear();
+
 }
 
-void MainWindow::on_readerror()
-{
-    ui->textEdit->append(p->readAllStandardError().data());
-}
 
 void MainWindow::on_pushButton_run_clicked()
 {
@@ -56,10 +67,10 @@ void MainWindow::on_pushButton_run_clicked()
         ui->textEdit->append("Please input your command !");
         return;
     }
-    ui->textEdit->append(QCoreApplication::applicationFilePath()+"$ "+ui->lineEdit_cmd->text());
-    QStringList params;
-    params << "-c" << ui->lineEdit_cmd->text();
-    excuteCmd(params);
+    ui->textEdit->append(hostName+ui->lineEdit_cmd->text());
+
+    cmd << "-c" << ui->lineEdit_cmd->text();
+    excuteCmd(cmd);
 
     ui->lineEdit_cmd->clear();
 }
