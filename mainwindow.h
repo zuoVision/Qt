@@ -10,37 +10,49 @@
 #include <QByteArray>
 #include <QMessageBox>
 #include <QFile>
+#include <QThread>
+#include <QThreadPool>
+
+#include "document.h"
+#include "listenerthread.h"
+#include "simpleperf.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow
+class MainWindow :
+        public QMainWindow
 {
     Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    QString hostName;
+    QString     m_hostName;
 
+    Simpleperf *simpleperf = new Simpleperf();
 
 private:
     Ui::MainWindow *ui;
+    QVector<QString>     m_cmdVector;
+
+protected:
+
+    QString     m_msg;
+
+    QStringList m_cmd;
     void initEnv();
-    QProcess *p = new QProcess(this);
-    QStringList cmd;
+    void initConnect();
+    void searchBar();
+    Document    m_doc;
 
-    void excuteCmd(QStringList params);
-    void excuteCmd(QString programPath, QStringList params);
+signals:
 
-    void init_p();
 
 private slots:
-
-//    void on_readoutput();
-//    void on_readerror();
-
+    void slotReciveSimpleperf(QString msg);
+    void slotReciveSimpleperf(QProcess::ProcessState newState);
     void on_pushButton_run_clicked();
 
     void on_pushButton_devices_clicked();
@@ -52,5 +64,8 @@ private slots:
     void on_pushButton_record_clicked();
     void on_pushButton_report_clicked();
     void on_pushButton_flamegraph_clicked();
+    void on_pushButton_doc_clicked();
+
+    void on_pushButton_cts_clicked();
 };
 #endif // MAINWINDOW_H

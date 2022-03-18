@@ -1,15 +1,34 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QLabel>
+#include <QListView>
+#include <stdlib.h>
 
+#define MY_TAG "mainwindow"
 #define PYTHON2_7 "/usr/bin/python2.7"
-#define BASH "bash"
+#define GNOME "/etc/gnome"
+#define TERMINAL "/usr/bin/terminator"
+
+#define ADBDEVICES      "adb devices"
+#define ADBROOT         "adb root"
+#define ADBREMOUNT      "adb remount"
+#define ADBOEMUNLOCK    "xxxxx"
+
+#define SIMPLEPERFSTAT   "XXXX"
+#define SIMPLEPERFRECORD "python scripts/app_profiler.py -p com.tcl.camera"
+#define SIMPLEPERFREPORT "python scripts/report_sample.py > out.perf"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);    
     initEnv();
+    initConnect();
+    qDebug() << MY_TAG  <<"[MainWindow]"
+             << QThread::currentThreadId();
+    m_hostName = simpleperf->listener->m_hostName;
 
 
 }
@@ -21,42 +40,57 @@ MainWindow::~MainWindow()
 
 void MainWindow::initEnv()
 {
-    //    connect(p , SIGNAL(readyReadStandardOutput()) , this , SLOT(on_readoutput()));
-    //    connect(p , SIGNAL(readyReadStandardError()) , this , SLOT(on_readerror()));
+    searchBar();
+    ui->tabWidget->setTabText(0,"simpleperf");
+    ui->tabWidget->setTabText(1,"CTS");
+}
+
+void MainWindow::initConnect()
+{
+    connect(simpleperf,SIGNAL(signalToMainWindow(QString)),
+            this,SLOT(slotReciveSimpleperf(QString)));
+    connect(simpleperf,SIGNAL(signalToMainWindow(QProcess::ProcessState)),
+            this,SLOT(slotReciveSimpleperf(QProcess::ProcessState)));
     //cmd回车-> run button click
-    connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),ui->pushButton_run,SLOT(click()));
-
-    init_p();
+    connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
+            ui->pushButton_run,SLOT(click()));
 }
 
-void MainWindow::excuteCmd(QStringList params)
+void MainWindow::searchBar()
 {
-    p->start(BASH,params);
-    //等待程序执行完
-    p->waitForReadyRead();
-    ui->textEdit->append(p->readAllStandardOutput());
-    ui->textEdit->append(p->readAllStandardError());
-    ui->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    cmd.clear();
+    ui->comboBox->setView(new QListView);
+    ui->comboBox->setLineEdit(ui->lineEdit_search);
+    ui->comboBox->setEditable(true);
+    ui->comboBox->setMaxVisibleItems(6);
+    ui->comboBox->lineEdit()->setPlaceholderText("search");
+//    ui->lineEdit_search->setPlaceholderText("input");
+//    ui->listView_cmdRcord.set
 }
 
-void MainWindow::excuteCmd(QString filePath, QStringList params)
+
+
+void MainWindow::slotReciveSimpleperf(QString msg)
 {
-    p->start(filePath,params);
-    //等待程序执行完
-    p->waitForReadyRead();
-    ui->textEdit->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
-    cmd.clear();
+//    qDebug()<<MY_TAG<<"[slotReciveSimpleperf]";
+    if(!msg.isEmpty()){
+        ui->textEdit->append(msg);
+    }
+    return;
 }
 
-void MainWindow::init_p()
+void MainWindow::slotReciveSimpleperf(QProcess::ProcessState newState)
 {
-    cmd << "-c" << "whoami";
-    p->start(BASH,cmd);
-    p->waitForFinished();
-    hostName = QString(p->readAllStandardOutput().simplified()) + ":$ "; //.simplified()去掉换行符等特殊字符
-    ui->textEdit->append(hostName);
-    cmd.clear();
+    qDebug()<<MY_TAG<<"[slotReciveSimpleperf] ProcessState:" << newState;
+    QString statusbarMsg;
+    if (newState == QProcess::Running){
+        statusbarMsg = "    Process Running ";
+    }else if(newState == QProcess::Starting){
+        statusbarMsg = "    Process Starting ";
+    }else{
+        statusbarMsg = "    Process Not Running";
+    }
+
+    ui->statusbar->showMessage(statusbarMsg);
 
 }
 
@@ -67,106 +101,72 @@ void MainWindow::on_pushButton_run_clicked()
         ui->textEdit->append("Please input your command !");
         return;
     }
-    ui->textEdit->append(hostName+ui->lineEdit_cmd->text());
+    m_cmdVector << ui->lineEdit_cmd->text();
 
-    cmd << "-c" << ui->lineEdit_cmd->text();
-    excuteCmd(cmd);
-
+    ui->textEdit->append(m_hostName+ui->lineEdit_cmd->text());
+    simpleperf->runCmdLine(ui->lineEdit_cmd->text());
     ui->lineEdit_cmd->clear();
 }
 
 void MainWindow::on_pushButton_devices_clicked()
 {
-
-    cmd << "-c" << "adb devices";
-    excuteCmd(cmd);
+    ui->textEdit->append(m_hostName+ADBDEVICES);
+    simpleperf->runAdbDevices(ADBDEVICES);
 }
 
 void MainWindow::on_pushButton_root_clicked()
 {
-    cmd << "-c" << "adb root";
-    excuteCmd(cmd);
+    ui->textEdit->append(m_hostName+ADBROOT);
+    simpleperf->runAdbRoot(ADBROOT);
 }
 
 void MainWindow::on_pushButton_remount_clicked()
 {
-    cmd << "-c" << "adb remount";
-    excuteCmd(cmd);
+    ui->textEdit->append(m_hostName+ADBREMOUNT);
+    simpleperf->runAdbRemount(ADBREMOUNT);
 }
 
 void MainWindow::on_pushButton_oemunlock_clicked()
 {
-    ui->textEdit->append("please make sure 'oem unlocking' set on ...");
-
-    cmd << "-c" << "adb reboot bootloader;"
-                      "fastboot flashing unlock;"
-                      "fastboot reboot ;"
-                      "adb wait-for-device;"
-                      "adb root;"
-                      "adb disable-verity;"
-                      "adb remount;"
-                      "adb reboot ;"
-                      "adb wait-for-device;"
-                      "adb root,adb remount";
-    excuteCmd(cmd);
+    ui->textEdit->append(m_hostName+ADBOEMUNLOCK);
+    simpleperf->runAdbOemUnlock(ADBOEMUNLOCK);
 }
 
 void MainWindow::on_pushButton_stat_clicked()
 {
-    ui->textEdit->append("<font color=\"#0000ff\">********** Simpleperf Stat **********</font> ");
-    ui->textEdit->append("test");
+    ui->textEdit->append(m_hostName+SIMPLEPERFSTAT);
+    simpleperf->runSimpleperfStat(SIMPLEPERFSTAT);
 }
 
 void MainWindow::on_pushButton_record_clicked()
 {
-    ui->textEdit->append("<font color=\"#0000ff\">********** Simpleperf Record **********</font> ");
-
-// 1. python
-//    QStringList cmd ;
-//    cmd << QCoreApplication::applicationDirPath() + "/scripts/app_profiler.py"
-//        << "-p" << "com.tcl.camera";
-//    excuteCmd(PYTHON2_7,cmd);
-
-//    2.bash
-
-    cmd <<"-c" << "python scripts/app_profiler.py -p com.tcl.camera";
-    excuteCmd(cmd);
-
-
-    cmd << "-c" << "adb pull /data/local/tmp/perf.data";
-    excuteCmd(cmd);
-    ui->textEdit->append("<font color=\"#00cc00\">Simpleperf Record Finished\n</font>");
+    ui->textEdit->append(m_hostName+SIMPLEPERFRECORD);
+    simpleperf->runSimpleperfRecord(SIMPLEPERFRECORD);
 }
 
 void MainWindow::on_pushButton_report_clicked()
 {
-    ui->textEdit->append("<font color=\"#0000ff\">********** Simpleperf Report **********</font> ");
-
-    cmd <<"-c" << "python scripts/report_sample.py > out.perf";
-    excuteCmd(cmd);
-    ui->textEdit->append(QCoreApplication::applicationDirPath()+"out.perf Done!");
-    ui->textEdit->append("<font color=\"#00cc00\">Simpleperf Report Finished\n</font> ");
+    ui->textEdit->append(m_hostName+SIMPLEPERFREPORT);
+    simpleperf->runSimpleperfReport(SIMPLEPERFREPORT);
 }
 
 void MainWindow::on_pushButton_flamegraph_clicked()
 {
-    ui->textEdit->append("<font color=\"#0000ff\">********** FlameGraph **********\n</font> ");
+    ui->textEdit->append(m_hostName+"FlameGraph");
+    simpleperf->runflamegraph();
+}
 
-    QString graphName = "/graph.svg";
-    QString fileName = QCoreApplication::applicationDirPath() + graphName;
+void MainWindow::on_pushButton_doc_clicked()
+{
+    m_doc.show();
+    m_doc.onLoadDocument("README.md");
+}
 
-
-    cmd <<"-c" << "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
-    excuteCmd(cmd);
-
-    cmd <<"-c" << "FlameGraph/flamegraph.pl out.folded > graph.svg";
-    excuteCmd(cmd);
-
-    if(QDesktopServices::openUrl(fileName)){
-        ui->textEdit->append(fileName);
-        ui->textEdit->append("<font color=\"#00cc00\">FlameGraph Opened  </font>");
-    }else {
-        ui->textEdit->append("<font color=\"#ee0000\">Open FlameGraph Failed !</font> ");
-    }
-
+void MainWindow::on_pushButton_cts_clicked()
+{
+    qDebug()<< MY_TAG << "run cts";
+    QProcess *bash = new  QProcess();
+    bash->setProgram(TERMINAL);
+    bash->setArguments(QStringList() << "-c" << "ls");
+    bash->start();
 }
