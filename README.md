@@ -35,5 +35,10 @@ Qt project
 * process处理无返回结果一般原因是：readAllStandardOutput只能读取一次，读取完之后就会清空输出，所以需要把readAllStandardOutput结果用QString保存起来
 
 2022年3月19日
-
 * 修复process不能实时输出的问题
+
+2022年3月20日
+* 增加命令行补全功能
+
+2022年3月20日
+* 构建cmd database，保存历史数据，供命令行补全

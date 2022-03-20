@@ -6,6 +6,8 @@
 #include <stdlib.h>
 
 #define MY_TAG "mainwindow"
+
+#define DATABASE "cmd_database.txt"
 #define PYTHON2_7 "/usr/bin/python2.7"
 #define GNOME "/etc/gnome"
 #define TERMINAL "/usr/bin/terminator"
@@ -26,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);    
     initUi();
+    initEnvironment();
     initConnect();
     qDebug() << MY_TAG  <<"[MainWindow]"
              << QThread::currentThreadId();
@@ -38,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+    fileOperation->saveDataBase(DATABASE,&m_cmdList);
 }
 
 void MainWindow::initUi()
@@ -46,16 +50,24 @@ void MainWindow::initUi()
     ui->tabWidget->setTabText(0,"simpleperf");
     ui->tabWidget->setTabText(1,"CTS");
 
+}
+
+void MainWindow::initEnvironment()
+{
     //cmd命令行自动补全
     completer = new QCompleter(m_cmdList,this);
     //最多显示数
     completer->setMaxVisibleItems(6);
     //过滤方式==》只要包含string 即可
-    completer->setFilterMode(Qt::MatchContains);
+    completer->setFilterMode(Qt::MatchStartsWith);
     //匹配大小写不敏感
     completer->setCaseSensitivity(Qt::CaseInsensitive);
 //    completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
     ui->lineEdit_cmd->setCompleter(completer);
+
+    fileOperation->loadDataBase(DATABASE,&m_cmdList);
+    completer->setModel(new QStringListModel(m_cmdList,this));
+    qDebug()<<MY_TAG<<"[cmd datebase]"<<m_cmdList;
 }
 
 void MainWindow::initConnect()
@@ -96,16 +108,15 @@ void MainWindow::slotReciveSimpleperf(QString msg)
 
 void MainWindow::slotReciveSimpleperf(QProcess::ProcessState newState)
 {
-    qDebug()<<MY_TAG<<"[slotReciveSimpleperf] ProcessState:" << newState;
-    QString statusbarMsg;
+//    qDebug()<<MY_TAG<<"[slotReciveSimpleperf] ProcessState:" << newState;
     if (newState == QProcess::Running){
-        statusbarMsg = "    Process Running ";
+        m_statusbarMsg = "    Process Running ";
     }else if(newState == QProcess::Starting){
-        statusbarMsg = "    Process Starting ";
+        m_statusbarMsg = "    Process Starting ";
     }else{
-        statusbarMsg = "    Process Not Running";
+        m_statusbarMsg = "    Process Not Running";
     }
-    ui->statusbar->showMessage(statusbarMsg);
+    ui->statusbar->showMessage(m_statusbarMsg);
 }
 
 
@@ -121,7 +132,7 @@ void MainWindow::on_pushButton_run_clicked()
         completer->setModel(new QStringListModel(m_cmdList,this));
     }
     ui->textEdit->append(m_hostName+ui->lineEdit_cmd->text());
-    simpleperf->runCmdLine(ui->lineEdit_cmd->text());
+//    simpleperf->runCmdLine(ui->lineEdit_cmd->text());
     ui->lineEdit_cmd->clear();
 }
 

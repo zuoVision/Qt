@@ -17,6 +17,7 @@
 #include "document.h"
 #include "listenerthread.h"
 #include "simpleperf.h"
+#include "fileoperation.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,6 +35,7 @@ public:
 
     Simpleperf *simpleperf = new Simpleperf();
     QCompleter *completer;
+    FileOperation *fileOperation = new FileOperation(this);
 
 private:
     Ui::MainWindow *ui;
@@ -41,8 +43,10 @@ private:
 protected:
     QString     m_msg;
     QStringList m_cmdList;
+    QString     m_statusbarMsg;
     Document    m_doc;
     void initUi();
+    void initEnvironment();
     void initConnect();
     void searchBar();
     void keyPressEvent(QKeyEvent *event);

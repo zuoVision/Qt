@@ -22,6 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     document.cpp \
+    fileoperation.cpp \
     listenerthread.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
 
 HEADERS += \
     document.h \
+    fileoperation.h \
     listenerthread.h \
     mainwindow.h \
     simpleperf.h

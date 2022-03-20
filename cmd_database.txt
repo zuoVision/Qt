@@ -1,0 +1,11 @@
+adb
+top
+ping baidu.com
+pwd
+ls
+find
+locate
+grep
+time
+whoami
+ps
