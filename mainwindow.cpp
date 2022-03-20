@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QLabel>
 #include <QListView>
+#include <QStringListModel>
 #include <stdlib.h>
 
 #define MY_TAG "mainwindow"
@@ -24,12 +25,13 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);    
-    initEnv();
+    initUi();
     initConnect();
     qDebug() << MY_TAG  <<"[MainWindow]"
              << QThread::currentThreadId();
+//    QThread::sleep(2);
     m_hostName = simpleperf->listener->m_hostName;
-
+    qDebug() <<MY_TAG <<m_hostName;
 
 }
 
@@ -38,11 +40,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::initEnv()
+void MainWindow::initUi()
 {
-    searchBar();
+//    searchBar();
     ui->tabWidget->setTabText(0,"simpleperf");
     ui->tabWidget->setTabText(1,"CTS");
+
+    //cmd命令行自动补全
+    completer = new QCompleter(m_cmdList,this);
+    //最多显示数
+    completer->setMaxVisibleItems(6);
+    //过滤方式==》只要包含string 即可
+    completer->setFilterMode(Qt::MatchContains);
+    //匹配大小写不敏感
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+//    completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
+    ui->lineEdit_cmd->setCompleter(completer);
 }
 
 void MainWindow::initConnect()
@@ -64,10 +77,13 @@ void MainWindow::searchBar()
     ui->comboBox->setMaxVisibleItems(6);
     ui->comboBox->lineEdit()->setPlaceholderText("search");
 //    ui->lineEdit_search->setPlaceholderText("input");
-//    ui->listView_cmdRcord.set
+    //    ui->listView_cmdRcord.set
 }
 
-
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    simpleperf->processKeyPressEvent(event);
+}
 
 void MainWindow::slotReciveSimpleperf(QString msg)
 {
@@ -89,9 +105,7 @@ void MainWindow::slotReciveSimpleperf(QProcess::ProcessState newState)
     }else{
         statusbarMsg = "    Process Not Running";
     }
-
     ui->statusbar->showMessage(statusbarMsg);
-
 }
 
 
@@ -101,8 +115,11 @@ void MainWindow::on_pushButton_run_clicked()
         ui->textEdit->append("Please input your command !");
         return;
     }
-    m_cmdVector << ui->lineEdit_cmd->text();
-
+    //动态更新completer模型库
+    if(!m_cmdList.contains(ui->lineEdit_cmd->text())){
+        m_cmdList << ui->lineEdit_cmd->text();
+        completer->setModel(new QStringListModel(m_cmdList,this));
+    }
     ui->textEdit->append(m_hostName+ui->lineEdit_cmd->text());
     simpleperf->runCmdLine(ui->lineEdit_cmd->text());
     ui->lineEdit_cmd->clear();

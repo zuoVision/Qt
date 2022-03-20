@@ -35,16 +35,15 @@ private:
 
 protected:
 
-
 signals:
     void signalToMainWindow(QString info);
     void signalToSimpleperf(QString info);
     void signalToSimpleperf(QProcess::ProcessState newState);
+    void signalProcessFinished();
 
 private slots:
     void slotReciveMainWindow(QStringList info);
     void slotReciveSimpleperf(QStringList info);
-    void exitCmd(int exitCode);
     void slotReciveProcessState(QProcess::ProcessState newState);
 };
 

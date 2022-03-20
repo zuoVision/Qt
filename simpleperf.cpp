@@ -20,19 +20,41 @@ QObject(parent)
 //    listenerThread->start();
 //    emit signalToListenerInitThread();
 
-
 }
 
 void Simpleperf::init_connect()
 {
-//    connect(this,SIGNAL(signalToListenerInitThread()),
-//            listener,SLOT(slotInitThread()));
     connect(this,SIGNAL(signalToListenerThread(QStringList)),
             listener,SLOT(slotReciveSimpleperf(QStringList)));
     connect(listener,SIGNAL(signalToSimpleperf(QString)),
             this,SLOT(slotReciveListener(QString)));
     connect(listener,SIGNAL(signalToSimpleperf(QProcess::ProcessState)),
             this,SLOT(slotReciveProcessState(QProcess::ProcessState)));
+    connect(listener,SIGNAL(signalProcessFinished()),
+            this,SLOT(slotProcessfinished()));
+}
+
+void Simpleperf::wait()
+{
+    time.start();
+    while(time.elapsed() < 180000) {            //等待时间流逝3min
+        QCoreApplication::processEvents();   //处理事件
+        if(m_isProcessFinished) {
+            m_isProcessFinished = false;
+            return;
+        }
+    }
+}
+
+void Simpleperf::processKeyPressEvent(QKeyEvent *event)
+{
+    if(event->modifiers() == Qt::ControlModifier) { // 如果按下了CTRL键
+        if(event->key() == Qt::Key_D){
+            qDebug()<<"CTRL + D";
+            listener->p->kill();
+//            emit signalToListenerThread(QStringList()<<"CTRL + D");
+        }
+    }
 }
 
 void Simpleperf::runCmdLine(QString cmd)
@@ -73,7 +95,7 @@ void Simpleperf::runAdbOemUnlock(QString cmd)
 
 void Simpleperf::runSimpleperfStat(QString cmd)
 {
-    m_cmd << "-c" << "ls";
+    m_cmd << "-c" << cmd;
     emit signalToListenerThread(m_cmd);
 
 }
@@ -91,6 +113,8 @@ void Simpleperf::runSimpleperfRecord(QString cmd)
     m_cmd <<"-c" << cmd;
     emit signalToListenerThread(m_cmd);
     m_cmd.clear();
+
+    wait();
 
     m_cmd << "-c" << "adb pull /data/local/tmp/perf.data";
     emit signalToListenerThread(m_cmd);
@@ -113,6 +137,8 @@ void Simpleperf::runflamegraph()
     emit signalToListenerThread(m_cmd);
     m_cmd.clear();
 
+    wait();
+
     m_cmd <<"-c" << "FlameGraph/flamegraph.pl out.folded > graph.svg";
     emit signalToListenerThread(m_cmd);
     m_cmd.clear();
@@ -134,6 +160,12 @@ void Simpleperf::slotReciveProcessState(QProcess::ProcessState newState)
 {
     qDebug()<<MY_TAG<<"[slotReciveProcessState] ProcessState";
     emit signalToMainWindow(newState);
+}
+
+void Simpleperf::slotProcessfinished()
+{
+    qDebug()<<MY_TAG<<"[slotProcessfinished] m_isProcessFinished true";
+    m_isProcessFinished = true;
 }
 
 

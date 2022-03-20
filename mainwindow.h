@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QThread>
 #include <QThreadPool>
+#include <QCompleter>
 
 #include "document.h"
 #include "listenerthread.h"
@@ -32,20 +33,19 @@ public:
     QString     m_hostName;
 
     Simpleperf *simpleperf = new Simpleperf();
+    QCompleter *completer;
 
 private:
     Ui::MainWindow *ui;
-    QVector<QString>     m_cmdVector;
 
 protected:
-
     QString     m_msg;
-
-    QStringList m_cmd;
-    void initEnv();
+    QStringList m_cmdList;
+    Document    m_doc;
+    void initUi();
     void initConnect();
     void searchBar();
-    Document    m_doc;
+    void keyPressEvent(QKeyEvent *event);
 
 signals:
 

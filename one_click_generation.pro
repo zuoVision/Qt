@@ -1,7 +1,11 @@
+#模块
 QT       += core gui svg
 
-
+#高于4版本添加widget
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+#应用程序名
+TARGET = one click
 
 CONFIG += c++11
 
