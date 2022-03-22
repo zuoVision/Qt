@@ -7,7 +7,6 @@ Qt project
 将远程代码同步至本地
 - git pull git@github.com:zuoVision/Qt.git
 
-
 2022年3月8日 22点57分
 - process 初始化 --> hostName 样式：zuozhe$
 
@@ -42,3 +41,8 @@ Qt project
 
 2022年3月20日
 * 构建cmd database，保存历史数据，供命令行补全
+
+2022年3月22日
+* 优化cmd database存储方案
+* 完善native cmd
+* 新增补全方式选项等

@@ -18,6 +18,7 @@ Document::Document(QWidget *parent) :
 Document::~Document()
 {
     delete ui;
+    emit destroyed();
 }
 
 void Document::init()
@@ -28,41 +29,45 @@ void Document::init()
 void Document::onLoadDocument(QString doc)
 {
     QString displayString;
-    QFile file(doc);
+    qDebug() << doc;
+    qDebug() << doc.split("/").last();
+    QFile file(doc.split("/").last());
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-//        qDebug()<<"Can't open the file! return"<<endl;
+        qDebug()<<"Can't open the file! return"<<endl;
         return;
     }
     while(!file.atEnd())
     {
         QByteArray line = file.readLine();
         QString str(line);
-//        qDebug() << str;
         displayString.append(str);
     }
     ui->plainTextEdit_doc->clear();
     ui->plainTextEdit_doc->appendPlainText(displayString);
+    file.close();
+}
+
+void Document::closeEvent(QCloseEvent *)
+{
+    emit closed();
 }
 
 void Document::on_pushButton_open_clicked()
 {
     QFileDialog *fd = new QFileDialog(this);
-    fd->setWindowTitle("选择文件*.txt");
+    fd->setWindowTitle("选择文件");
     fd->setNameFilter("");
     fd->setViewMode(QFileDialog::Detail);
-    QString filename;
     if(fd->exec() == QDialog::Accepted){
-        filename = fd->selectedFiles()[0];
+        filePath = fd->selectedFiles()[0];
+        onLoadDocument(filePath);
     }
-
-    onLoadDocument(filename);
-
 }
 
 void Document::on_pushButton_save_clicked()
 {
-
+//    qDebug()<<filePath;
     QFile myfile(filePath);//创建一个输出文件的文档
     if (myfile.open(QFile::WriteOnly|QFile::Text))//注意WriteOnly是往文本中写入的时候用，ReadOnly是在读文本中内容的时候用，Truncate表示将原来文件中的内容清空
     {
@@ -70,4 +75,5 @@ void Document::on_pushButton_save_clicked()
         out << ui->plainTextEdit_doc->toPlainText();
     }
     QMessageBox::information(this,"提示","文本已保存");
+    myfile.close();
 }

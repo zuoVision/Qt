@@ -16,6 +16,7 @@ public:
     ListenerThread(/*QObject *parent =nullptr*/);
 
     // QThread interface
+    QString     m_userName;
     QString     m_hostName;
     QStringList m_cmd;
     QString     m_stdOutput;

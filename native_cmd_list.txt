@@ -1,0 +1,116 @@
+======LINUX=======
+cat
+chmod
+chown
+diff
+file
+find
+git
+gitview
+cut
+ln
+less
+locate
+more
+mv
+paste
+patch
+rm
+slocate
+split
+tee
+touch
+which
+cp
+whereis
+awk
+read
+egrep
+fgrep
+grep
+join
+sed
+sort
+spell
+tr
+let
+cd
+df
+dirs
+du
+mdu
+mkdir
+pwd
+quota
+quotacheck
+quotaoff
+quotaon
+mount
+rmdir
+tree
+umount
+ls
+reset
+clear
+alias
+dmesg
+eval
+insmod
+lsmod
+minfo
+set
+passwd
+resize
+rmmod
+time
+setenv
+unalias
+unzip
+zip
+======ADB=======
+adb devices
+adb install demo.apk
+adb install -r demo.apk  #install apk to sdcard
+adb shell pm list packages
+adb shell pm list packages -3  #show 3rd party package
+adb shell pm path apk.name  #show apk path
+adb shell am start -n com.tcl.camera/com.android.camera.CameraActivity  #start apk
+adb shell dumpsys package  #show package info
+adb shell dumpsys meminfo  #show meminfo
+adb shell ps | grep camera
+adb shell pkill camera
+adb shell wm size  #show screen size
+adb shell am monitor  #get package name
+adb shell setenforce 0
+adb shell screencap -p /sdcard/screensnap1.png
+adb shell screenrecord storage/sdcard0/screen.mp4
+adb shell cat /proc/cpuinfo  #show cup info
+adb shell input tap 360 1400  #take picture
+adb shell sentest #show sensor info
+adb logcat
+adb logcat -c  #clear log cache
+adb reboot
+adb shell getprop
+adb shell top -m 10 #show top 10
+adb push
+adb pull
+adb bugreport
+adb help
+======GIT======
+git config --global user.name <user.name>
+git config --global user.email <user.name>@tcl.com
+git config -l
+git status
+git add
+git commot -m
+git push
+git pull
+git branch
+git show-branch
+git checkout
+git reset
+git stash
+git stash list
+git blame
+git clean -fd  #rm untrack file/folder
+======CUSTOM=======

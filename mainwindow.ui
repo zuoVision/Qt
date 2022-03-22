@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>One Click</string>
+   <string>OneClick</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_4">
@@ -24,7 +24,7 @@
        <attribute name="title">
         <string>Tab 1</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_6">
+       <layout class="QGridLayout" name="gridLayout_7">
         <item row="0" column="0" colspan="2">
          <widget class="QFrame" name="frame">
           <property name="sizePolicy">
@@ -58,6 +58,87 @@
              <property name="text">
               <string>Run</string>
              </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="3">
+            <widget class="QWidget" name="widget" native="true">
+             <layout class="QGridLayout" name="gridLayout_6">
+              <item row="0" column="5">
+               <spacer name="horizontalSpacer">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item row="0" column="1">
+               <widget class="Line" name="line">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QComboBox" name="comboBox_completeregular">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>MatchStartsWith</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>MatchContains</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>MatchEndsWith</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="checkBox_savecmd">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>save command</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="Line" name="line_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="label">
+                <property name="font">
+                 <font>
+                  <pointsize>9</pointsize>
+                 </font>
+                </property>
+                <property name="text">
+                 <string>complete regular</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </item>
           </layout>
@@ -111,7 +192,7 @@
              <x>0</x>
              <y>0</y>
              <width>637</width>
-             <height>430</height>
+             <height>381</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_3">

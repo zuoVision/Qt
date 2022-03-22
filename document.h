@@ -2,6 +2,7 @@
 #define DOCUMENT_H
 
 #include <QWidget>
+#include <QCloseEvent>
 
 namespace Ui {
 class Document;
@@ -21,7 +22,10 @@ public:
 
 private:
     Ui::Document *ui;
+    void closeEvent(QCloseEvent *);
 
+signals:
+    void closed();
 private slots:
     void on_pushButton_open_clicked();
     void on_pushButton_save_clicked();

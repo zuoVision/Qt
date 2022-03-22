@@ -31,7 +31,9 @@ class MainWindow :
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    QString     m_userName;
     QString     m_hostName;
+    QString     m_totalName;
 
     Simpleperf *simpleperf = new Simpleperf();
     QCompleter *completer;
@@ -42,19 +44,20 @@ private:
 
 protected:
     QString     m_msg;
-    QStringList m_cmdList;
+    QStringList m_nativeCmdList;
+    QStringList m_customCmdList;
     QString     m_statusbarMsg;
     Document    m_doc;
     void initUi();
     void initEnvironment();
     void initConnect();
-    void searchBar();
     void keyPressEvent(QKeyEvent *event);
 
 signals:
 
 
 private slots:
+    void slotReciveDocument();
     void slotReciveSimpleperf(QString msg);
     void slotReciveSimpleperf(QProcess::ProcessState newState);
     void on_pushButton_run_clicked();
@@ -71,5 +74,6 @@ private slots:
     void on_pushButton_doc_clicked();
 
     void on_pushButton_cts_clicked();
+    void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
 };
 #endif // MAINWINDOW_H

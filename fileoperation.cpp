@@ -14,7 +14,7 @@ FileOperation::FileOperation(QObject *parent) : QObject(parent)
 void FileOperation::loadDataBase(QString filePath, QStringList *stringList)
 {
     QFile file(filePath);
-    qDebug()<<MY_TAG<<"loadDataBase"<<file.fileName()<<stringList;
+    qDebug()<<MY_TAG<<"loadDataBase"<<file.fileName()/*<<stringList*/;
 
     if(!file.exists()){
         QMessageBox::warning(NULL,"warning",QString("file:%1 does not exist!")
@@ -42,17 +42,18 @@ void FileOperation::loadDataBase(QString filePath, QStringList *stringList)
 
 void FileOperation::saveDataBase(QString filePath, QStringList *stringList)
 {
-    qDebug()<<MY_TAG<<"saveDataBase"<<filePath<< *stringList;
-    QFile file(filePath);
+//    qDebug()<<MY_TAG<<"saveDataBase"<<filePath.split("/").last()<< *stringList;
+    QFile file(filePath.split("/").last());
     if(!file.exists()){
         QMessageBox::warning(NULL,"warning",QString("file:%1 does not exist!")
                              .arg(file.fileName()));
-
     }
-    if(!file.open(QIODevice::WriteOnly)){
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Append|QIODevice::Text)){   //QIODevice::Text 换行符生效
         QMessageBox::warning(NULL,"warning",QString("can't open file:%1(%2)")
                              .arg(file.fileName())
                              .arg(file.errorString()));
+        file.close();
+        return;
     }
     QTextStream out(&file);
 
@@ -60,4 +61,5 @@ void FileOperation::saveDataBase(QString filePath, QStringList *stringList)
         out<<*it<<"\n";
     }
     file.close();
+    return;
 }

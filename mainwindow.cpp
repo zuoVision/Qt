@@ -7,7 +7,7 @@
 
 #define MY_TAG "mainwindow"
 
-#define DATABASE "cmd_database.txt"
+#define DATABASE ":/config/native_cmd_list.txt"
 #define PYTHON2_7 "/usr/bin/python2.7"
 #define GNOME "/etc/gnome"
 #define TERMINAL "/usr/bin/terminator"
@@ -33,20 +33,21 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << MY_TAG  <<"[MainWindow]"
              << QThread::currentThreadId();
 //    QThread::sleep(2);
-    m_hostName = simpleperf->listener->m_hostName;
-    qDebug() <<MY_TAG <<m_hostName;
-
+    m_userName = simpleperf->listener->m_userName.simplified();
+    m_hostName = simpleperf->listener->m_hostName.simplified();
+    m_totalName = m_userName.append("@").append(m_hostName).append(":~$ ");
+    qDebug() <<MY_TAG <<m_totalName;
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    fileOperation->saveDataBase(DATABASE,&m_cmdList);
+    fileOperation->saveDataBase(DATABASE,&m_customCmdList);
 }
 
 void MainWindow::initUi()
 {
-//    searchBar();
+    ui->checkBox_savecmd->setCheckState(Qt::Checked);
     ui->tabWidget->setTabText(0,"simpleperf");
     ui->tabWidget->setTabText(1,"CTS");
 
@@ -55,23 +56,22 @@ void MainWindow::initUi()
 void MainWindow::initEnvironment()
 {
     //cmd命令行自动补全
-    completer = new QCompleter(m_cmdList,this);
+    completer = new QCompleter(m_nativeCmdList,this);
     //最多显示数
     completer->setMaxVisibleItems(6);
-    //过滤方式==》只要包含string 即可
-    completer->setFilterMode(Qt::MatchStartsWith);
     //匹配大小写不敏感
     completer->setCaseSensitivity(Qt::CaseInsensitive);
-//    completer->setCompletionMode(QCompleter::UnfilteredPopupCompletion);
     ui->lineEdit_cmd->setCompleter(completer);
 
-    fileOperation->loadDataBase(DATABASE,&m_cmdList);
-    completer->setModel(new QStringListModel(m_cmdList,this));
-    qDebug()<<MY_TAG<<"[cmd datebase]"<<m_cmdList;
+    fileOperation->loadDataBase(DATABASE,&m_nativeCmdList);
+    completer->setModel(new QStringListModel(m_nativeCmdList,this));
+    qDebug()<<MY_TAG<<"[native cmd datebase]"<<m_nativeCmdList;
 }
 
 void MainWindow::initConnect()
 {
+    connect(&m_doc,SIGNAL(closed()),
+            this,SLOT(slotReciveDocument()));
     connect(simpleperf,SIGNAL(signalToMainWindow(QString)),
             this,SLOT(slotReciveSimpleperf(QString)));
     connect(simpleperf,SIGNAL(signalToMainWindow(QProcess::ProcessState)),
@@ -81,20 +81,14 @@ void MainWindow::initConnect()
             ui->pushButton_run,SLOT(click()));
 }
 
-void MainWindow::searchBar()
-{
-    ui->comboBox->setView(new QListView);
-    ui->comboBox->setLineEdit(ui->lineEdit_search);
-    ui->comboBox->setEditable(true);
-    ui->comboBox->setMaxVisibleItems(6);
-    ui->comboBox->lineEdit()->setPlaceholderText("search");
-//    ui->lineEdit_search->setPlaceholderText("input");
-    //    ui->listView_cmdRcord.set
-}
-
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     simpleperf->processKeyPressEvent(event);
+}
+
+void MainWindow::slotReciveDocument()
+{
+    ui->pushButton_doc->setEnabled(true);
 }
 
 void MainWindow::slotReciveSimpleperf(QString msg)
@@ -123,71 +117,75 @@ void MainWindow::slotReciveSimpleperf(QProcess::ProcessState newState)
 void MainWindow::on_pushButton_run_clicked()
 {
     if (ui->lineEdit_cmd->text().isEmpty()){
-        ui->textEdit->append("Please input your command !");
+        ui->textEdit->append(m_totalName);
         return;
     }
     //动态更新completer模型库
-    if(!m_cmdList.contains(ui->lineEdit_cmd->text())){
-        m_cmdList << ui->lineEdit_cmd->text();
-        completer->setModel(new QStringListModel(m_cmdList,this));
+    if(!m_nativeCmdList.contains(ui->lineEdit_cmd->text()) &&
+        ui->checkBox_savecmd->isChecked())
+    {
+        m_customCmdList << ui->lineEdit_cmd->text();
+        m_nativeCmdList << ui->lineEdit_cmd->text();
+        completer->setModel(new QStringListModel(m_nativeCmdList,this));
     }
-    ui->textEdit->append(m_hostName+ui->lineEdit_cmd->text());
-//    simpleperf->runCmdLine(ui->lineEdit_cmd->text());
+    ui->textEdit->append(m_totalName+ui->lineEdit_cmd->text());
+    simpleperf->runCmdLine(ui->lineEdit_cmd->text());
     ui->lineEdit_cmd->clear();
 }
 
 void MainWindow::on_pushButton_devices_clicked()
 {
-    ui->textEdit->append(m_hostName+ADBDEVICES);
+    ui->textEdit->append(m_totalName+ADBDEVICES);
     simpleperf->runAdbDevices(ADBDEVICES);
 }
 
 void MainWindow::on_pushButton_root_clicked()
 {
-    ui->textEdit->append(m_hostName+ADBROOT);
+    ui->textEdit->append(m_totalName+ADBROOT);
     simpleperf->runAdbRoot(ADBROOT);
 }
 
 void MainWindow::on_pushButton_remount_clicked()
 {
-    ui->textEdit->append(m_hostName+ADBREMOUNT);
+    ui->textEdit->append(m_totalName+ADBREMOUNT);
     simpleperf->runAdbRemount(ADBREMOUNT);
 }
 
 void MainWindow::on_pushButton_oemunlock_clicked()
 {
-    ui->textEdit->append(m_hostName+ADBOEMUNLOCK);
+    ui->textEdit->append(m_totalName+ADBOEMUNLOCK);
     simpleperf->runAdbOemUnlock(ADBOEMUNLOCK);
 }
 
 void MainWindow::on_pushButton_stat_clicked()
 {
-    ui->textEdit->append(m_hostName+SIMPLEPERFSTAT);
+    ui->textEdit->append(m_totalName+SIMPLEPERFSTAT);
     simpleperf->runSimpleperfStat(SIMPLEPERFSTAT);
 }
 
 void MainWindow::on_pushButton_record_clicked()
 {
-    ui->textEdit->append(m_hostName+SIMPLEPERFRECORD);
+    ui->textEdit->append(m_totalName+SIMPLEPERFRECORD);
     simpleperf->runSimpleperfRecord(SIMPLEPERFRECORD);
 }
 
 void MainWindow::on_pushButton_report_clicked()
 {
-    ui->textEdit->append(m_hostName+SIMPLEPERFREPORT);
+    ui->textEdit->append(m_totalName+SIMPLEPERFREPORT);
     simpleperf->runSimpleperfReport(SIMPLEPERFREPORT);
 }
 
 void MainWindow::on_pushButton_flamegraph_clicked()
 {
-    ui->textEdit->append(m_hostName+"FlameGraph");
+    ui->textEdit->append(m_totalName+"FlameGraph");
     simpleperf->runflamegraph();
 }
 
 void MainWindow::on_pushButton_doc_clicked()
 {
     m_doc.show();
-    m_doc.onLoadDocument("README.md");
+    m_doc.onLoadDocument(":/config/README.mk");
+    ui->pushButton_doc->setEnabled(false);
 }
 
 void MainWindow::on_pushButton_cts_clicked()
@@ -197,4 +195,20 @@ void MainWindow::on_pushButton_cts_clicked()
     bash->setProgram(TERMINAL);
     bash->setArguments(QStringList() << "-c" << "ls");
     bash->start();
+}
+
+void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1)
+{
+//    qDebug() << "on_comboBox_completeregular_currentIndexChanged"<<arg1;
+    Qt::MatchFlags mf;
+    if(arg1==0){
+        mf = Qt::MatchStartsWith;
+    }else if(arg1==1){
+        mf = Qt::MatchContains;
+    }else if(arg1==2){
+        mf = Qt::MatchEndsWith;
+    }else {
+        mf = Qt::MatchStartsWith;
+    }
+    completer->setFilterMode(mf);
 }

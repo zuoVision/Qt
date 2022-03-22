@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/config">
+        <file>native_cmd_list.txt</file>
+        <file>README.md</file>
+    </qresource>
+</RCC>

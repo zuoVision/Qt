@@ -49,10 +49,13 @@ void ListenerThread::initThread()
     qDebug() << MY_TAG  <<"[InitThread]"
              << QThread::currentThreadId();
     p = new QProcess();
-    p->start(BASH,QStringList() << "-c" << "whoami");
+    p->start(BASH,QStringList() << "-c" << "whoami");    //hostname:41000966-26-1 username:zuozhe
     p->waitForFinished();
-    m_hostName = p->readAllStandardOutput().simplified().append("$ ");
-    qDebug() <<MY_TAG <<m_hostName;
+    m_userName = p->readAllStandardOutput().simplified()/*.append("$ ")*/;
+    p->start(BASH,QStringList()<< "-c" << "hostname");
+    p->waitForFinished();
+    m_hostName = p->readAllStandardOutput().simplified()/*.append("$ ")*/;
+    qDebug() <<MY_TAG <<m_userName<<m_hostName;
     qRegisterMetaType<QProcess::ProcessState>("QProcess::ProcessState");
     connect(p,SIGNAL(stateChanged(QProcess::ProcessState)),
             this,SLOT(slotReciveProcessState(QProcess::ProcessState)));
