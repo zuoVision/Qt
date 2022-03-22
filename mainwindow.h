@@ -43,11 +43,12 @@ private:
     Ui::MainWindow *ui;
 
 protected:
-    QString     m_msg;
-    QStringList m_nativeCmdList;
-    QStringList m_customCmdList;
-    QString     m_statusbarMsg;
-    Document    m_doc;
+    QString                     m_msg;
+    QStringList                 m_nativeCmdList;
+    QStringList                 m_customCmdList;
+    QProcess::ProcessState      m_processState=QProcess::ProcessState::NotRunning;
+    QString                     m_statusbarMsg="Process Not Running";
+    Document                    m_doc;
     void initUi();
     void initEnvironment();
     void initConnect();
@@ -58,7 +59,7 @@ signals:
 
 private slots:
     void slotReciveDocument();
-    void slotReciveSimpleperf(QString msg);
+    void slotReciveSimpleperf(QString msg,ListenerThread::SignalType signalType);
     void slotReciveSimpleperf(QProcess::ProcessState newState);
     void on_pushButton_run_clicked();
 

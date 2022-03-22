@@ -42,13 +42,13 @@ private:
 protected:
 
 signals:
-    void signalToMainWindow(QString msg);
+    void signalToMainWindow(QString msg,ListenerThread::SignalType signalType=ListenerThread::SignalType::NORNAL_INFO);
     void signalToMainWindow(QProcess::ProcessState state);
     void signalToListenerThread(QStringList msg);
     void signalToListenerInitThread();
 
 private slots:
-    void slotReciveListener(QString msg);
+    void slotReciveListener(QString msg,ListenerThread::SignalType signalType);
     void slotReciveProcessState(QProcess::ProcessState newState);
     void slotProcessfinished();
 };

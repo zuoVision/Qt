@@ -50,7 +50,7 @@ void MainWindow::initUi()
     ui->checkBox_savecmd->setCheckState(Qt::Checked);
     ui->tabWidget->setTabText(0,"simpleperf");
     ui->tabWidget->setTabText(1,"CTS");
-
+    ui->statusbar->showMessage(m_statusbarMsg);
 }
 
 void MainWindow::initEnvironment()
@@ -58,7 +58,7 @@ void MainWindow::initEnvironment()
     //cmd命令行自动补全
     completer = new QCompleter(m_nativeCmdList,this);
     //最多显示数
-    completer->setMaxVisibleItems(6);
+    completer->setMaxVisibleItems(10);
     //匹配大小写不敏感
     completer->setCaseSensitivity(Qt::CaseInsensitive);
     ui->lineEdit_cmd->setCompleter(completer);
@@ -72,8 +72,8 @@ void MainWindow::initConnect()
 {
     connect(&m_doc,SIGNAL(closed()),
             this,SLOT(slotReciveDocument()));
-    connect(simpleperf,SIGNAL(signalToMainWindow(QString)),
-            this,SLOT(slotReciveSimpleperf(QString)));
+    connect(simpleperf,SIGNAL(signalToMainWindow(QString,ListenerThread::SignalType)),
+            this,SLOT(slotReciveSimpleperf(QString ,ListenerThread::SignalType)));
     connect(simpleperf,SIGNAL(signalToMainWindow(QProcess::ProcessState)),
             this,SLOT(slotReciveSimpleperf(QProcess::ProcessState)));
     //cmd回车-> run button click
@@ -91,10 +91,14 @@ void MainWindow::slotReciveDocument()
     ui->pushButton_doc->setEnabled(true);
 }
 
-void MainWindow::slotReciveSimpleperf(QString msg)
+void MainWindow::slotReciveSimpleperf(QString msg,ListenerThread::SignalType signalType)
 {
-//    qDebug()<<MY_TAG<<"[slotReciveSimpleperf]";
-    if(!msg.isEmpty()){
+    qDebug()<<MY_TAG<<"[slotReciveSimpleperf]" << msg << signalType;
+    if(signalType==ListenerThread::SignalType::OUTPUT_INFO){
+        ui->textEdit->append(QString("<font color=\"#0000cc\">%1</font>").arg(msg));
+    }else if(signalType==ListenerThread::SignalType::ERROR_INFO){
+        ui->textEdit->append(QString("<font color=\"#cc0000\">%1</font>").arg(msg));
+    }else{
         ui->textEdit->append(msg);
     }
     return;
@@ -103,12 +107,13 @@ void MainWindow::slotReciveSimpleperf(QString msg)
 void MainWindow::slotReciveSimpleperf(QProcess::ProcessState newState)
 {
 //    qDebug()<<MY_TAG<<"[slotReciveSimpleperf] ProcessState:" << newState;
+    m_processState = newState;
     if (newState == QProcess::Running){
-        m_statusbarMsg = "    Process Running ";
+        m_statusbarMsg = "    Process Running (you can input 'exit' to force quit!) ";
     }else if(newState == QProcess::Starting){
         m_statusbarMsg = "    Process Starting ";
     }else{
-        m_statusbarMsg = "    Process Not Running";
+        m_statusbarMsg = "    Process Not Running ";
     }
     ui->statusbar->showMessage(m_statusbarMsg);
 }
@@ -116,7 +121,9 @@ void MainWindow::slotReciveSimpleperf(QProcess::ProcessState newState)
 
 void MainWindow::on_pushButton_run_clicked()
 {
-    if (ui->lineEdit_cmd->text().isEmpty()){
+    if (ui->lineEdit_cmd->text().isEmpty()
+        && m_processState!=QProcess::ProcessState::NotRunning)
+    {
         ui->textEdit->append(m_totalName);
         return;
     }
@@ -135,48 +142,56 @@ void MainWindow::on_pushButton_run_clicked()
 
 void MainWindow::on_pushButton_devices_clicked()
 {
+    if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+ADBDEVICES);
     simpleperf->runAdbDevices(ADBDEVICES);
 }
 
 void MainWindow::on_pushButton_root_clicked()
 {
+    if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+ADBROOT);
     simpleperf->runAdbRoot(ADBROOT);
 }
 
 void MainWindow::on_pushButton_remount_clicked()
 {
+    if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+ADBREMOUNT);
     simpleperf->runAdbRemount(ADBREMOUNT);
 }
 
 void MainWindow::on_pushButton_oemunlock_clicked()
 {
+    if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+ADBOEMUNLOCK);
     simpleperf->runAdbOemUnlock(ADBOEMUNLOCK);
 }
 
 void MainWindow::on_pushButton_stat_clicked()
 {
+    if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+SIMPLEPERFSTAT);
     simpleperf->runSimpleperfStat(SIMPLEPERFSTAT);
 }
 
 void MainWindow::on_pushButton_record_clicked()
 {
+    if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+SIMPLEPERFRECORD);
     simpleperf->runSimpleperfRecord(SIMPLEPERFRECORD);
 }
 
 void MainWindow::on_pushButton_report_clicked()
 {
+    if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+SIMPLEPERFREPORT);
     simpleperf->runSimpleperfReport(SIMPLEPERFREPORT);
 }
 
 void MainWindow::on_pushButton_flamegraph_clicked()
 {
+    if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+"FlameGraph");
     simpleperf->runflamegraph();
 }

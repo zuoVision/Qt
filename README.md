@@ -42,6 +42,9 @@ Qt project
 2022年3月20日
 * 构建cmd database，保存历史数据，供命令行补全
 
+2022年3月21日
+* 增加signalToSimpleperf的信号发送类型
+
 2022年3月22日
 * 优化cmd database存储方案
 * 完善native cmd

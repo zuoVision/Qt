@@ -34,7 +34,6 @@ void ListenerThread::run()
             process();
         }
     }
-
 }
 
 
@@ -68,10 +67,10 @@ void ListenerThread::process()
         p->waitForFinished(1);
         m_stdOutput = p->readAllStandardOutput();
         m_stdError = p->readAllStandardError();
-        emit signalToSimpleperf(m_stdOutput);
-        emit signalToSimpleperf(m_stdError);
-        qDebug()<<"OUTPUT:"<<m_stdOutput;
-        qDebug()<<"ERROR:"<<m_stdError;
+        if (!m_stdOutput.isEmpty()) emit signalToSimpleperf(m_stdOutput,OUTPUT_INFO);
+        if (!m_stdError.isEmpty()) emit signalToSimpleperf(m_stdError,ERROR_INFO);
+//        qDebug()<<"OUTPUT:"<<m_stdOutput;
+//        qDebug()<<"ERROR:"<<m_stdError;
         msleep(500);
     }
     qDebug()<<"state:"<<p->state();

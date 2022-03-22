@@ -14,7 +14,12 @@ class ListenerThread : public QThread
     Q_OBJECT
 public:
     ListenerThread(/*QObject *parent =nullptr*/);
-
+    enum SignalType {
+        NORNAL_INFO=0,
+        OUTPUT_INFO,
+        ERROR_INFO
+    };
+    Q_ENUM(SignalType)
     // QThread interface
     QString     m_userName;
     QString     m_hostName;
@@ -38,7 +43,8 @@ protected:
 
 signals:
     void signalToMainWindow(QString info);
-    void signalToSimpleperf(QString info);
+//    void signalToSimpleperf(QString info);
+    void signalToSimpleperf(QString info,ListenerThread::SignalType signalType=NORNAL_INFO);
     void signalToSimpleperf(QProcess::ProcessState newState);
     void signalProcessFinished();
 

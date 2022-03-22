@@ -26,8 +26,9 @@ void Simpleperf::init_connect()
 {
     connect(this,SIGNAL(signalToListenerThread(QStringList)),
             listener,SLOT(slotReciveSimpleperf(QStringList)));
-    connect(listener,SIGNAL(signalToSimpleperf(QString)),
-            this,SLOT(slotReciveListener(QString)));
+    qRegisterMetaType<ListenerThread::SignalType>("ListenerThread::SignalType");
+    connect(listener,SIGNAL(signalToSimpleperf(QString,ListenerThread::SignalType)),
+            this,SLOT(slotReciveListener(QString,ListenerThread::SignalType)));
     connect(listener,SIGNAL(signalToSimpleperf(QProcess::ProcessState)),
             this,SLOT(slotReciveProcessState(QProcess::ProcessState)));
     connect(listener,SIGNAL(signalProcessFinished()),
@@ -150,10 +151,14 @@ void Simpleperf::runflamegraph()
     }
 }
 
-void Simpleperf::slotReciveListener(QString msg)
-{
-//    qDebug() << MY_TAG <<"[slotReciveListener]" << msg;
-    emit signalToMainWindow(msg);
+void Simpleperf::slotReciveListener(QString msg,ListenerThread::SignalType signalType)
+ {
+//    qDebug() << MY_TAG <<"[slotReciveListener]" << msg; 
+   qDebug() << MY_TAG <<"[slotReciveListener]" << signalType;
+    if(signalType == 1){
+        qDebug()<<"output infoxxxxxxxxxxxxx";
+    }
+    emit signalToMainWindow(msg,signalType);
 }
 
 void Simpleperf::slotReciveProcessState(QProcess::ProcessState newState)
