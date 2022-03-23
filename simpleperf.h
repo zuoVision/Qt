@@ -16,6 +16,7 @@ public:
 
     //后台监听进程
     ListenerThread * listener;
+    typedef ListenerThread::SignalType SignalType;
 
     void init_connect();
     void wait();
@@ -28,8 +29,8 @@ public:
     void runSimpleperfStat(QString cmd);
     void runSimpleperfRecord(QString cmd);
     void runSimpleperfReport(QString cmd);
-    void runflamegraph();
-
+    void runFlamegraph();
+    void runCts(QString cmd);
 
 
 private:
@@ -42,13 +43,13 @@ private:
 protected:
 
 signals:
-    void signalToMainWindow(QString msg,ListenerThread::SignalType signalType=ListenerThread::SignalType::NORNAL_INFO);
+    void signalToMainWindow(QString msg,SignalType signalType=SignalType::NORNAL_INFO);
     void signalToMainWindow(QProcess::ProcessState state);
     void signalToListenerThread(QStringList msg);
     void signalToListenerInitThread();
 
 private slots:
-    void slotReciveListener(QString msg,ListenerThread::SignalType signalType);
+    void slotReciveListener(QString msg,SignalType signalType);
     void slotReciveProcessState(QProcess::ProcessState newState);
     void slotProcessfinished();
 };

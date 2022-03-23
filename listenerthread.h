@@ -27,14 +27,18 @@ public:
     QString     m_stdOutput;
     QString     m_stdError;
     QString     m_program = BASH;
-
+    bool        m_isSubConsoleOn=false;
     QProcess *p;
 
     bool isExit(QStringList info);
     void run();
+
+    void openTerminal();
+
 private:
-    void initThread();
+    void initThread(QProcess *processer);
     void process();
+    void creatProcesser(QProcess *processer);
 
 
 

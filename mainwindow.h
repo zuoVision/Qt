@@ -18,6 +18,8 @@
 #include "listenerthread.h"
 #include "simpleperf.h"
 #include "fileoperation.h"
+#include "xts.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,8 +37,9 @@ public:
     QString     m_hostName;
     QString     m_totalName;
 
-    Simpleperf *simpleperf = new Simpleperf();
-    QCompleter *completer;
+    Simpleperf  *simpleperf = new Simpleperf();
+    Xts         *xts = new Xts();
+    QCompleter  *completer;
     FileOperation *fileOperation = new FileOperation(this);
 
 private:

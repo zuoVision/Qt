@@ -9,8 +9,6 @@
 
 #define DATABASE ":/config/native_cmd_list.txt"
 #define PYTHON2_7 "/usr/bin/python2.7"
-#define GNOME "/etc/gnome"
-#define TERMINAL "/usr/bin/terminator"
 
 #define ADBDEVICES      "adb devices"
 #define ADBROOT         "adb root"
@@ -21,6 +19,7 @@
 #define SIMPLEPERFRECORD "python scripts/app_profiler.py -p com.tcl.camera"
 #define SIMPLEPERFREPORT "python scripts/report_sample.py > out.perf"
 
+#define RUNCTS "~/XTS/Android_R/android-cts/tools/cts-tradefed"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -47,7 +46,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUi()
 {
-    ui->checkBox_savecmd->setCheckState(Qt::Checked);
+//    ui->checkBox_savecmd->setCheckState(Qt::Checked);
     ui->tabWidget->setTabText(0,"simpleperf");
     ui->tabWidget->setTabText(1,"CTS");
     ui->statusbar->showMessage(m_statusbarMsg);
@@ -65,15 +64,15 @@ void MainWindow::initEnvironment()
 
     fileOperation->loadDataBase(DATABASE,&m_nativeCmdList);
     completer->setModel(new QStringListModel(m_nativeCmdList,this));
-    qDebug()<<MY_TAG<<"[native cmd datebase]"<<m_nativeCmdList;
+//    qDebug()<<MY_TAG<<"[native cmd datebase]"<<m_nativeCmdList;
 }
 
 void MainWindow::initConnect()
 {
     connect(&m_doc,SIGNAL(closed()),
             this,SLOT(slotReciveDocument()));
-    connect(simpleperf,SIGNAL(signalToMainWindow(QString,ListenerThread::SignalType)),
-            this,SLOT(slotReciveSimpleperf(QString ,ListenerThread::SignalType)));
+    connect(simpleperf,SIGNAL(signalToMainWindow(QString,SignalType)),
+            this,SLOT(slotReciveSimpleperf(QString,SignalType)));
     connect(simpleperf,SIGNAL(signalToMainWindow(QProcess::ProcessState)),
             this,SLOT(slotReciveSimpleperf(QProcess::ProcessState)));
     //cmd回车-> run button click
@@ -99,7 +98,8 @@ void MainWindow::slotReciveSimpleperf(QString msg,ListenerThread::SignalType sig
     }else if(signalType==ListenerThread::SignalType::ERROR_INFO){
         ui->textEdit->append(QString("<font color=\"#cc0000\">%1</font>").arg(msg));
     }else{
-        ui->textEdit->append(msg);
+        ui->textEdit->append(QString("<font style='font-size:16px; "
+                                     "color:green'>%1</font>").arg(msg));
     }
     return;
 }
@@ -114,6 +114,7 @@ void MainWindow::slotReciveSimpleperf(QProcess::ProcessState newState)
         m_statusbarMsg = "    Process Starting ";
     }else{
         m_statusbarMsg = "    Process Not Running ";
+        if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
     }
     ui->statusbar->showMessage(m_statusbarMsg);
 }
@@ -135,9 +136,11 @@ void MainWindow::on_pushButton_run_clicked()
         m_nativeCmdList << ui->lineEdit_cmd->text();
         completer->setModel(new QStringListModel(m_nativeCmdList,this));
     }
-    ui->textEdit->append(m_totalName+ui->lineEdit_cmd->text());
+//    if (ui->lineEdit_cmd->text()=="adb shell"){
+//        simpleperf->runCmdLine("~/test.sh");
+//    }
+    if(!simpleperf->listener->m_isSubConsoleOn) ui->textEdit->append(m_totalName+ui->lineEdit_cmd->text());
     simpleperf->runCmdLine(ui->lineEdit_cmd->text());
-    ui->lineEdit_cmd->clear();
 }
 
 void MainWindow::on_pushButton_devices_clicked()
@@ -193,7 +196,7 @@ void MainWindow::on_pushButton_flamegraph_clicked()
 {
     if(m_processState!=QProcess::ProcessState::NotRunning) return;
     ui->textEdit->append(m_totalName+"FlameGraph");
-    simpleperf->runflamegraph();
+    simpleperf->runFlamegraph();
 }
 
 void MainWindow::on_pushButton_doc_clicked()
@@ -205,11 +208,7 @@ void MainWindow::on_pushButton_doc_clicked()
 
 void MainWindow::on_pushButton_cts_clicked()
 {
-    qDebug()<< MY_TAG << "run cts";
-    QProcess *bash = new  QProcess();
-    bash->setProgram(TERMINAL);
-    bash->setArguments(QStringList() << "-c" << "ls");
-    bash->start();
+    xts->runCts();
 }
 
 void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1)

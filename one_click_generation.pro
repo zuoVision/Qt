@@ -26,14 +26,16 @@ SOURCES += \
     listenerthread.cpp \
     main.cpp \
     mainwindow.cpp \
-    simpleperf.cpp
+    simpleperf.cpp \
+    xts.cpp
 
 HEADERS += \
     document.h \
     fileoperation.h \
     listenerthread.h \
     mainwindow.h \
-    simpleperf.h
+    simpleperf.h \
+    xts.h
 
 FORMS += \
     document.ui \

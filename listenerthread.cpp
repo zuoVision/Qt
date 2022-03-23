@@ -1,8 +1,9 @@
 #include "listenerthread.h"
 #include <QDebug>
 
-
 #define MY_TAG "listenerthread"
+#define TERMINAL "/usr/bin/terminator"
+#define GNOME "/etc/gnome"
 
 ListenerThread::ListenerThread(/*QObject *parent*/)
 //QObject(parent)
@@ -28,12 +29,23 @@ void ListenerThread::run()
 {
     qDebug() << MY_TAG  <<"[run]"
              << QThread::currentThreadId();
-    initThread();
+    p = new QProcess();
+    initThread(p);
     while (true) {
         if(!m_cmd.isEmpty()){
             process();
         }
     }
+}
+
+void ListenerThread::openTerminal()
+{
+//    QProcess *bash = new  QProcess();
+//    bash->start(TERMINAL);
+//    bash->waitForStarted();
+//    bash->write("~/test.sh");    //向终端写入命令，注意尾部的“\n”不可省略
+//    bash->write("\n\r");
+    system("terminator");
 }
 
 
@@ -43,20 +55,19 @@ void ListenerThread::slotReciveProcessState(QProcess::ProcessState newState)
 }
 
 
-void ListenerThread::initThread()
+void ListenerThread::initThread(QProcess *processer)
 {   
     qDebug() << MY_TAG  <<"[InitThread]"
              << QThread::currentThreadId();
-    p = new QProcess();
-    p->start(BASH,QStringList() << "-c" << "whoami");    //hostname:41000966-26-1 username:zuozhe
-    p->waitForFinished();
-    m_userName = p->readAllStandardOutput().simplified()/*.append("$ ")*/;
-    p->start(BASH,QStringList()<< "-c" << "hostname");
-    p->waitForFinished();
-    m_hostName = p->readAllStandardOutput().simplified()/*.append("$ ")*/;
+    processer->start(BASH,QStringList() << "-c" << "whoami");    //hostname:41000966-26-1 username:zuozhe
+    processer->waitForFinished();
+    m_userName = processer->readAllStandardOutput().simplified()/*.append("$ ")*/;
+    processer->start(BASH,QStringList()<< "-c" << "hostname");
+    processer->waitForFinished();
+    m_hostName = processer->readAllStandardOutput().simplified()/*.append("$ ")*/;
     qDebug() <<MY_TAG <<m_userName<<m_hostName;
     qRegisterMetaType<QProcess::ProcessState>("QProcess::ProcessState");
-    connect(p,SIGNAL(stateChanged(QProcess::ProcessState)),
+    connect(processer,SIGNAL(stateChanged(QProcess::ProcessState)),
             this,SLOT(slotReciveProcessState(QProcess::ProcessState)));
 }
 
@@ -78,6 +89,15 @@ void ListenerThread::process()
     m_cmd.clear();
 }
 
+void ListenerThread::creatProcesser(QProcess *processer)
+{
+    processer->start(m_program,QStringList()<<"-c"<<"adb shell getprop ro.product.device");
+    processer->waitForFinished();
+    QString sig = processer->readAllStandardOutput();
+    qDebug()<<sig;
+    emit signalToSimpleperf(sig.append(":/ $ "));
+}
+
 void ListenerThread::slotReciveMainWindow(QStringList info)
 {
     qDebug()<<MY_TAG<<"[slotReciveSimpleperf] #Thread ID:"
@@ -90,13 +110,22 @@ void ListenerThread::slotReciveSimpleperf(QStringList info)
     qDebug() << MY_TAG  <<"[slotReciveSimpleperf]"
              << QThread::currentThreadId() << info
              << p->state();
-    if(info.isEmpty()){
-        emit signalToSimpleperf("cmd is empty");
+    if(info.isEmpty()||isExit(info)){
+
         return;
     }
-    if(isExit(info)){
-        return ;
-    }
+//    if(!m_isSubConsoleOn && info.contains("adb shell")){
+//        QProcess *as = new QProcess();
+//        creatProcesser(as);
+//        m_isSubConsoleOn=true;
+//        return;
+//    }
+//    if(m_isSubConsoleOn){
+//        m_cmd << info.first() << QString("adb shell ").append(info.last());
+//        emit signalToSimpleperf(info.last());
+//        qDebug()<< m_cmd;
+//        return;
+//    }
     m_cmd=info;
 
 

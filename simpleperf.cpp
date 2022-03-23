@@ -26,9 +26,9 @@ void Simpleperf::init_connect()
 {
     connect(this,SIGNAL(signalToListenerThread(QStringList)),
             listener,SLOT(slotReciveSimpleperf(QStringList)));
-    qRegisterMetaType<ListenerThread::SignalType>("ListenerThread::SignalType");
-    connect(listener,SIGNAL(signalToSimpleperf(QString,ListenerThread::SignalType)),
-            this,SLOT(slotReciveListener(QString,ListenerThread::SignalType)));
+    qRegisterMetaType<SignalType>("SignalType");
+    connect(listener,SIGNAL(signalToSimpleperf(QString,SignalType)),
+            this,SLOT(slotReciveListener(QString,SignalType)));
     connect(listener,SIGNAL(signalToSimpleperf(QProcess::ProcessState)),
             this,SLOT(slotReciveProcessState(QProcess::ProcessState)));
     connect(listener,SIGNAL(signalProcessFinished()),
@@ -37,8 +37,8 @@ void Simpleperf::init_connect()
 
 void Simpleperf::wait()
 {
-    time.start();
-    while(time.elapsed() < 180000) {            //等待时间流逝3min
+//    time.start();
+    while(true/*time.elapsed() < 180000*/) {            //等待时间流逝3min
         QCoreApplication::processEvents();   //处理事件
         if(m_isProcessFinished) {
             m_isProcessFinished = false;
@@ -67,7 +67,7 @@ void Simpleperf::runCmdLine(QString cmd)
 
 void Simpleperf::runAdbDevices(QString cmd)
 {
-
+    qDebug()<<"runAdbDevices";
     m_cmd << "-c" << cmd;
     emit signalToListenerThread(m_cmd);
     m_cmd.clear();
@@ -98,7 +98,7 @@ void Simpleperf::runSimpleperfStat(QString cmd)
 {
     m_cmd << "-c" << cmd;
     emit signalToListenerThread(m_cmd);
-
+    m_cmd.clear();
 }
 
 void Simpleperf::runSimpleperfRecord(QString cmd)
@@ -121,6 +121,8 @@ void Simpleperf::runSimpleperfRecord(QString cmd)
     emit signalToListenerThread(m_cmd);
     m_cmd.clear();
 
+    wait();
+    emit signalToMainWindow("Record Finished.");
 }
 
 void Simpleperf::runSimpleperfReport(QString cmd)
@@ -132,7 +134,7 @@ void Simpleperf::runSimpleperfReport(QString cmd)
     qDebug() <<MY_TAG << "[runSimpleperfReport] finished";
 }
 
-void Simpleperf::runflamegraph()
+void Simpleperf::runFlamegraph()
 {
     m_cmd <<"-c" << "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
     emit signalToListenerThread(m_cmd);
@@ -151,13 +153,16 @@ void Simpleperf::runflamegraph()
     }
 }
 
-void Simpleperf::slotReciveListener(QString msg,ListenerThread::SignalType signalType)
+void Simpleperf::runCts(QString cmd)
+{
+    m_cmd << "-c" << cmd;
+    qDebug()<<MY_TAG<<"runCts"<<m_cmd;
+    emit signalToListenerThread(m_cmd);
+}
+
+void Simpleperf::slotReciveListener(QString msg,SignalType signalType)
  {
-//    qDebug() << MY_TAG <<"[slotReciveListener]" << msg; 
-   qDebug() << MY_TAG <<"[slotReciveListener]" << signalType;
-    if(signalType == 1){
-        qDebug()<<"output infoxxxxxxxxxxxxx";
-    }
+    qDebug() << MY_TAG <<"[slotReciveListener]" << signalType;
     emit signalToMainWindow(msg,signalType);
 }
 
