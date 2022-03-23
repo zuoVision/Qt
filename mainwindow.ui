@@ -10,22 +10,139 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="font">
+   <font>
+    <family>Consolas</family>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>OneClick</string>
+  </property>
+  <property name="dockOptions">
+   <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_4">
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
+      <property name="font">
+       <font>
+        <family>Consolas</family>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
       <property name="currentIndex">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="tab_simpleperf">
+      <property name="tabsClosable">
+       <bool>false</bool>
+      </property>
+      <widget class="QWidget" name="tab_adb">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Command</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_7">
-        <item row="0" column="0" colspan="2">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="3" column="0">
+         <widget class="QGroupBox" name="groupBox_git">
+          <property name="title">
+           <string>Git</string>
+          </property>
+          <widget class="QPushButton" name="pushButton_doc">
+           <property name="geometry">
+            <rect>
+             <x>670</x>
+             <y>40</y>
+             <width>75</width>
+             <height>23</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Doc</string>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QGroupBox" name="groupBox_linux">
+          <property name="title">
+           <string>Linux</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QGroupBox" name="groupBox_adb">
+          <property name="title">
+           <string>ADB</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pushButton_devices">
+             <property name="text">
+              <string>Devices</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_root">
+             <property name="text">
+              <string>Root</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pushButton_remount">
+             <property name="text">
+              <string>Remount</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="pushButton_oemunlock">
+             <property name="text">
+              <string>OemUnlock</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <widget class="QPushButton" name="pushButton_2">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="6">
+            <widget class="QPushButton" name="pushButton_3">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="7">
+            <widget class="QPushButton" name="pushButton_4">
+             <property name="text">
+              <string>PushButton</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="0" column="0">
          <widget class="QFrame" name="frame">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -87,6 +204,7 @@
                <widget class="QComboBox" name="comboBox_completeregular">
                 <property name="font">
                  <font>
+                  <family>Consolas</family>
                   <pointsize>9</pointsize>
                  </font>
                 </property>
@@ -111,6 +229,7 @@
                <widget class="QCheckBox" name="checkBox_savecmd">
                 <property name="font">
                  <font>
+                  <family>Consolas</family>
                   <pointsize>9</pointsize>
                  </font>
                 </property>
@@ -130,6 +249,7 @@
                <widget class="QLabel" name="label">
                 <property name="font">
                  <font>
+                  <family>Consolas</family>
                   <pointsize>9</pointsize>
                  </font>
                 </property>
@@ -144,96 +264,32 @@
           </layout>
          </widget>
         </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_simpleperf">
+       <attribute name="title">
+        <string>Simpleperf</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_8">
         <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox_adb">
-          <property name="title">
-           <string>ADB</string>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="2" column="0">
-            <widget class="QPushButton" name="pushButton_remount">
-             <property name="text">
-              <string>Remount</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QPushButton" name="pushButton_devices">
-             <property name="text">
-              <string>Devices</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="pushButton_root">
-             <property name="text">
-              <string>Root</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QPushButton" name="pushButton_oemunlock">
-             <property name="text">
-              <string>OemUnlock</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="1" rowspan="2">
-         <widget class="QScrollArea" name="scrollArea">
-          <property name="widgetResizable">
-           <bool>true</bool>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
           </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>637</width>
-             <height>384</height>
-            </rect>
-           </property>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="0" column="0">
-             <widget class="QTextEdit" name="textEdit">
-              <property name="cursor" stdset="0">
-               <cursorShape>IBeamCursor</cursorShape>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </widget>
+         </spacer>
         </item>
-        <item row="2" column="0">
+        <item row="0" column="0">
          <widget class="QGroupBox" name="groupBox_simpleperf">
           <property name="title">
            <string>Simpleperf</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
-           <item row="2" column="0">
-            <widget class="QPushButton" name="pushButton_report">
-             <property name="text">
-              <string>Report</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="pushButton_record">
-             <property name="text">
-              <string>Record</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QPushButton" name="pushButton_flamegraph">
-             <property name="text">
-              <string>FlameGraph</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="0">
             <widget class="QPushButton" name="pushButton_stat">
              <property name="text">
@@ -241,27 +297,61 @@
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QPushButton" name="pushButton_doc">
+           <item row="0" column="1">
+            <widget class="QPushButton" name="pushButton_record">
              <property name="text">
-              <string>Doc</string>
+              <string>Record</string>
              </property>
             </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QPushButton" name="pushButton_report">
+             <property name="text">
+              <string>Report</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="3">
+            <widget class="QPushButton" name="pushButton_flamegraph">
+             <property name="text">
+              <string>FlameGraph</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="4">
+            <widget class="QPushButton" name="pushButton_5">
+             <property name="text">
+              <string>One Click</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="5">
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
           </layout>
          </widget>
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tab_cts">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>XTS</string>
        </attribute>
        <widget class="QPushButton" name="pushButton_cts">
         <property name="geometry">
          <rect>
-          <x>30</x>
-          <y>50</y>
+          <x>10</x>
+          <y>10</y>
           <width>89</width>
           <height>25</height>
          </rect>
@@ -281,11 +371,42 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>28</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dockWidget_output">
+   <property name="floating">
+    <bool>false</bool>
+   </property>
+   <property name="features">
+    <set>QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::BottomDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string notr="true">输出</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_4">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QTextEdit" name="textEdit">
+       <property name="cursor" stdset="0">
+        <cursorShape>IBeamCursor</cursorShape>
+       </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhMultiLine</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
  </widget>
  <resources/>
  <connections/>

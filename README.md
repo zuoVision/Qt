@@ -49,3 +49,7 @@ Qt project
 * 优化cmd database存储方案
 * 完善native cmd
 * 新增补全方式选项等
+* 新增process处理完成后发送信号的类型
+
+2022年3月23日
+* 新增dockwidget显示输出内容

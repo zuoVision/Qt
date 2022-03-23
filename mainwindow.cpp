@@ -47,8 +47,7 @@ MainWindow::~MainWindow()
 void MainWindow::initUi()
 {
 //    ui->checkBox_savecmd->setCheckState(Qt::Checked);
-    ui->tabWidget->setTabText(0,"simpleperf");
-    ui->tabWidget->setTabText(1,"CTS");
+
     ui->statusbar->showMessage(m_statusbarMsg);
 }
 
