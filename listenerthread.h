@@ -53,7 +53,7 @@ signals:
     void signalProcessFinished();
 
 private slots:
-    void slotReciveMainWindow(QStringList info);
+    void slotReciveXts(QStringList info);
     void slotReciveSimpleperf(QStringList info);
     void slotReciveProcessState(QProcess::ProcessState newState);
 };

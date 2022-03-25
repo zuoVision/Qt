@@ -47,8 +47,10 @@ MainWindow::~MainWindow()
 void MainWindow::initUi()
 {
 //    ui->checkBox_savecmd->setCheckState(Qt::Checked);
-
+    setWindowIcon(QIcon(":/icon/icon/superman.ico"));
     ui->statusbar->showMessage(m_statusbarMsg);
+    ui->label_simpleperfdoc->setText(tr("<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"));
+
 }
 
 void MainWindow::initEnvironment()
@@ -77,6 +79,7 @@ void MainWindow::initConnect()
     //cmd回车-> run button click
     connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
             ui->pushButton_run,SLOT(click()));
+    connect(ui->textEdit,SIGNAL(textChanged()),this,SLOT(moveCursorToEnd()));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
@@ -116,6 +119,14 @@ void MainWindow::slotReciveSimpleperf(QProcess::ProcessState newState)
         if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
     }
     ui->statusbar->showMessage(m_statusbarMsg);
+}
+
+void MainWindow::moveCursorToEnd()
+{
+    //移动光标到末尾
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    ui->textEdit->setTextCursor(cursor);
 }
 
 
@@ -225,3 +236,4 @@ void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1
     }
     completer->setFilterMode(mf);
 }
+

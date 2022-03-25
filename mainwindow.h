@@ -64,6 +64,7 @@ private slots:
     void slotReciveDocument();
     void slotReciveSimpleperf(QString msg,ListenerThread::SignalType signalType);
     void slotReciveSimpleperf(QProcess::ProcessState newState);
+    void moveCursorToEnd();
     void on_pushButton_run_clicked();
 
     void on_pushButton_devices_clicked();

@@ -3,4 +3,7 @@
         <file>native_cmd_list.txt</file>
         <file>README.md</file>
     </qresource>
+    <qresource prefix="/icon">
+        <file>icon/superman.ico</file>
+    </qresource>
 </RCC>

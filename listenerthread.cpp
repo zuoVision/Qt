@@ -98,10 +98,11 @@ void ListenerThread::creatProcesser(QProcess *processer)
     emit signalToSimpleperf(sig.append(":/ $ "));
 }
 
-void ListenerThread::slotReciveMainWindow(QStringList info)
+void ListenerThread::slotReciveXts(QStringList info)
 {
-    qDebug()<<MY_TAG<<"[slotReciveSimpleperf] #Thread ID:"
+    qDebug()<<MY_TAG<<"[slotReciveXts] #Thread ID:"
            <<QThread::currentThreadId() << info;
+    m_cmd=info;
 }
 
 
@@ -111,7 +112,6 @@ void ListenerThread::slotReciveSimpleperf(QStringList info)
              << QThread::currentThreadId() << info
              << p->state();
     if(info.isEmpty()||isExit(info)){
-
         return;
     }
 //    if(!m_isSubConsoleOn && info.contains("adb shell")){
