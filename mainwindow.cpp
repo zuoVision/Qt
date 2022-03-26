@@ -41,8 +41,15 @@ void MainWindow::initUi()
 //    ui->checkBox_savecmd->setCheckState(Qt::Checked);
     setWindowIcon(QIcon(":/icon/icon/superman.ico"));
     ui->statusbar->showMessage(m_statusbarMsg);
+    ui->textEdit->setReadOnly(true);
     ui->label_simpleperfdoc->setText(tr("<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"));
 
+    ui->tableWidget_xts->verticalHeader()->show();
+    ui->tableWidget_xts->horizontalHeader()->show();
+    ui->tableWidget_xts->setHorizontalHeaderLabels(QStringList()<<"testcases"<<"resolution");
+    ui->tableWidget_xts->horizontalHeader()->setStyleSheet("QHeaderView::section{background:lightgreen;}");
+    ui->tableWidget_xts->setSortingEnabled(true);
+    ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//禁止编辑
 }
 
 void MainWindow::initEnvironment()
@@ -58,10 +65,16 @@ void MainWindow::initEnvironment()
     fileOperation->loadDataBase(DATABASE,&m_nativeCmdList);
     completer->setModel(new QStringListModel(m_nativeCmdList,this));
 //    qDebug()<<MY_TAG<<"[native cmd datebase]"<<m_nativeCmdList;
+
+
 }
 
 void MainWindow::initConnect()
 {
+    //help
+    connect(ui->actionDocument,SIGNAL(triggered()),
+            this,SLOT(slo_openDocument()));
+
     //commonCommand
     connect(ccd,SIGNAL(sig_sendToMainWindow(QString)),
             this,SLOT(slo_reciveMessage(QString)));
@@ -110,7 +123,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::slotReciveDocument()
 {
-    ui->pushButton_doc->setEnabled(true);
+    ui->actionDocument->setEnabled(true);
 }
 
 void MainWindow::slo_reciveMessage(QString msg)
@@ -134,10 +147,14 @@ void MainWindow::slo_reciveMessage(QProcess::ProcessState state)
 
 void MainWindow::slo_showCtsSuite()
 {
-
     ui->comboBox_ctssuite->addItems(xts->m_ctsSuite);
+}
 
-
+void MainWindow::slo_openDocument()
+{
+    m_doc.show();
+    m_doc.onLoadDocument(":/config/README.mk");
+    ui->actionDocument->setEnabled(false);
 }
 
 void MainWindow::moveCursorToEnd()
@@ -202,16 +219,13 @@ void MainWindow::on_pushButton_flamegraph_clicked()
     simpleperf->runFlamegraph();
 }
 
-void MainWindow::on_pushButton_doc_clicked()
+void MainWindow::on_pushButton_runcts_clicked()
 {
-    m_doc.show();
-    m_doc.onLoadDocument(":/config/README.mk");
-    ui->pushButton_doc->setEnabled(false);
-}
-
-void MainWindow::on_pushButton_cts_clicked()
-{
-    xts->runCts();
+    QString m_ctsSuite      = ui->comboBox_ctssuite->currentText();
+    QString m_ctsCommand    = ui->comboBox_ctscommand->currentText();
+    QString m_ctsModule     = ui->comboBox_ctsmodule->currentText();
+    QString m_ctsTest       = ui->lineEdit_ctstest->text();
+    xts->runCts(m_ctsSuite,m_ctsCommand,m_ctsModule,m_ctsTest);
 }
 
 void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1)
@@ -230,3 +244,8 @@ void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1
     completer->setFilterMode(mf);
 }
 
+void MainWindow::on_pushButton_loadctssuite_clicked()
+{
+   ui->comboBox_ctssuite->insertItem(-1,m_doc.openFile());
+   ui->comboBox_ctssuite->setCurrentIndex(0);
+}

@@ -17,7 +17,7 @@ public:
 public:
     void init_connect();
     void findCtsSuite();
-    void runCts();
+    void runCts(const QString arg1,const QString arg2,const QString arg3,const QString arg4);
     void stopProcessor();
 
 public:

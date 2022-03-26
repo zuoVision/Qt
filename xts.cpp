@@ -4,7 +4,7 @@
 
 #define MY_TAG          "XTS"
 #define CTSSUITE        "~/XTS/Android_R/android-cts/tools/cts-tradefed "
-#define CTRCOMMAND      "run cts-dev "
+#define CTSCOMMAND      "run cts-dev "
 #define CTSMODULE       "-m CtsCameraTestCases "
 #define CTSTEST         "-t android.hardware.camera2.cts.RobustnessTest#testSimultaneousTriggers"
 #define FINDCTSSUITE    "find ~/ -iname cts-tradefed"
@@ -65,7 +65,7 @@ void Xts::findCtsSuite()
 void Xts::slo_reciveOutput(QString output)
 {
     qDebug() << MY_TAG << "slo_reciveOutput" << output;
-    if (output.contains("tools/cts-tradefed")){
+    if (output.endsWith("tools/cts-tradefed")){
         m_ctsSuite << output.split("\n");
         qDebug() << m_ctsSuite;
         emit sig_findCtsSuite();
@@ -94,18 +94,24 @@ void Xts::slo_reciveState(QProcess::ProcessState state)
         emit sig_sendToMainWindow("Done");
 }
 
-void Xts::runCts()
+void Xts::runCts(const QString arg1, const QString arg2, const QString arg3, const QString arg4)
 {
-//    qDebug() << MY_TAG << "runCts";
-
+        qDebug() << MY_TAG << "runCts"
+                 << arg1 <<arg2 <<arg3 <<arg4;
     if (xts_cpt->processor->state() != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
+    QString ctssuite;
+    QString ctscmd;
+    QString ctsmodule;
+    QString ctstest;
 
-    QString ctssuite    = CTSSUITE;
-    QString ctscmd      = CTRCOMMAND;
-    QString ctsmodule   = CTSMODULE;
-    QString ctstest     = CTSTEST;
-    QString cmd         = ctssuite+ctscmd+ctsmodule+ctstest;
+    !arg1.isEmpty() ? ctssuite = arg1                           : CTSSUITE;
+    !arg2.isEmpty() ? ctscmd = QString(" ").append(arg2)        : CTSCOMMAND;
+    !arg3.isEmpty() ? ctsmodule = QString(" -m ").append(arg3)  : CTSMODULE;
+    !arg4.isEmpty() ? ctstest = QString(" -t ").append(arg4)    : " xx ";
+
+    QString cmd = ctssuite+ctscmd+ctsmodule+ctstest;
+    qDebug()<<MY_TAG<<cmd;
     emit sig_sendToMainWindow(xts_cpt->m_userName+cmd);
     emit processCommand(cmd);
 }

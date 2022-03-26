@@ -23,7 +23,7 @@ Document::~Document()
 
 void Document::init()
 {
-    filePath = "README.md";
+    m_filePath = "README.md";
 }
 
 void Document::onLoadDocument(QString doc)
@@ -48,6 +48,19 @@ void Document::onLoadDocument(QString doc)
     file.close();
 }
 
+QString Document::openFile()
+{
+    QFileDialog *fd = new QFileDialog(this);
+    QString filePath;
+    fd->setWindowTitle("选择文件");
+    fd->setNameFilter("");
+    fd->setViewMode(QFileDialog::Detail);
+    if(fd->exec() == QDialog::Accepted){
+        filePath = fd->selectedFiles()[0];
+    }
+    return filePath;
+}
+
 void Document::closeEvent(QCloseEvent *)
 {
     emit closed();
@@ -55,20 +68,14 @@ void Document::closeEvent(QCloseEvent *)
 
 void Document::on_pushButton_open_clicked()
 {
-    QFileDialog *fd = new QFileDialog(this);
-    fd->setWindowTitle("选择文件");
-    fd->setNameFilter("");
-    fd->setViewMode(QFileDialog::Detail);
-    if(fd->exec() == QDialog::Accepted){
-        filePath = fd->selectedFiles()[0];
-        onLoadDocument(filePath);
-    }
+    m_filePath = openFile();
+    onLoadDocument(m_filePath);
 }
 
 void Document::on_pushButton_save_clicked()
 {
 //    qDebug()<<filePath;
-    QFile myfile(filePath);//创建一个输出文件的文档
+    QFile myfile(m_filePath);//创建一个输出文件的文档
     if (myfile.open(QFile::WriteOnly|QFile::Text))//注意WriteOnly是往文本中写入的时候用，ReadOnly是在读文本中内容的时候用，Truncate表示将原来文件中的内容清空
     {
         QTextStream out(&myfile);

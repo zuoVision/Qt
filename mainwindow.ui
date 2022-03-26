@@ -43,7 +43,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="tabsClosable">
        <bool>false</bool>
@@ -185,8 +185,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>662</width>
-             <height>347</height>
+             <width>657</width>
+             <height>259</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -238,26 +238,6 @@
                <string>Git</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_9">
-               <item row="0" column="5">
-                <widget class="QPushButton" name="pushButton_doc">
-                 <property name="text">
-                  <string>Doc</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="6">
-                <spacer name="horizontalSpacer_4">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
                <item row="0" column="0">
                 <widget class="QPushButton" name="pushButton_7">
                  <property name="enabled">
@@ -278,13 +258,26 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="4">
-                <widget class="QPushButton" name="pushButton_10">
+               <item row="0" column="5">
+                <spacer name="horizontalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="pushButton_8">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>stash</string>
+                  <string>status</string>
                  </property>
                 </widget>
                </item>
@@ -298,13 +291,13 @@
                  </property>
                 </widget>
                </item>
-               <item row="0" column="1">
-                <widget class="QPushButton" name="pushButton_8">
+               <item row="0" column="4">
+                <widget class="QPushButton" name="pushButton_10">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
                  <property name="text">
-                  <string>status</string>
+                  <string>stash</string>
                  </property>
                 </widget>
                </item>
@@ -315,8 +308,8 @@
              <widget class="QGroupBox" name="groupBox_adb">
               <property name="font">
                <font>
-                <family>Noto Sans CJK SC</family>
-                <pointsize>11</pointsize>
+                <family>Consolas</family>
+                <pointsize>9</pointsize>
                </font>
               </property>
               <property name="title">
@@ -361,6 +354,12 @@
                </item>
                <item row="0" column="3">
                 <widget class="QPushButton" name="pushButton_oemunlock">
+                 <property name="font">
+                  <font>
+                   <family>Consolas</family>
+                   <pointsize>9</pointsize>
+                  </font>
+                 </property>
                  <property name="text">
                   <string>oemUnlock</string>
                  </property>
@@ -368,6 +367,12 @@
                </item>
                <item row="0" column="0">
                 <widget class="QPushButton" name="pushButton_devices">
+                 <property name="font">
+                  <font>
+                   <family>Consolas</family>
+                   <pointsize>9</pointsize>
+                  </font>
+                 </property>
                  <property name="text">
                   <string>devices</string>
                  </property>
@@ -385,6 +390,12 @@
                </item>
                <item row="0" column="1">
                 <widget class="QPushButton" name="pushButton_root">
+                 <property name="font">
+                  <font>
+                   <family>Consolas</family>
+                   <pointsize>9</pointsize>
+                  </font>
+                 </property>
                  <property name="text">
                   <string>root</string>
                  </property>
@@ -402,6 +413,12 @@
                </item>
                <item row="0" column="2">
                 <widget class="QPushButton" name="pushButton_remount">
+                 <property name="font">
+                  <font>
+                   <family>Consolas</family>
+                   <pointsize>9</pointsize>
+                  </font>
+                 </property>
                  <property name="text">
                   <string>remount</string>
                  </property>
@@ -434,8 +451,8 @@
                  </property>
                  <property name="font">
                   <font>
-                   <family>Noto Sans CJK SC</family>
-                   <pointsize>11</pointsize>
+                   <family>Consolas</family>
+                   <pointsize>9</pointsize>
                    <kerning>true</kerning>
                   </font>
                  </property>
@@ -486,90 +503,109 @@
           <property name="title">
            <string>Simpleperf</string>
           </property>
-          <widget class="QPushButton" name="pushButton_stat">
-           <property name="geometry">
-            <rect>
-             <x>14</x>
-             <y>50</y>
-             <width>80</width>
-             <height>31</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Stat</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton_record">
-           <property name="geometry">
-            <rect>
-             <x>100</x>
-             <y>50</y>
-             <width>80</width>
-             <height>31</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Record</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton_report">
-           <property name="geometry">
-            <rect>
-             <x>186</x>
-             <y>50</y>
-             <width>80</width>
-             <height>31</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>Report</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton_flamegraph">
-           <property name="geometry">
-            <rect>
-             <x>272</x>
-             <y>50</y>
-             <width>94</width>
-             <height>31</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>FlameGraph</string>
-           </property>
-          </widget>
-          <widget class="QPushButton" name="pushButton_5">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-           <property name="geometry">
-            <rect>
-             <x>372</x>
-             <y>50</y>
-             <width>80</width>
-             <height>31</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>One Click</string>
-           </property>
-          </widget>
-          <widget class="QLabel" name="label_simpleperfdoc">
-           <property name="geometry">
-            <rect>
-             <x>10</x>
-             <y>330</y>
-             <width>141</width>
-             <height>31</height>
-            </rect>
-           </property>
-           <property name="text">
-            <string>documentation link</string>
-           </property>
-           <property name="openExternalLinks">
-            <bool>true</bool>
-           </property>
-          </widget>
+          <layout class="QGridLayout" name="gridLayout_12">
+           <item row="0" column="0">
+            <widget class="QScrollArea" name="scrollArea_2">
+             <property name="widgetResizable">
+              <bool>true</bool>
+             </property>
+             <widget class="QWidget" name="scrollAreaWidgetContents_2">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>654</width>
+                <height>304</height>
+               </rect>
+              </property>
+              <widget class="QPushButton" name="pushButton_flamegraph">
+               <property name="geometry">
+                <rect>
+                 <x>270</x>
+                 <y>40</y>
+                 <width>94</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>FlameGraph</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_stat">
+               <property name="geometry">
+                <rect>
+                 <x>12</x>
+                 <y>40</y>
+                 <width>80</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Stat</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_record">
+               <property name="geometry">
+                <rect>
+                 <x>98</x>
+                 <y>40</y>
+                 <width>80</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Record</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_report">
+               <property name="geometry">
+                <rect>
+                 <x>184</x>
+                 <y>40</y>
+                 <width>80</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Report</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pushButton_5">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>370</x>
+                 <y>40</y>
+                 <width>80</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>One Click</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_simpleperfdoc">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>240</y>
+                 <width>131</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>documentation link</string>
+               </property>
+               <property name="openExternalLinks">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </widget>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -578,67 +614,288 @@
        <attribute name="title">
         <string>XTS</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="2" column="0">
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+       <layout class="QGridLayout" name="gridLayout_13">
+        <item row="0" column="0">
+         <widget class="QScrollArea" name="scrollArea_3">
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>583</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="2" column="2">
-         <widget class="QPushButton" name="pushButton_cts">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>run cts</string>
-          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_3">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>674</width>
+             <height>338</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0" colspan="2">
+             <widget class="QWidget" name="widget_2" native="true">
+              <layout class="QGridLayout" name="gridLayout_14">
+               <item row="6" column="0">
+                <spacer name="horizontalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="6" column="1">
+                <widget class="QPushButton" name="pushButton_runcts">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>run cts</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                 <item>
+                  <widget class="QLabel" name="label_ctssuite">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>60</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>suite:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="comboBox_ctssuite"/>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_loadctssuite">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="text">
+                    <string>load</string>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="4" column="0" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_3">
+                 <item>
+                  <widget class="QLabel" name="label_ctstest">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>60</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>test:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_ctstest"/>
+                 </item>
+                </layout>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_2">
+                 <item>
+                  <widget class="QLabel" name="label_ctsmodule">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Fixed" vsizetype="Maximum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>60</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>module:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="comboBox_ctsmodule">
+                   <item>
+                    <property name="text">
+                     <string>CtsCameraTestCases</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>...</string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="1" column="0" colspan="2">
+                <layout class="QHBoxLayout" name="horizontalLayout_4">
+                 <item>
+                  <widget class="QLabel" name="label_ctscommand">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>60</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>command:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QComboBox" name="comboBox_ctscommand">
+                   <item>
+                    <property name="text">
+                     <string>run cts-dev</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>run cts</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>l m</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>l s</string>
+                    </property>
+                   </item>
+                   <item>
+                    <property name="text">
+                     <string>retry --retry </string>
+                    </property>
+                   </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QGroupBox" name="groupBox_ctsresult">
+              <property name="title">
+               <string>result</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_15">
+               <item row="0" column="0">
+                <widget class="QPushButton" name="pushButton_log">
+                 <property name="text">
+                  <string>log</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="pushButton_result">
+                 <property name="text">
+                  <string>result</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <spacer name="horizontalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="1" column="0" colspan="3">
+                <widget class="QTableWidget" name="tableWidget_xts">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="rowCount">
+                  <number>5</number>
+                 </property>
+                 <property name="columnCount">
+                  <number>2</number>
+                 </property>
+                 <attribute name="horizontalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderCascadingSectionResizes">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>300</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>false</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <row/>
+                 <row/>
+                 <row/>
+                 <row/>
+                 <row/>
+                 <column/>
+                 <column/>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
-        </item>
-        <item row="0" column="0" colspan="3">
-         <widget class="QWidget" name="widget_2" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout">
-           <item>
-            <widget class="QLabel" name="label_ctssuite">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text">
-              <string>cts suite:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="comboBox_ctssuite"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -652,9 +909,29 @@
      <x>0</x>
      <y>0</y>
      <width>718</width>
-     <height>28</height>
+     <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>help</string>
+    </property>
+    <widget class="QMenu" name="menuContact_me">
+     <property name="title">
+      <string>Contact me</string>
+     </property>
+     <widget class="QMenu" name="menuzhe_zuo_tcl_com">
+      <property name="title">
+       <string>zhe.zuo@tcl.com</string>
+      </property>
+     </widget>
+     <addaction name="menuzhe_zuo_tcl_com"/>
+    </widget>
+    <addaction name="actionDocument"/>
+    <addaction name="menuContact_me"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="dockWidget_output">
@@ -688,6 +965,21 @@
     </layout>
    </widget>
   </widget>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionDocument">
+   <property name="text">
+    <string>Document</string>
+   </property>
+  </action>
+  <action name="actioncopy">
+   <property name="text">
+    <string>copy</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

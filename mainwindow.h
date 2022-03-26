@@ -41,6 +41,12 @@ public:
     QCompleter      *completer;
     FileOperation   *fileOperation = new FileOperation(this);
 
+public:
+//    QString         m_ctsSuite;
+//    QString         m_ctsCommand;
+//    QString         m_ctsModule;
+//    QString         m_ctsTest;
+
 private:
     Ui::MainWindow *ui;
 
@@ -51,6 +57,8 @@ protected:
     QProcess::ProcessState      m_processState=QProcess::ProcessState::NotRunning;
     QString                     m_statusbarMsg="Process Not Running";
     Document                    m_doc;
+
+protected:
     void initUi();
     void initEnvironment();
     void initConnect();
@@ -64,6 +72,7 @@ private slots:
     void slo_reciveMessage(QString msg);
     void slo_reciveMessage(QProcess::ProcessState state);
     void slo_showCtsSuite();
+    void slo_openDocument();
     void moveCursorToEnd();
     void on_pushButton_run_clicked();
 
@@ -76,9 +85,10 @@ private slots:
     void on_pushButton_record_clicked();
     void on_pushButton_report_clicked();
     void on_pushButton_flamegraph_clicked();
-    void on_pushButton_doc_clicked();
 
-    void on_pushButton_cts_clicked();
+
+    void on_pushButton_runcts_clicked();
     void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
+    void on_pushButton_loadctssuite_clicked();
 };
 #endif // MAINWINDOW_H

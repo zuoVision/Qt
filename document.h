@@ -17,8 +17,12 @@ public:
     ~Document();
     void init();
 
-    QString filePath;
-    void onLoadDocument(QString doc);
+
+    void    onLoadDocument(QString doc);
+    QString openFile();
+
+public:
+    QString m_filePath;
 
 private:
     Ui::Document *ui;
