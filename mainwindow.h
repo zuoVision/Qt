@@ -19,7 +19,7 @@
 #include "simpleperf.h"
 #include "fileoperation.h"
 #include "xts.h"
-
+#include "commoncommand.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,13 +34,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     QString     m_userName;
-    QString     m_hostName;
-    QString     m_totalName;
 
-    Simpleperf  *simpleperf = new Simpleperf();
-    Xts         *xts = new Xts();
-    QCompleter  *completer;
-    FileOperation *fileOperation = new FileOperation(this);
+    CommonCommand   *ccd = new CommonCommand();
+    Simpleperf      *simpleperf = new Simpleperf();
+    Xts             *xts = new Xts(this);
+    QCompleter      *completer;
+    FileOperation   *fileOperation = new FileOperation(this);
 
 private:
     Ui::MainWindow *ui;
@@ -62,8 +61,9 @@ signals:
 
 private slots:
     void slotReciveDocument();
-    void slotReciveSimpleperf(QString msg,ListenerThread::SignalType signalType);
-    void slotReciveSimpleperf(QProcess::ProcessState newState);
+    void slo_reciveMessage(QString msg);
+    void slo_reciveMessage(QProcess::ProcessState state);
+    void slo_showCtsSuite();
     void moveCursorToEnd();
     void on_pushButton_run_clicked();
 

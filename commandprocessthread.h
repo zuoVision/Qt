@@ -3,31 +3,46 @@
 
 #include <QProcess>
 #include <QThread>
-#include <QVector>
 
-class CommandProcessThread : public QThread
+class CommandProcessThread : public QObject
 {
     Q_OBJECT
 public:
-    CommandProcessThread();
-    void createProcessor();
+    CommandProcessThread(QObject *parent=nullptr);
+    ~CommandProcessThread();
 
 private:
-    void run() override;
-    void process();
+    void init();
+    void uninit();
+    void init_connect();
+
 
 public:
-    QProcess *p1;
-    QProcess *p2;
-    QVector<QProcess*> processors;
+    QProcess                *processor;
+    QProcess::ProcessState  m_processState;
+    QString                 m_userName;
+//    QString                 m_hostName;
+    QString                 m_output;
+    QString                 m_error;
+
+
 private:
-
-
+    bool m_flag=false;
 
 signals:
+    void sig_sendOutput(QString ouput);
+    void sig_sendError(QString error);
+    void sig_sendState(QProcess::ProcessState state);
+    void sig_sendInfo(QString info);
 
 public slots:
-    void printOutput();
+    void process(QString cmd);
+    void process(QString cmd,unsigned long secs);
+    void stopProcessor();
+    void exitProcessor();
+    void createProcessor();
+    void slo_processAllMsg();
+    void slo_processState(QProcess::ProcessState state);
 };
 
 #endif // COMMANDPROCESSTHREAD_H

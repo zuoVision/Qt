@@ -22,6 +22,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     commandprocessthread.cpp \
+    commoncommand.cpp \
     document.cpp \
     fileoperation.cpp \
     listenerthread.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
 
 HEADERS += \
     commandprocessthread.h \
+    commoncommand.h \
     document.h \
     fileoperation.h \
     listenerthread.h \

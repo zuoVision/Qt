@@ -1,40 +1,33 @@
-#ifndef XTS_H
-#define XTS_H
+#ifndef COMMONCOMMAND_H
+#define COMMONCOMMAND_H
 
 #include <QObject>
 
-#include "listenerthread.h"
 #include "commandprocessthread.h"
 
-
-class Xts : public QObject
+class CommonCommand : public QObject
 {
     Q_OBJECT
 public:
-    explicit Xts(QObject *parent = nullptr);
-    ~Xts();
+    explicit CommonCommand(QObject *parent = nullptr);
+    ~CommonCommand();
 
-public:
+    void init();
+    void uninit();
     void init_connect();
-    void findCtsSuite();
-    void runCts();
+    void runCommand(const QString cmd);
     void stopProcessor();
 
 public:
-    QThread                 *xts_Thread;
-    CommandProcessThread    *xts_cpt;
-
-    QStringList             m_ctsSuite;
+    QThread *ccd_Thread;
+    CommandProcessThread *ccd_cpt;
 
 signals:
     void start();
-    void processCommand(QString cmd);
-    void processCommand(QString cmd,unsigned long secs);
+    void processCommand(QString);
     void stop();
-    void exit();
     void sig_sendToMainWindow(QString);
     void sig_sendToMainWindow(QProcess::ProcessState);
-    void sig_findCtsSuite();
 
 public slots:
     void slo_reciveOutput(QString output);
@@ -43,4 +36,4 @@ public slots:
     void slo_reciveState(QProcess::ProcessState state);
 };
 
-#endif // XTS_H
+#endif // COMMONCOMMAND_H

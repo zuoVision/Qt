@@ -8,102 +8,92 @@
 
 #define MY_TAG "simpleperf"
 
+#define SIMPLEPERFSTAT   "pwd"
+#define SIMPLEPERFRECORD "python scripts/app_profiler.py -p com.tcl.camera"
+#define SIMPLEPERFREPORT "python scripts/report_sample.py > out.perf"
+
+
 Simpleperf::Simpleperf(QObject *parent):
 QObject(parent)
 {
-    //实例化监听进程
-//    listenerThread = new QThread();
-    listener = new ListenerThread();
+    qDebug() << MY_TAG << "Simpleperf" <<QThread::currentThreadId();
+    sim_Thread = new QThread(this);
+    sim_cpt = new CommandProcessThread();
     init_connect();
-    listener->start();
-//    listener->moveToThread(listenerThread);
-//    listenerThread->start();
-//    emit signalToListenerInitThread();
+    sim_cpt->moveToThread(sim_Thread);
+    sim_Thread->start();
+    emit start();
 
 }
 
+Simpleperf::~Simpleperf()
+{
+    qDebug() << MY_TAG << "~Simpleperf +";
+    sim_Thread->exit(0);
+    delete sim_cpt;
+    delete sim_Thread;
+    qDebug() << MY_TAG << "~Simpleperf -";
+}
 void Simpleperf::init_connect()
 {
-    connect(this,SIGNAL(signalToListenerThread(QStringList)),
-            listener,SLOT(slotReciveSimpleperf(QStringList)));
-    qRegisterMetaType<SignalType>("SignalType");
-    connect(listener,SIGNAL(signalToSimpleperf(QString,SignalType)),
-            this,SLOT(slotReciveListener(QString,SignalType)));
-    connect(listener,SIGNAL(signalToSimpleperf(QProcess::ProcessState)),
-            this,SLOT(slotReciveProcessState(QProcess::ProcessState)));
-    connect(listener,SIGNAL(signalProcessFinished()),
-            this,SLOT(slotProcessfinished()));
+    connect(this,SIGNAL(start()),
+            sim_cpt,SLOT(createProcessor()));
+    connect(this,SIGNAL(processCommand(QString)),
+            sim_cpt,SLOT(process(QString)));
+    connect(this,SIGNAL(stop()),
+            sim_cpt,SLOT(stopProcessor()));
+    connect(sim_cpt,SIGNAL(sig_sendOutput(QString)),
+            this,SLOT(slo_reciveOutput(QString)));
+    connect(sim_cpt,SIGNAL(sig_sendError(QString)),
+            this,SLOT(slo_reciveError(QString)));
+    connect(sim_cpt,SIGNAL(sig_sendInfo(QString)),
+            this,SLOT(slo_reciveInfo(QString)));
+    connect(sim_cpt,SIGNAL(sig_sendState(QProcess::ProcessState)),
+            this,SLOT(slo_reciveState(QProcess::ProcessState)));
 }
 
-void Simpleperf::wait()
+void Simpleperf::slo_reciveOutput(QString output)
 {
-//    time.start();
-    while(true/*time.elapsed() < 180000*/) {            //等待时间流逝3min
-        QCoreApplication::processEvents();   //处理事件
-        if(m_isProcessFinished) {
-            m_isProcessFinished = false;
-            return;
-        }
-    }
+    qDebug() << MY_TAG << "slo_reciveOutput" << output;
+    emit sig_sendToMainWindow(output);
 }
 
-void Simpleperf::processKeyPressEvent(QKeyEvent *event)
+void Simpleperf::slo_reciveError(QString error)
 {
-    if(event->modifiers() == Qt::ControlModifier) { // 如果按下了CTRL键
-        if(event->key() == Qt::Key_D){
-            qDebug()<<"CTRL + D";
-            listener->p->kill();
-//            emit signalToListenerThread(QStringList()<<"CTRL + D");
-        }
-    }
+//    qDebug() << MY_TAG << "slo_reciveError" << error;
+    emit sig_sendToMainWindow(error);
 }
 
-void Simpleperf::runCmdLine(QString cmd)
+void Simpleperf::slo_reciveInfo(QString info)
 {
-    m_cmd << "-c" << cmd ;
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
+//    qDebug() << MY_TAG << "slo_reciveInfo" << info;
+    emit sig_sendToMainWindow(info);
 }
 
-void Simpleperf::runAdbDevices(QString cmd)
+void Simpleperf::slo_reciveState(QProcess::ProcessState state)
 {
-    qDebug()<<"runAdbDevices";
-    m_cmd << "-c" << cmd;
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
+//    qDebug() << MY_TAG << "slo_reciveState" << state;
+    emit sig_sendToMainWindow(state);
+    if (state==QProcess::ProcessState::NotRunning)
+        emit sig_sendToMainWindow("Done");
+    m_state = state;
 }
 
-void Simpleperf::runAdbRoot(QString cmd)
+void Simpleperf::runStat()
 {
-    m_cmd << "-c" << cmd;
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
+    qDebug() << MY_TAG << "runStat";
+    if (m_state != QProcess::ProcessState::NotRunning)
+        return emit sig_sendToMainWindow("please wait!");
+    emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFSTAT);
+    emit processCommand(SIMPLEPERFSTAT);
 }
 
-void Simpleperf::runAdbRemount(QString cmd)
+void Simpleperf::runRecord()
 {
-    m_cmd << "-c" << cmd;
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
-}
-
-void Simpleperf::runAdbOemUnlock(QString cmd)
-{
-    m_cmd << "-c" << cmd;
-//    emit signeixtalToListenerThread(m_cmd);
-    m_cmd.clear();
-}
-
-void Simpleperf::runSimpleperfStat(QString cmd)
-{
-    m_cmd << "-c" << cmd;
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
-}
-
-void Simpleperf::runSimpleperfRecord(QString cmd)
-{
-    qDebug() << MY_TAG << "runSimpleperfRecord";
+    qDebug() << MY_TAG << "runRecord";
+    if (m_state != QProcess::ProcessState::NotRunning)
+        return emit sig_sendToMainWindow("please wait!");
+    emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFRECORD);
     // 1. python
     //    QStringList m_cmd ;
     //    m_cmd << QCoreApplication::applicationDirPath() + "/scripts/app_profiler.py"
@@ -111,72 +101,43 @@ void Simpleperf::runSimpleperfRecord(QString cmd)
     //    excuteCmd(PYTHON2_7,m_cmd);
 
     //    2.bash
-    m_cmd <<"-c" << cmd;
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
+    QString cmd1 = SIMPLEPERFRECORD;
+    QString cmd2 = "adb pull /data/local/tmp/perf.data";
+    emit processCommand(cmd1+";"+cmd2);
 
-    wait();
-
-    m_cmd << "-c" << "adb pull /data/local/tmp/perf.data";
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
-
-    wait();
-    emit signalToMainWindow("Record Finished.");
 }
 
-void Simpleperf::runSimpleperfReport(QString cmd)
+void Simpleperf::runReport()
 {
-    m_cmd <<"-c" << cmd;
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
-    emit signalToMainWindow("[runSimpleperfReport] finished");
-    qDebug() <<MY_TAG << "[runSimpleperfReport] finished";
+    qDebug() << MY_TAG << "runReport";
+    if (m_state != QProcess::ProcessState::NotRunning)
+        return emit sig_sendToMainWindow("please wait!");
+    emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFREPORT);
+    emit processCommand(SIMPLEPERFREPORT);
 }
+
 
 void Simpleperf::runFlamegraph()
 {
-    m_cmd <<"-c" << "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
+    qDebug() << MY_TAG << "runFlamegraph";
+    if (m_state != QProcess::ProcessState::NotRunning)
+        return emit sig_sendToMainWindow("please wait!");
+    QString cmd1 = "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
+    QString cmd2 = "FlameGraph/flamegraph.pl out.folded > graph.svg";
+    emit sig_sendToMainWindow(sim_cpt->m_userName+cmd1+cmd2);
+    emit processCommand(cmd1+";"+cmd2);
 
-    wait();
-
-    m_cmd <<"-c" << "FlameGraph/flamegraph.pl out.folded > graph.svg";
-    emit signalToListenerThread(m_cmd);
-    m_cmd.clear();
     if(QDesktopServices::openUrl(QUrl("graph.svg"))){
-//        emit signalToMainWindow(/*fileName*/);
-        emit signalToMainWindow("<font color=\"#00cc00\">FlameGraph Opened  </font>");
+        emit sig_sendToMainWindow("FlameGraph Opened");
+//        emit sig_sendToMainWindow("<font color=\"#00cc00\">FlameGraph Opened  </font>");
     }else {
-        emit signalToMainWindow("<font color=\"#ee0000\">Open FlameGraph Failed !</font> ");
+        emit sig_sendToMainWindow("FlameGraph open Failed !");
+//        emit sig_sendToMainWindow("<font color=\"#ee0000\">Open FlameGraph Failed !</font> ");
     }
 }
 
-void Simpleperf::runCts(QString cmd)
+void Simpleperf::stopProcessor()
 {
-    m_cmd << "-c" << cmd;
-    qDebug()<<MY_TAG<<"runCts"<<m_cmd;
-    emit signalToListenerThread(m_cmd);
+    emit stop();
 }
-
-void Simpleperf::slotReciveListener(QString msg,SignalType signalType)
- {
-    qDebug() << MY_TAG <<"[slotReciveListener]" << signalType;
-    emit signalToMainWindow(msg,signalType);
-}
-
-void Simpleperf::slotReciveProcessState(QProcess::ProcessState newState)
-{
-    qDebug()<<MY_TAG<<"[slotReciveProcessState] ProcessState";
-    emit signalToMainWindow(newState);
-}
-
-void Simpleperf::slotProcessfinished()
-{
-    qDebug()<<MY_TAG<<"[slotProcessfinished] m_isProcessFinished true";
-    m_isProcessFinished = true;
-}
-
-
 

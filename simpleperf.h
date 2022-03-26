@@ -6,52 +6,47 @@
 #include <QObject>
 #include <QThread>
 #include <QTime>
-#include "listenerthread.h"
+
+#include "commandprocessthread.h"
 
 class Simpleperf: public QObject
 {
     Q_OBJECT
 public:
     Simpleperf(QObject *parent =nullptr);
+    ~Simpleperf();
 
-    //后台监听进程
-    ListenerThread * listener;
-    typedef ListenerThread::SignalType SignalType;
+public:
+    QThread                 *sim_Thread;
+    CommandProcessThread    *sim_cpt;
 
     void init_connect();
-    void wait();
     void processKeyPressEvent(QKeyEvent *event);
-    void runCmdLine(QString cmd);
-    void runAdbDevices(QString cmd);
-    void runAdbRoot(QString cmd);
-    void runAdbRemount(QString cmd);
-    void runAdbOemUnlock(QString cmd);
-    void runSimpleperfStat(QString cmd);
-    void runSimpleperfRecord(QString cmd);
-    void runSimpleperfReport(QString cmd);
-    void runFlamegraph();
-    void runCts(QString cmd);
 
+    void runStat();
+    void runRecord();
+    void runReport();
+    void runFlamegraph();
+    void stopProcessor();
 
 private:
+    QProcess::ProcessState m_state = QProcess::ProcessState::NotRunning;
 
-//    QThread     *listenerThread;
-    QStringList m_cmd;
-    QString     m_msg;
-    bool        m_isProcessFinished = false;
-    QTime       time;
 protected:
 
 signals:
-    void signalToMainWindow(QString msg,SignalType signalType=SignalType::NORNAL_INFO);
-    void signalToMainWindow(QProcess::ProcessState state);
-    void signalToListenerThread(QStringList msg);
-    void signalToListenerInitThread();
+    void start();
+    void processCommand(QString cmd);
+    void stop();
+    void sig_sendToMainWindow(QString);
+    void sig_sendToMainWindow(QProcess::ProcessState);
 
 private slots:
-    void slotReciveListener(QString msg,SignalType signalType);
-    void slotReciveProcessState(QProcess::ProcessState newState);
-    void slotProcessfinished();
+    void slo_reciveOutput(QString output);
+    void slo_reciveError(QString error);
+    void slo_reciveInfo(QString info);
+    void slo_reciveState(QProcess::ProcessState state);
+
 };
 
 #endif // SIMPLEPERF_H
