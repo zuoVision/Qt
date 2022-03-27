@@ -10,6 +10,12 @@
     <height>681</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="font">
    <font>
     <family>Consolas</family>
@@ -43,7 +49,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <property name="tabsClosable">
        <bool>false</bool>
@@ -185,8 +191,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>657</width>
-             <height>259</height>
+             <width>662</width>
+             <height>327</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -514,8 +520,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>654</width>
-                <height>304</height>
+                <width>652</width>
+                <height>300</height>
                </rect>
               </property>
               <widget class="QPushButton" name="pushButton_flamegraph">
@@ -591,7 +597,7 @@
                 <rect>
                  <x>10</x>
                  <y>240</y>
-                 <width>131</width>
+                 <width>141</width>
                  <height>16</height>
                 </rect>
                </property>
@@ -624,9 +630,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
-             <width>674</width>
-             <height>338</height>
+             <y>-34</y>
+             <width>662</width>
+             <height>384</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
@@ -671,7 +677,7 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>60</width>
+                     <width>80</width>
                      <height>0</height>
                     </size>
                    </property>
@@ -710,7 +716,7 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>60</width>
+                     <width>80</width>
                      <height>0</height>
                     </size>
                    </property>
@@ -736,7 +742,7 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>60</width>
+                     <width>80</width>
                      <height>0</height>
                     </size>
                    </property>
@@ -773,7 +779,7 @@
                    </property>
                    <property name="minimumSize">
                     <size>
-                     <width>60</width>
+                     <width>80</width>
                      <height>0</height>
                     </size>
                    </property>
@@ -822,21 +828,7 @@
                <string>result</string>
               </property>
               <layout class="QGridLayout" name="gridLayout_15">
-               <item row="0" column="0">
-                <widget class="QPushButton" name="pushButton_log">
-                 <property name="text">
-                  <string>log</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QPushButton" name="pushButton_result">
-                 <property name="text">
-                  <string>result</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="2">
+               <item row="0" column="3">
                 <spacer name="horizontalSpacer_6">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -849,7 +841,21 @@
                  </property>
                 </spacer>
                </item>
-               <item row="1" column="0" colspan="3">
+               <item row="0" column="1">
+                <widget class="QPushButton" name="pushButton_log">
+                 <property name="text">
+                  <string>log</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QPushButton" name="pushButton_result">
+                 <property name="text">
+                  <string>result</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0" colspan="4">
                 <widget class="QTableWidget" name="tableWidget_xts">
                  <property name="sizePolicy">
                   <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
@@ -857,11 +863,23 @@
                    <verstretch>0</verstretch>
                   </sizepolicy>
                  </property>
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="frameShadow">
+                  <enum>QFrame::Plain</enum>
+                 </property>
+                 <property name="lineWidth">
+                  <number>0</number>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustToContents</enum>
+                 </property>
                  <property name="rowCount">
                   <number>5</number>
                  </property>
                  <property name="columnCount">
-                  <number>2</number>
+                  <number>3</number>
                  </property>
                  <attribute name="horizontalHeaderVisible">
                   <bool>false</bool>
@@ -870,7 +888,7 @@
                   <bool>false</bool>
                  </attribute>
                  <attribute name="horizontalHeaderDefaultSectionSize">
-                  <number>300</number>
+                  <number>200</number>
                  </attribute>
                  <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
                   <bool>false</bool>
@@ -886,6 +904,7 @@
                  <row/>
                  <row/>
                  <row/>
+                 <column/>
                  <column/>
                  <column/>
                 </widget>
@@ -909,7 +928,7 @@
      <x>0</x>
      <y>0</y>
      <width>718</width>
-     <height>23</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

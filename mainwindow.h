@@ -42,10 +42,12 @@ public:
     FileOperation   *fileOperation = new FileOperation(this);
 
 public:
-//    QString         m_ctsSuite;
-//    QString         m_ctsCommand;
-//    QString         m_ctsModule;
-//    QString         m_ctsTest;
+    QString         m_modulename;
+    QString         m_totalTests;
+    QString         m_pass;
+    QStringList     m_test;
+    QStringList     m_result;
+    QStringList     m_resolution;
 
 private:
     Ui::MainWindow *ui;
@@ -63,6 +65,8 @@ protected:
     void initEnvironment();
     void initConnect();
     void keyPressEvent(QKeyEvent *event);
+    void readXml();
+    void insertDataToTable();
 
 signals:
 
@@ -90,5 +94,7 @@ private slots:
     void on_pushButton_runcts_clicked();
     void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
     void on_pushButton_loadctssuite_clicked();
+    void on_pushButton_log_clicked();
+    void on_pushButton_result_clicked();
 };
 #endif // MAINWINDOW_H

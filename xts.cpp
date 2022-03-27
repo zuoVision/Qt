@@ -1,8 +1,11 @@
 #include "xts.h"
 
+#include <QDataStream>
 #include <QDebug>
 
 #define MY_TAG          "XTS"
+#define cout            qDebug() << MY_TAG << __BASE_FILE__ << __LINE__ << __FUNCTION__
+
 #define CTSSUITE        "~/XTS/Android_R/android-cts/tools/cts-tradefed "
 #define CTSCOMMAND      "run cts-dev "
 #define CTSMODULE       "-m CtsCameraTestCases "
@@ -70,7 +73,9 @@ void Xts::slo_reciveOutput(QString output)
         qDebug() << m_ctsSuite;
         emit sig_findCtsSuite();
         return;
-    }
+    }   
+    if(output.contains("SuiteResultReporter: ")) analyzeResult(output);
+
     emit sig_sendToMainWindow(output);
 }
 
@@ -91,7 +96,9 @@ void Xts::slo_reciveState(QProcess::ProcessState state)
 //    qDebug() << MY_TAG << "slo_reciveState" << state;
     emit sig_sendToMainWindow(state);
     if (state==QProcess::ProcessState::NotRunning)
+    {
         emit sig_sendToMainWindow("Done");
+    }
 }
 
 void Xts::runCts(const QString arg1, const QString arg2, const QString arg3, const QString arg4)
@@ -100,15 +107,13 @@ void Xts::runCts(const QString arg1, const QString arg2, const QString arg3, con
                  << arg1 <<arg2 <<arg3 <<arg4;
     if (xts_cpt->processor->state() != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
-    QString ctssuite;
-    QString ctscmd;
-    QString ctsmodule;
-    QString ctstest;
+
+    QString ctssuite,ctscmd,ctsmodule,ctstest;
 
     !arg1.isEmpty() ? ctssuite = arg1                           : CTSSUITE;
     !arg2.isEmpty() ? ctscmd = QString(" ").append(arg2)        : CTSCOMMAND;
     !arg3.isEmpty() ? ctsmodule = QString(" -m ").append(arg3)  : CTSMODULE;
-    !arg4.isEmpty() ? ctstest = QString(" -t ").append(arg4)    : " xx ";
+    !arg4.isEmpty() ? ctstest = QString(" -t ").append(arg4)    : " ";
 
     QString cmd = ctssuite+ctscmd+ctsmodule+ctstest;
     qDebug()<<MY_TAG<<cmd;
@@ -119,6 +124,17 @@ void Xts::runCts(const QString arg1, const QString arg2, const QString arg3, con
 void Xts::stopProcessor()
 {
     emit stop();
+}
+
+void Xts::analyzeResult(QString output)
+{
+    QStringList list = output.split("\n");
+    m_totalRunTime  = list.filter("Total Run time:").first();
+    m_totalTests    = list.filter("Total Tests:").first();
+    m_passed        = list.filter("PASSED:").first();
+    m_failed        = list.filter("FAILED:").first();
+    cout << m_totalRunTime << m_totalTests << m_passed << m_failed;
+
 }
 
 

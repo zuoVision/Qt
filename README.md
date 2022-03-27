@@ -53,3 +53,14 @@ Qt project
 
 2022年3月23日
 * 新增dockwidget显示输出内容
+
+2022年3月25日
+* 创建XTS模块
+
+2022年3月26日
+* 创建commonCommand模块
+* 重构process处理流程--> 改在commandprocessthread中执行 弃用原listenerthread
+* 完善xts模块
+
+2022年3月27日
+* 完善xts模块，新增testcase result查看功能

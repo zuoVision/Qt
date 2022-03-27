@@ -1,19 +1,25 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QDesktopServices>
 #include <QLabel>
 #include <QListView>
+#include <QMessageBox>
 #include <QStringListModel>
+#include <QXmlStreamReader>
 #include <stdlib.h>
 
-#define MY_TAG "MainWindow"
+#define MY_TAG          "MainWindow"
+#define cout            qDebug() << MY_TAG /*<< __BASE_FILE__ << __LINE__*/ << __FUNCTION__
 
-#define DATABASE ":/config/native_cmd_list.txt"
-#define PYTHON2_7 "/usr/bin/python2.7"
+#define DATABASE        ":/config/native_cmd_list.txt"
+#define PYTHON2_7       "/usr/bin/python2.7"
 
 #define ADBDEVICES      "adb devices"
 #define ADBROOT         "adb root"
 #define ADBREMOUNT      "adb remount"
 #define ADBOEMUNLOCK    "xxxxx"
+
+#define TESTRESULT      "test_result.xml"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -46,7 +52,9 @@ void MainWindow::initUi()
 
     ui->tableWidget_xts->verticalHeader()->show();
     ui->tableWidget_xts->horizontalHeader()->show();
-    ui->tableWidget_xts->setHorizontalHeaderLabels(QStringList()<<"testcases"<<"resolution");
+    //zi shi ying kuan du
+    ui->tableWidget_xts->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+    ui->tableWidget_xts->setHorizontalHeaderLabels(QStringList()<<"Tests"<<"Result"<<"Resolution");
     ui->tableWidget_xts->horizontalHeader()->setStyleSheet("QHeaderView::section{background:lightgreen;}");
     ui->tableWidget_xts->setSortingEnabled(true);
     ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//禁止编辑
@@ -120,6 +128,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             xts->stopProcessor();
     }
 }
+
 
 void MainWindow::slotReciveDocument()
 {
@@ -248,4 +257,94 @@ void MainWindow::on_pushButton_loadctssuite_clicked()
 {
    ui->comboBox_ctssuite->insertItem(-1,m_doc.openFile());
    ui->comboBox_ctssuite->setCurrentIndex(0);
+}
+
+void MainWindow::on_pushButton_log_clicked()
+{
+    if (ui->comboBox_ctssuite->currentText().isEmpty())
+    {
+        QMessageBox::warning(this,"warning","please choose cts suite ...");
+        return;
+    }
+    QDesktopServices::openUrl(QUrl(ui->comboBox_ctssuite->currentText()+"../../../logs/latest/"));
+}
+
+void MainWindow::on_pushButton_result_clicked()
+{
+
+    if (ui->comboBox_ctssuite->currentText().isEmpty())
+    {
+        QMessageBox::warning(this,"warning","please choose cts suite ...");
+        return;
+    }
+#if 0
+    QDesktopServices::openUrl(QUrl(ui->comboBox_ctssuite->currentText()+"../../../results/latest/test_result.html"));
+#endif
+    readXml();
+    insertDataToTable();
+}
+
+void MainWindow::readXml()
+{
+    QFile file("test_result.xml");
+    QString nodename;
+    QString output;
+    if(!file.exists()){
+        QMessageBox::warning(this,"warning","file not found!");
+        return;
+    }
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"warning","file open failed!");
+        return;
+    }
+    QXmlStreamReader xmlreader(&file);
+    while (!xmlreader.atEnd() || !xmlreader.hasError()) {
+        xmlreader.readNextStartElement();
+        nodename = xmlreader.name().toString();
+        if(nodename == "Module" && xmlreader.isStartElement()){
+            m_modulename = xmlreader.attributes().value("name").toString();
+            m_totalTests = xmlreader.attributes().value("total_tests").toString();
+            m_pass       = xmlreader.attributes().value("pass").toString();
+//            QMessageBox::information(this,"Result",
+//                                     QString("Module :%1\nTotal Tests :%2\nPass:%3").
+//                                     arg(xmlreader.attributes().value("name").toString()).
+//                                     arg(xmlreader.attributes().value("total_tests").toString()).
+//                                     arg(xmlreader.attributes().value("pass").toString()));
+            while (!(nodename == "Module" && xmlreader.isEndElement())) {// module not end
+                xmlreader.readNextStartElement();
+                nodename = xmlreader.name().toString();
+                if(nodename == "TestCase" && xmlreader.isStartElement()){
+//                    cout << xmlreader.attributes().value("name").toString();
+                    QString testcase = xmlreader.attributes().value("name").toString();
+                    while (!(nodename == "TestCase" && xmlreader.isEndElement())) {
+                        xmlreader.readNextStartElement();
+                        nodename = xmlreader.name().toString();
+                        if(nodename == "Test" && xmlreader.isStartElement()){
+                            QString name    = xmlreader.attributes().value("name").toString();
+                            QString result  = xmlreader.attributes().value("result").toString();
+                            m_test   << testcase+"#"+name;
+                            m_result << result;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void MainWindow::insertDataToTable()
+{
+    QStringList *list = new QStringList();
+    QString test,result,fail;
+    fail = QString::number(m_totalTests.toInt() - m_pass.toInt());
+    test = QString("Test(%1)").arg(m_totalTests);
+    result = QString("Result(pass %1 fail %2)").arg(m_pass).arg(fail);
+    *list << test << result;
+    ui->tableWidget_xts->setHorizontalHeaderLabels(*list);
+    ui->tableWidget_xts->setRowCount(m_totalTests.toInt());
+    for(int row=0;row<ui->tableWidget_xts->rowCount();row++){
+        ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(m_test[row]));
+        ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(m_result[row]));
+    }
 }
