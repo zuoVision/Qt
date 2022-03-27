@@ -1,0 +1,5 @@
+com.google.android.settings.gts.MADAComplianceTest#testMADACompliance0
+com.google.android.settings.gts.MADAComplianceTest#testMADACompliance1
+com.google.android.settings.gts.MADAComplianceTest#testMADACompliance2
+com.google.android.settings.gts.MADAComplianceTest#testMADACompliance3
+com.google.android.settings.gts.MADAComplianceTest#testMADACompliance4

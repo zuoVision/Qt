@@ -4,30 +4,32 @@
 
 
 #define MY_TAG "CommandProcessThread"
+#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
+
 #define BASH "bash"
 
 CommandProcessThread::CommandProcessThread(QObject *parent):QObject(parent)
 {
-    qDebug() << MY_TAG << "[CommandProcessThread]" <<QThread::currentThreadId();
+    cout <<QThread::currentThreadId();
 //    init();
 }
 
 CommandProcessThread::~CommandProcessThread()
 {
-    qDebug() << MY_TAG << "[~CommandProcessThread]";
+    cout << "[~CommandProcessThread]";
 
     uninit();
 }
 
 void CommandProcessThread::init()
 {
-    qDebug() << MY_TAG << "[init]" <<QThread::currentThreadId();
+    cout <<QThread::currentThreadId();
 
 }
 
 void CommandProcessThread::uninit()
 {
-    qDebug() << MY_TAG << "[uninit]" <<QThread::currentThreadId();
+    cout <<QThread::currentThreadId();
 //    processor->terminate();
 //    delete processor;
 }
@@ -45,8 +47,7 @@ void CommandProcessThread::init_connect()
 
 void CommandProcessThread::createProcessor()
 {
-    qDebug() << MY_TAG  << "[createProcessor]"
-             << QThread::currentThreadId();
+    cout << QThread::currentThreadId();
     processor = new QProcess();
     processor->start(BASH,QStringList() << "-c" << "whoami;hostname"); //hostname:41000966-26-1 username:zuozhe
     processor->waitForFinished();
@@ -61,8 +62,7 @@ void CommandProcessThread::createProcessor()
 
 void CommandProcessThread::stopProcessor()
 {
-    qDebug() << MY_TAG << "[stopProcessor]"
-             << QThread::currentThreadId();
+    cout << QThread::currentThreadId();
     if(processor->state()!=QProcess::ProcessState::NotRunning)
     {
         processor->close();
@@ -72,16 +72,16 @@ void CommandProcessThread::stopProcessor()
 
 void CommandProcessThread::exitProcessor()
 {
-    qDebug() << MY_TAG << "[exitProcessor]";
+    cout << "[exitProcessor]";
     delete processor;
 }
 
 void CommandProcessThread::process(QString cmd)
 {
-    qDebug() << MY_TAG << "[process]" << " + ";
+    cout << " + ";
     if (cmd.isEmpty())
     {
-        qDebug() << MY_TAG << "[process]" << "command is empty, please input command!";
+        cout << "command is empty, please input command!";
         return;
     }
     if (processor->state()!=QProcess::ProcessState::NotRunning){
@@ -98,10 +98,10 @@ void CommandProcessThread::process(QString cmd)
 
 void CommandProcessThread::process(QString cmd, unsigned long secs)
 {
-    qDebug() << MY_TAG << "[process]" << " + " << secs;
+    cout << " + " << secs;
     if (cmd.isEmpty())
     {
-        qDebug() << MY_TAG << "[process]" << "command is empty, please input command!";
+        cout << "command is empty, please input command!";
         return;
     }
     if (processor->state()!=QProcess::ProcessState::NotRunning){
@@ -114,10 +114,10 @@ void CommandProcessThread::process(QString cmd, unsigned long secs)
     processor->start(BASH,QStringList()<<"-c"<< cmd);
     processor->waitForReadyRead();
     if(!processor->waitForFinished(secs)){
-        qDebug() << MY_TAG << "time out";
+        cout << "time out";
         processor->close();
     }
-    qDebug() << MY_TAG << "[process]"<<" - ";
+    cout << " - ";
 }
 
 void CommandProcessThread::slo_processAllMsg()

@@ -64,3 +64,6 @@ Qt project
 
 2022年3月27日
 * 完善xts模块，新增testcase result查看功能
+* 状态栏分栏
+* 调整debug log格式
+* TODO:QThread: Destroyed while thread is still running

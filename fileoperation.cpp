@@ -3,18 +3,20 @@
 #include <QMessageBox>
 #include <QThread>
 #include <QList>
+#include <QFile>
 
 #define MY_TAG "FileOperation"
+#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
-FileOperation::FileOperation(QObject *parent) : QObject(parent)
+FileOperation::FileOperation(QObject *parent) :QObject(parent)
 {
-    qDebug()<<MY_TAG<<QThread::currentThreadId();
+    cout <<QThread::currentThreadId();
 }
 
 void FileOperation::loadDataBase(QString filePath, QStringList *stringList)
 {
     QFile file(filePath);
-    qDebug()<<MY_TAG<<"loadDataBase"<<file.fileName()/*<<stringList*/;
+    cout<<file.fileName()/*<<stringList*/;
 
     if(!file.exists()){
         QMessageBox::warning(NULL,"warning",QString("file:%1 does not exist!")
@@ -42,7 +44,7 @@ void FileOperation::loadDataBase(QString filePath, QStringList *stringList)
 
 void FileOperation::saveDataBase(QString filePath, QStringList *stringList)
 {
-//    qDebug()<<MY_TAG<<"saveDataBase"<<filePath.split("/").last()<< *stringList;
+//    cout <<filePath.split("/").last()<< *stringList;
     QFile file(filePath.split("/").last());
     if(!file.exists()){
         QMessageBox::warning(NULL,"warning",QString("file:%1 does not exist!")
@@ -62,4 +64,39 @@ void FileOperation::saveDataBase(QString filePath, QStringList *stringList)
     }
     file.close();
     return;
+}
+
+bool FileOperation::readXml(QFile *file)
+{
+    QString nodename;
+    QString output;
+    QXmlStreamReader xmlreader(file);
+    while (!xmlreader.atEnd() || !xmlreader.hasError()) {
+        xmlreader.readNextStartElement();
+        nodename = xmlreader.name().toString();
+        if(nodename == "Module" && xmlreader.isStartElement()){
+            m_modulename = xmlreader.attributes().value("name").toString();
+            m_totalTests = xmlreader.attributes().value("total_tests").toString();
+            m_pass       = xmlreader.attributes().value("pass").toString();
+            while (!(nodename == "Module" && xmlreader.isEndElement())) {// module not end
+                xmlreader.readNextStartElement();
+                nodename = xmlreader.name().toString();
+                if(nodename == "TestCase" && xmlreader.isStartElement()){
+                    QString testcase = xmlreader.attributes().value("name").toString();
+                    while (!(nodename == "TestCase" && xmlreader.isEndElement())) {
+                        xmlreader.readNextStartElement();
+                        nodename = xmlreader.name().toString();
+                        if(nodename == "Test" && xmlreader.isStartElement()){
+                            QString name    = xmlreader.attributes().value("name").toString();
+                            QString result  = xmlreader.attributes().value("result").toString();
+                            m_test   << testcase+"#"+name;
+                            m_result << result;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    if(m_modulename.isEmpty()||xmlreader.hasError()) return false;
+    return true;
 }

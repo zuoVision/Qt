@@ -3,24 +3,25 @@
 #include <QDebug>
 
 #define MY_TAG "CommonCommand"
+#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
 
 CommonCommand::CommonCommand(QObject *parent) : QObject(parent)
 {
-    qDebug() << MY_TAG << "[CommonCommand]" <<QThread::currentThreadId();
+    cout <<QThread::currentThreadId();
     init();
 }
 
 CommonCommand::~CommonCommand()
 {
-    qDebug() << MY_TAG << "~Simpleperf";
+    cout << "~Simpleperf";
     delete ccd_cpt;
     delete ccd_Thread;
 }
 
 void CommonCommand::init()
 {
-    qDebug() << MY_TAG << "[CommonCommand]" <<QThread::currentThreadId();
+    cout <<QThread::currentThreadId();
 
     ccd_Thread = new QThread(this);
     ccd_cpt = new CommandProcessThread();
@@ -50,25 +51,25 @@ void CommonCommand::init_connect()
 
 void CommonCommand::slo_reciveOutput(QString output)
 {
-//    qDebug() << MY_TAG << "slo_reciveOutput" << output;
+//    cout << output;
     emit sig_sendToMainWindow(output);
 }
 
 void CommonCommand::slo_reciveError(QString error)
 {
-//    qDebug() << MY_TAG << "slo_reciveError" << error;
+//    cout << error;
     emit sig_sendToMainWindow(error);
 }
 
 void CommonCommand::slo_reciveInfo(QString info)
 {
-//    qDebug() << MY_TAG << "slo_reciveInfo" << info;
+//    cout << info;
     emit sig_sendToMainWindow(info);
 }
 
 void CommonCommand::slo_reciveState(QProcess::ProcessState state)
 {
-//    qDebug() << MY_TAG << "slo_reciveState" << state;
+//    cout << state;
     emit sig_sendToMainWindow(state);
     if (state==QProcess::ProcessState::NotRunning)
         emit sig_sendToMainWindow("Done");
@@ -76,7 +77,7 @@ void CommonCommand::slo_reciveState(QProcess::ProcessState state)
 
 void CommonCommand::runCommand(const QString cmd)
 {
-//    qDebug() << MY_TAG << "runCommand";
+//    cout << "runCommand";
     if(!cmd.isEmpty()&&
         ccd_cpt->processor->state()==QProcess::ProcessState::NotRunning)
         emit sig_sendToMainWindow(ccd_cpt->m_userName+cmd);

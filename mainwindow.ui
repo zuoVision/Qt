@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>718</width>
-    <height>681</height>
+    <width>800</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -191,8 +191,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>662</width>
-             <height>327</height>
+             <width>756</width>
+             <height>364</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -520,8 +520,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>652</width>
-                <height>300</height>
+                <width>736</width>
+                <height>423</height>
                </rect>
               </property>
               <widget class="QPushButton" name="pushButton_flamegraph">
@@ -630,9 +630,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-34</y>
-             <width>662</width>
-             <height>384</height>
+             <y>0</y>
+             <width>756</width>
+             <height>457</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
@@ -802,17 +802,17 @@
                    </item>
                    <item>
                     <property name="text">
-                     <string>l m</string>
+                     <string>list module ( l r )</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>l s</string>
+                     <string>list result ( l r )</string>
                     </property>
                    </item>
                    <item>
                     <property name="text">
-                     <string>retry --retry </string>
+                     <string>retry --retry &lt;session num&gt;(勿选)</string>
                     </property>
                    </item>
                   </widget>
@@ -887,6 +887,9 @@
                  <attribute name="horizontalHeaderCascadingSectionResizes">
                   <bool>false</bool>
                  </attribute>
+                 <attribute name="horizontalHeaderMinimumSectionSize">
+                  <number>200</number>
+                 </attribute>
                  <attribute name="horizontalHeaderDefaultSectionSize">
                   <number>200</number>
                  </attribute>
@@ -927,8 +930,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>718</width>
-     <height>28</height>
+     <width>800</width>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

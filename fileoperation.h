@@ -3,6 +3,7 @@
 
 #include <QFile>
 #include <QObject>
+#include <QXmlStreamReader>
 
 class FileOperation : public QObject
 {
@@ -11,7 +12,17 @@ public:
     explicit FileOperation(QObject *parent = nullptr);
     void loadDataBase(QString filePath,QStringList *stringList);
     void saveDataBase(QString filePath,QStringList *stringList);
+    bool readXml(QFile *file);
 
+public:
+    QString         m_modulename;
+    QString         m_totalTests;
+    QString         m_pass;
+    QStringList     m_test;
+    QStringList     m_result;
+
+private:
+    QXmlStreamReader xmlreader;
 signals:
 
 };

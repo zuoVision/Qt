@@ -38,16 +38,21 @@ public:
     CommonCommand   *ccd = new CommonCommand();
     Simpleperf      *simpleperf = new Simpleperf();
     Xts             *xts = new Xts(this);
-    QCompleter      *completer;
+    QCompleter      *cmd_completer;
+    QCompleter      *test_completer;
     FileOperation   *fileOperation = new FileOperation(this);
 
 public:
-    QString         m_modulename;
-    QString         m_totalTests;
-    QString         m_pass;
-    QStringList     m_test;
-    QStringList     m_result;
+//    QString         m_modulename;
+//    QString         m_totalTests;
+//    QString         m_pass;
+//    QStringList     m_test;
+//    QStringList     m_result;
     QStringList     m_resolution;
+
+    QLabel          *m_ccd_status;
+    QLabel          *m_sim_status;
+    QLabel          *m_xts_status;
 
 private:
     Ui::MainWindow *ui;
@@ -56,6 +61,7 @@ protected:
     QString                     m_msg;
     QStringList                 m_nativeCmdList;
     QStringList                 m_customCmdList;
+    QStringList                 m_ctsTestList;
     QProcess::ProcessState      m_processState=QProcess::ProcessState::NotRunning;
     QString                     m_statusbarMsg="Process Not Running";
     Document                    m_doc;
@@ -65,7 +71,7 @@ protected:
     void initEnvironment();
     void initConnect();
     void keyPressEvent(QKeyEvent *event);
-    void readXml();
+//    void readXml();
     void insertDataToTable();
 
 signals:

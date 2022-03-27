@@ -7,6 +7,7 @@
 
 
 #define MY_TAG "simpleperf"
+#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
 #define SIMPLEPERFSTAT   "pwd"
 #define SIMPLEPERFRECORD "python scripts/app_profiler.py -p com.tcl.camera"

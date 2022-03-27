@@ -9,9 +9,10 @@
 #include <stdlib.h>
 
 #define MY_TAG          "MainWindow"
-#define cout            qDebug() << MY_TAG /*<< __BASE_FILE__ << __LINE__*/ << __FUNCTION__
+#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
 #define DATABASE        ":/config/native_cmd_list.txt"
+#define CTSTEST         ":/config/cts_test_list.txt"
 #define PYTHON2_7       "/usr/bin/python2.7"
 
 #define ADBDEVICES      "adb devices"
@@ -29,10 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     initUi();
     initEnvironment();
     initConnect();
-    qDebug() << MY_TAG  <<"[MainWindow]"
-             << QThread::currentThreadId();
+    cout << QThread::currentThreadId();
     m_userName = ccd->ccd_cpt->m_userName;
-    qDebug() << MY_TAG << m_userName;
+    cout << m_userName;
 
 }
 
@@ -46,7 +46,18 @@ void MainWindow::initUi()
 {
 //    ui->checkBox_savecmd->setCheckState(Qt::Checked);
     setWindowIcon(QIcon(":/icon/icon/superman.ico"));
-    ui->statusbar->showMessage(m_statusbarMsg);
+//    ui->statusbar->showMessage(m_statusbarMsg);
+
+    m_ccd_status = new QLabel("ccd",this);
+    m_sim_status = new QLabel("sim",this);
+    m_xts_status = new QLabel("xts",this);
+    m_ccd_status->setMinimumWidth(100);
+    m_ccd_status->setMinimumWidth(100);
+    m_ccd_status->setMinimumWidth(100);
+    ui->statusbar->addWidget(m_ccd_status);
+    ui->statusbar->addWidget(m_sim_status);
+    ui->statusbar->addWidget(m_xts_status);
+
     ui->textEdit->setReadOnly(true);
     ui->label_simpleperfdoc->setText(tr("<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"));
 
@@ -63,18 +74,23 @@ void MainWindow::initUi()
 void MainWindow::initEnvironment()
 {
     //cmd命令行自动补全
-    completer = new QCompleter(m_nativeCmdList,this);
+    cmd_completer = new QCompleter();
     //最多显示数
-    completer->setMaxVisibleItems(10);
+    cmd_completer->setMaxVisibleItems(10);
     //匹配大小写不敏感
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-    ui->lineEdit_cmd->setCompleter(completer);
-
+    cmd_completer->setCaseSensitivity(Qt::CaseInsensitive);
     fileOperation->loadDataBase(DATABASE,&m_nativeCmdList);
-    completer->setModel(new QStringListModel(m_nativeCmdList,this));
-//    qDebug()<<MY_TAG<<"[native cmd datebase]"<<m_nativeCmdList;
+    cmd_completer->setModel(new QStringListModel(m_nativeCmdList,this));
+    ui->lineEdit_cmd->setCompleter(cmd_completer);
 
-
+    //cts test自动补全
+    test_completer = new QCompleter();
+    test_completer->setMaxVisibleItems(10);
+    test_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    test_completer->setFilterMode(Qt::MatchContains);
+    fileOperation->loadDataBase(":/config/cts_test_list.txt",&m_ctsTestList);
+    test_completer->setModel(new QStringListModel(m_ctsTestList,this));
+    ui->lineEdit_ctstest->setCompleter(test_completer);
 }
 
 void MainWindow::initConnect()
@@ -119,7 +135,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if((event->modifiers() == Qt::ControlModifier) &&
        (event->key() == Qt::Key_D))
     {
-        qDebug()<<"CTRL + D" << ui->tabWidget->currentIndex();
+        cout <<"CTRL + D" << ui->tabWidget->currentIndex();
         if(ui->tabWidget->currentIndex()==0)
             ccd->stopProcessor();
         if(ui->tabWidget->currentIndex()==1)
@@ -151,7 +167,7 @@ void MainWindow::slo_reciveMessage(QProcess::ProcessState state)
         m_statusbarMsg = "    Process Not Running ";
         if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
     }
-    ui->statusbar->showMessage(m_statusbarMsg);
+//    ui->statusbar->showMessage(m_statusbarMsg);
 }
 
 void MainWindow::slo_showCtsSuite()
@@ -176,13 +192,13 @@ void MainWindow::moveCursorToEnd()
 
 void MainWindow::on_pushButton_run_clicked()
 {
-    //动态更新completer模型库
+    //动态更新cmd_completer模型库
     if(!m_nativeCmdList.contains(ui->lineEdit_cmd->text()) &&
         ui->checkBox_savecmd->isChecked())
     {
         m_customCmdList << ui->lineEdit_cmd->text();
         m_nativeCmdList << ui->lineEdit_cmd->text();
-        completer->setModel(new QStringListModel(m_nativeCmdList,this));
+        cmd_completer->setModel(new QStringListModel(m_nativeCmdList,this));
     }
     ccd->runCommand(ui->lineEdit_cmd->text());
     ui->lineEdit_cmd->clear();
@@ -250,7 +266,7 @@ void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1
     }else {
         mf = Qt::MatchStartsWith;
     }
-    completer->setFilterMode(mf);
+    cmd_completer->setFilterMode(mf);
 }
 
 void MainWindow::on_pushButton_loadctssuite_clicked()
@@ -266,7 +282,11 @@ void MainWindow::on_pushButton_log_clicked()
         QMessageBox::warning(this,"warning","please choose cts suite ...");
         return;
     }
-    QDesktopServices::openUrl(QUrl(ui->comboBox_ctssuite->currentText()+"../../../logs/latest/"));
+    QString path = ui->comboBox_ctssuite->currentText()+"../../../logs/latest/";
+    if(!QDesktopServices::openUrl(QUrl(path))){
+        QMessageBox::warning(this,"warning",QString("open folder failed#{%1}").arg(path));
+    }
+
 }
 
 void MainWindow::on_pushButton_result_clicked()
@@ -280,15 +300,7 @@ void MainWindow::on_pushButton_result_clicked()
 #if 0
     QDesktopServices::openUrl(QUrl(ui->comboBox_ctssuite->currentText()+"../../../results/latest/test_result.html"));
 #endif
-    readXml();
-    insertDataToTable();
-}
-
-void MainWindow::readXml()
-{
     QFile file("test_result.xml");
-    QString nodename;
-    QString output;
     if(!file.exists()){
         QMessageBox::warning(this,"warning","file not found!");
         return;
@@ -298,53 +310,71 @@ void MainWindow::readXml()
         QMessageBox::warning(this,"warning","file open failed!");
         return;
     }
-    QXmlStreamReader xmlreader(&file);
-    while (!xmlreader.atEnd() || !xmlreader.hasError()) {
-        xmlreader.readNextStartElement();
-        nodename = xmlreader.name().toString();
-        if(nodename == "Module" && xmlreader.isStartElement()){
-            m_modulename = xmlreader.attributes().value("name").toString();
-            m_totalTests = xmlreader.attributes().value("total_tests").toString();
-            m_pass       = xmlreader.attributes().value("pass").toString();
-//            QMessageBox::information(this,"Result",
-//                                     QString("Module :%1\nTotal Tests :%2\nPass:%3").
-//                                     arg(xmlreader.attributes().value("name").toString()).
-//                                     arg(xmlreader.attributes().value("total_tests").toString()).
-//                                     arg(xmlreader.attributes().value("pass").toString()));
-            while (!(nodename == "Module" && xmlreader.isEndElement())) {// module not end
-                xmlreader.readNextStartElement();
-                nodename = xmlreader.name().toString();
-                if(nodename == "TestCase" && xmlreader.isStartElement()){
-//                    cout << xmlreader.attributes().value("name").toString();
-                    QString testcase = xmlreader.attributes().value("name").toString();
-                    while (!(nodename == "TestCase" && xmlreader.isEndElement())) {
-                        xmlreader.readNextStartElement();
-                        nodename = xmlreader.name().toString();
-                        if(nodename == "Test" && xmlreader.isStartElement()){
-                            QString name    = xmlreader.attributes().value("name").toString();
-                            QString result  = xmlreader.attributes().value("result").toString();
-                            m_test   << testcase+"#"+name;
-                            m_result << result;
-                        }
-                    }
-                }
-            }
-        }
-    }
+    if(fileOperation->readXml(&file)) insertDataToTable();
 }
+
+//丢弃
+//void MainWindow::readXml()
+//{
+//    QFile file("test_result.xml");
+//    QString nodename;
+//    QString output;
+//    if(!file.exists()){
+//        QMessageBox::warning(this,"warning","file not found!");
+//        return;
+//    }
+//    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+//    {
+//        QMessageBox::warning(this,"warning","file open failed!");
+//        return;
+//    }
+//    QXmlStreamReader xmlreader(&file);
+//    while (!xmlreader.atEnd() || !xmlreader.hasError()) {
+//        xmlreader.readNextStartElement();
+//        nodename = xmlreader.name().toString();
+//        if(nodename == "Module" && xmlreader.isStartElement()){
+//            m_modulename = xmlreader.attributes().value("name").toString();
+//            m_totalTests = xmlreader.attributes().value("total_tests").toString();
+//            m_pass       = xmlreader.attributes().value("pass").toString();
+////            QMessageBox::information(this,"Result",
+////                                     QString("Module :%1\nTotal Tests :%2\nPass:%3").
+////                                     arg(xmlreader.attributes().value("name").toString()).
+////                                     arg(xmlreader.attributes().value("total_tests").toString()).
+////                                     arg(xmlreader.attributes().value("pass").toString()));
+//            while (!(nodename == "Module" && xmlreader.isEndElement())) {// module not end
+//                xmlreader.readNextStartElement();
+//                nodename = xmlreader.name().toString();
+//                if(nodename == "TestCase" && xmlreader.isStartElement()){
+////                    cout << xmlreader.attributes().value("name").toString();
+//                    QString testcase = xmlreader.attributes().value("name").toString();
+//                    while (!(nodename == "TestCase" && xmlreader.isEndElement())) {
+//                        xmlreader.readNextStartElement();
+//                        nodename = xmlreader.name().toString();
+//                        if(nodename == "Test" && xmlreader.isStartElement()){
+//                            QString name    = xmlreader.attributes().value("name").toString();
+//                            QString result  = xmlreader.attributes().value("result").toString();
+//                            m_test   << testcase+"#"+name;
+//                            m_result << result;
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 void MainWindow::insertDataToTable()
 {
     QStringList *list = new QStringList();
     QString test,result,fail;
-    fail = QString::number(m_totalTests.toInt() - m_pass.toInt());
-    test = QString("Test(%1)").arg(m_totalTests);
-    result = QString("Result(pass %1 fail %2)").arg(m_pass).arg(fail);
+    fail = QString::number(fileOperation->m_totalTests.toInt() - fileOperation->m_pass.toInt());
+    test = QString("Test(%1)").arg(fileOperation->m_totalTests);
+    result = QString("Result(pass %1 fail %2)").arg(fileOperation->m_pass).arg(fail);
     *list << test << result;
     ui->tableWidget_xts->setHorizontalHeaderLabels(*list);
-    ui->tableWidget_xts->setRowCount(m_totalTests.toInt());
+    ui->tableWidget_xts->setRowCount(fileOperation->m_totalTests.toInt());
     for(int row=0;row<ui->tableWidget_xts->rowCount();row++){
-        ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(m_test[row]));
-        ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(m_result[row]));
+        ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(fileOperation->m_test[row]));
+        ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(fileOperation->m_result[row]));
     }
 }

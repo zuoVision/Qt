@@ -4,7 +4,7 @@
 #include <QDebug>
 
 #define MY_TAG          "XTS"
-#define cout            qDebug() << MY_TAG << __BASE_FILE__ << __LINE__ << __FUNCTION__
+#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
 #define CTSSUITE        "~/XTS/Android_R/android-cts/tools/cts-tradefed "
 #define CTSCOMMAND      "run cts-dev "
@@ -15,7 +15,7 @@
 
 Xts::Xts(QObject *parent) : QObject(parent)
 {
-    qDebug() << MY_TAG << "Xts()" <<QThread::currentThreadId();
+    cout << QThread::currentThreadId();
     xts_Thread = new QThread(this);
     xts_cpt = new CommandProcessThread();
     init_connect();
@@ -28,12 +28,12 @@ Xts::Xts(QObject *parent) : QObject(parent)
 
 Xts::~Xts()
 {
-    qDebug()<<MY_TAG<<"~Xts() +";
+    cout <<"~Xts() +";
     emit exit();
     delete xts_cpt;
     xts_Thread->exit(0);
     delete xts_Thread;
-    qDebug()<<MY_TAG<<"~Xts() -";
+    cout<<"~Xts() -";
 }
 
 void Xts::init_connect()
@@ -61,13 +61,13 @@ void Xts::init_connect()
 
 void Xts::findCtsSuite()
 {
-    qDebug() << MY_TAG << FINDCTSSUITE;
+    cout << FINDCTSSUITE;
     emit processCommand(FINDCTSSUITE,3);
 }
 
 void Xts::slo_reciveOutput(QString output)
 {
-    qDebug() << MY_TAG << "slo_reciveOutput" << output;
+    cout << output;
     if (output.endsWith("tools/cts-tradefed")){
         m_ctsSuite << output.split("\n");
         qDebug() << m_ctsSuite;
@@ -81,19 +81,19 @@ void Xts::slo_reciveOutput(QString output)
 
 void Xts::slo_reciveError(QString error)
 {
-//    qDebug() << MY_TAG << "slo_reciveError" << error;
+//    cout << error;
     emit sig_sendToMainWindow(error);
 }
 
 void Xts::slo_reciveInfo(QString info)
 {
-//    qDebug() << MY_TAG << "slo_reciveInfo" << info;
+//    cout << info;
     emit sig_sendToMainWindow(info);
 }
 
 void Xts::slo_reciveState(QProcess::ProcessState state)
 {
-//    qDebug() << MY_TAG << "slo_reciveState" << state;
+//    cout << state;
     emit sig_sendToMainWindow(state);
     if (state==QProcess::ProcessState::NotRunning)
     {
@@ -103,8 +103,7 @@ void Xts::slo_reciveState(QProcess::ProcessState state)
 
 void Xts::runCts(const QString arg1, const QString arg2, const QString arg3, const QString arg4)
 {
-        qDebug() << MY_TAG << "runCts"
-                 << arg1 <<arg2 <<arg3 <<arg4;
+    cout << arg1 <<arg2 <<arg3 <<arg4;
     if (xts_cpt->processor->state() != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
 

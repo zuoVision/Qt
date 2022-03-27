@@ -7,6 +7,9 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+#define MY_TAG          "Document"
+#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
+
 Document::Document(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Document)
@@ -29,12 +32,12 @@ void Document::init()
 void Document::onLoadDocument(QString doc)
 {
     QString displayString;
-    qDebug() << doc;
-    qDebug() << doc.split("/").last();
+    cout << doc;
+    cout << doc.split("/").last();
     QFile file(doc.split("/").last());
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        qDebug()<<"Can't open the file! return"<<endl;
+        cout <<"Can't open the file! return";
         return;
     }
     while(!file.atEnd())

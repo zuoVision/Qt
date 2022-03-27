@@ -2,6 +2,7 @@
     <qresource prefix="/config">
         <file>native_cmd_list.txt</file>
         <file>README.md</file>
+        <file>cts_test_list.txt</file>
     </qresource>
     <qresource prefix="/icon">
         <file>icon/superman.ico</file>
