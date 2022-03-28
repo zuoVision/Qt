@@ -45,6 +45,7 @@ signals:
     void sig_sendToMainWindow(QString);
     void sig_sendToMainWindow(QProcess::ProcessState);
     void sig_findCtsSuite();
+    void sig_showCtsResult();
 
 public slots:
     void slo_reciveOutput(QString output);

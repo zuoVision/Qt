@@ -21,7 +21,6 @@ void FileOperation::loadDataBase(QString filePath, QStringList *stringList)
     if(!file.exists()){
         QMessageBox::warning(NULL,"warning",QString("file:%1 does not exist!")
                              .arg(file.fileName()));
-
     }
     if(!file.open(QIODevice::ReadOnly)){
         QMessageBox::warning(NULL,"warning",QString("can't open file:%1(%2)")
@@ -68,6 +67,7 @@ void FileOperation::saveDataBase(QString filePath, QStringList *stringList)
 
 bool FileOperation::readXml(QFile *file)
 {
+    cout ;
     QString nodename;
     QString output;
     QXmlStreamReader xmlreader(file);
@@ -78,6 +78,7 @@ bool FileOperation::readXml(QFile *file)
             m_modulename = xmlreader.attributes().value("name").toString();
             m_totalTests = xmlreader.attributes().value("total_tests").toString();
             m_pass       = xmlreader.attributes().value("pass").toString();
+//            cout << m_modulename << m_totalTests << m_pass;
             while (!(nodename == "Module" && xmlreader.isEndElement())) {// module not end
                 xmlreader.readNextStartElement();
                 nodename = xmlreader.name().toString();
@@ -97,6 +98,15 @@ bool FileOperation::readXml(QFile *file)
             }
         }
     }
-    if(m_modulename.isEmpty()||xmlreader.hasError()) return false;
+    if(m_modulename.isEmpty())
+    {
+        return false;
+    }
+    return true;
+}
+
+bool FileOperation::readExcel(QFile *file)
+{
+    cout << file;
     return true;
 }

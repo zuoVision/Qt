@@ -5,6 +5,7 @@
 #include <QListView>
 #include <QMessageBox>
 #include <QStringListModel>
+#include <QTableView>
 #include <QXmlStreamReader>
 #include <stdlib.h>
 
@@ -33,7 +34,6 @@ MainWindow::MainWindow(QWidget *parent)
     cout << QThread::currentThreadId();
     m_userName = ccd->ccd_cpt->m_userName;
     cout << m_userName;
-
 }
 
 MainWindow::~MainWindow()
@@ -120,12 +120,16 @@ void MainWindow::initConnect()
             this,SLOT(slo_reciveMessage(QProcess::ProcessState)));
     connect(xts,SIGNAL(sig_findCtsSuite()),
             this,SLOT(slo_showCtsSuite()));
+    connect(xts,SIGNAL(sig_showCtsResult()),
+            this,SLOT(slo_showCtsResult()));
 
     //cmd回车-> run button click
     connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
             ui->pushButton_run,SLOT(click()));
     connect(ui->textEdit,SIGNAL(textChanged()),
             this,SLOT(moveCursorToEnd()));
+    connect(ui->tableWidget_xts,SIGNAL(itemChanged(QTableWidgetItem*)),
+            this,SLOT(setTabelWidgetColor(QTableWidgetItem*)));
 
 }
 
@@ -188,6 +192,14 @@ void MainWindow::moveCursorToEnd()
     QTextCursor cursor = ui->textEdit->textCursor();
     cursor.movePosition(QTextCursor::End);
     ui->textEdit->setTextCursor(cursor);
+}
+
+void MainWindow::setTabelWidgetColor(QTableWidgetItem *item)
+{
+    if(item->text() == "fail"){
+        QBrush redColor(Qt::red);
+        item->setForeground(redColor);
+    }
 }
 
 void MainWindow::on_pushButton_run_clicked()
@@ -286,10 +298,9 @@ void MainWindow::on_pushButton_log_clicked()
     if(!QDesktopServices::openUrl(QUrl(path))){
         QMessageBox::warning(this,"warning",QString("open folder failed#{%1}").arg(path));
     }
-
 }
 
-void MainWindow::on_pushButton_result_clicked()
+void MainWindow::slo_showCtsResult()
 {
 
     if (ui->comboBox_ctssuite->currentText().isEmpty())
@@ -300,6 +311,7 @@ void MainWindow::on_pushButton_result_clicked()
 #if 0
     QDesktopServices::openUrl(QUrl(ui->comboBox_ctssuite->currentText()+"../../../results/latest/test_result.html"));
 #endif
+    cout ;
     QFile file("test_result.xml");
     if(!file.exists()){
         QMessageBox::warning(this,"warning","file not found!");
@@ -311,57 +323,8 @@ void MainWindow::on_pushButton_result_clicked()
         return;
     }
     if(fileOperation->readXml(&file)) insertDataToTable();
+    file.close();
 }
-
-//丢弃
-//void MainWindow::readXml()
-//{
-//    QFile file("test_result.xml");
-//    QString nodename;
-//    QString output;
-//    if(!file.exists()){
-//        QMessageBox::warning(this,"warning","file not found!");
-//        return;
-//    }
-//    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-//    {
-//        QMessageBox::warning(this,"warning","file open failed!");
-//        return;
-//    }
-//    QXmlStreamReader xmlreader(&file);
-//    while (!xmlreader.atEnd() || !xmlreader.hasError()) {
-//        xmlreader.readNextStartElement();
-//        nodename = xmlreader.name().toString();
-//        if(nodename == "Module" && xmlreader.isStartElement()){
-//            m_modulename = xmlreader.attributes().value("name").toString();
-//            m_totalTests = xmlreader.attributes().value("total_tests").toString();
-//            m_pass       = xmlreader.attributes().value("pass").toString();
-////            QMessageBox::information(this,"Result",
-////                                     QString("Module :%1\nTotal Tests :%2\nPass:%3").
-////                                     arg(xmlreader.attributes().value("name").toString()).
-////                                     arg(xmlreader.attributes().value("total_tests").toString()).
-////                                     arg(xmlreader.attributes().value("pass").toString()));
-//            while (!(nodename == "Module" && xmlreader.isEndElement())) {// module not end
-//                xmlreader.readNextStartElement();
-//                nodename = xmlreader.name().toString();
-//                if(nodename == "TestCase" && xmlreader.isStartElement()){
-////                    cout << xmlreader.attributes().value("name").toString();
-//                    QString testcase = xmlreader.attributes().value("name").toString();
-//                    while (!(nodename == "TestCase" && xmlreader.isEndElement())) {
-//                        xmlreader.readNextStartElement();
-//                        nodename = xmlreader.name().toString();
-//                        if(nodename == "Test" && xmlreader.isStartElement()){
-//                            QString name    = xmlreader.attributes().value("name").toString();
-//                            QString result  = xmlreader.attributes().value("result").toString();
-//                            m_test   << testcase+"#"+name;
-//                            m_result << result;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
 
 void MainWindow::insertDataToTable()
 {
@@ -377,4 +340,27 @@ void MainWindow::insertDataToTable()
         ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(fileOperation->m_test[row]));
         ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(fileOperation->m_result[row]));
     }
+
 }
+
+void MainWindow::readfile()
+{
+    cout;
+    QFile file("/home/zuozhe/share/2022/One Click/one_click_generation/cts_test_list.txt");
+    QTextStream in(&file);
+    if(!file.exists()){
+        QMessageBox::warning(NULL,"warning",QString("file:%1 does not exist!")
+                             .arg(file.fileName()));
+    }
+    if(file.open(QIODevice::ReadOnly)){
+
+        while(!in.atEnd()){
+            cout << in.readLine();
+            if(in.readLine().contains("[1]"))
+            {
+                cout << in.readLine().data();
+            }
+        }
+    }
+}
+

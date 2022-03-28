@@ -13,6 +13,7 @@
 #include <QThread>
 #include <QThreadPool>
 #include <QCompleter>
+#include <QTableWidget>
 
 #include "document.h"
 #include "listenerthread.h"
@@ -71,9 +72,8 @@ protected:
     void initEnvironment();
     void initConnect();
     void keyPressEvent(QKeyEvent *event);
-//    void readXml();
     void insertDataToTable();
-
+    void readfile();
 signals:
 
 
@@ -82,10 +82,12 @@ private slots:
     void slo_reciveMessage(QString msg);
     void slo_reciveMessage(QProcess::ProcessState state);
     void slo_showCtsSuite();
+    void slo_showCtsResult();
     void slo_openDocument();
     void moveCursorToEnd();
-    void on_pushButton_run_clicked();
+    void setTabelWidgetColor(QTableWidgetItem *item);
 
+    void on_pushButton_run_clicked();
     void on_pushButton_devices_clicked();
     void on_pushButton_root_clicked();
     void on_pushButton_remount_clicked();
@@ -101,6 +103,6 @@ private slots:
     void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
     void on_pushButton_loadctssuite_clicked();
     void on_pushButton_log_clicked();
-    void on_pushButton_result_clicked();
+
 };
 #endif // MAINWINDOW_H

@@ -13,6 +13,7 @@ public:
     void loadDataBase(QString filePath,QStringList *stringList);
     void saveDataBase(QString filePath,QStringList *stringList);
     bool readXml(QFile *file);
+    bool readExcel(QFile *file);
 
 public:
     QString         m_modulename;

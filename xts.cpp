@@ -98,6 +98,7 @@ void Xts::slo_reciveState(QProcess::ProcessState state)
     if (state==QProcess::ProcessState::NotRunning)
     {
         emit sig_sendToMainWindow("Done");
+//        emit sig_showCtsResult();
     }
 }
 
