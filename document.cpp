@@ -64,6 +64,15 @@ QString Document::openFile()
     return filePath;
 }
 
+QString Document::selectDirectory()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                     "/home",
+                                                     QFileDialog::ShowDirsOnly
+                                                     | QFileDialog::DontResolveSymlinks);
+    return dir;
+}
+
 void Document::closeEvent(QCloseEvent *)
 {
     emit closed();

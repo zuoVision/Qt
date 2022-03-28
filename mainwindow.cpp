@@ -47,13 +47,19 @@ void MainWindow::initUi()
 //    ui->checkBox_savecmd->setCheckState(Qt::Checked);
     setWindowIcon(QIcon(":/icon/icon/superman.ico"));
 //    ui->statusbar->showMessage(m_statusbarMsg);
-
-    m_ccd_status = new QLabel("ccd",this);
-    m_sim_status = new QLabel("sim",this);
+    const QString m_red_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:red";
+    const QString m_green_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:green";
+    const QString m_grey_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:grey";
+    const QString m_yellow_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:yellow";
+    m_ccd_status = new QLabel("command",this);
+    m_sim_status = new QLabel("simpleperf",this);
     m_xts_status = new QLabel("xts",this);
-    m_ccd_status->setMinimumWidth(100);
-    m_ccd_status->setMinimumWidth(100);
-    m_ccd_status->setMinimumWidth(100);
+    m_ccd_status->setStyleSheet(m_red_SheetStyle);//改成 红色圆形
+    m_sim_status->setStyleSheet(m_green_SheetStyle);//改成 绿色圆形
+    m_xts_status->setStyleSheet(m_yellow_SheetStyle);//改成 黄色圆形
+    m_ccd_status->setMinimumWidth(150);
+    m_sim_status->setMinimumWidth(150);
+    m_xts_status->setMinimumWidth(150);
     ui->statusbar->addWidget(m_ccd_status);
     ui->statusbar->addWidget(m_sim_status);
     ui->statusbar->addWidget(m_xts_status);
@@ -118,8 +124,6 @@ void MainWindow::initConnect()
             this,SLOT(slo_reciveMessage(QString)));
     connect(xts,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState)),
             this,SLOT(slo_reciveMessage(QProcess::ProcessState)));
-    connect(xts,SIGNAL(sig_findCtsSuite()),
-            this,SLOT(slo_showCtsSuite()));
     connect(xts,SIGNAL(sig_showCtsResult()),
             this,SLOT(slo_showCtsResult()));
 
@@ -135,7 +139,7 @@ void MainWindow::initConnect()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
-//    qDebug()<<MY_TAG<<"keyPressEvent";
+    //TODO:ctrl + D no response
     if((event->modifiers() == Qt::ControlModifier) &&
        (event->key() == Qt::Key_D))
     {
@@ -172,11 +176,6 @@ void MainWindow::slo_reciveMessage(QProcess::ProcessState state)
         if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
     }
 //    ui->statusbar->showMessage(m_statusbarMsg);
-}
-
-void MainWindow::slo_showCtsSuite()
-{
-    ui->comboBox_ctssuite->addItems(xts->m_ctsSuite);
 }
 
 void MainWindow::slo_openDocument()
@@ -258,7 +257,7 @@ void MainWindow::on_pushButton_flamegraph_clicked()
 
 void MainWindow::on_pushButton_runcts_clicked()
 {
-    QString m_ctsSuite      = ui->comboBox_ctssuite->currentText();
+    QString m_ctsSuite      = ui->lineEdit_ctssuite->text();
     QString m_ctsCommand    = ui->comboBox_ctscommand->currentText();
     QString m_ctsModule     = ui->comboBox_ctsmodule->currentText();
     QString m_ctsTest       = ui->lineEdit_ctstest->text();
@@ -283,18 +282,18 @@ void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1
 
 void MainWindow::on_pushButton_loadctssuite_clicked()
 {
-   ui->comboBox_ctssuite->insertItem(-1,m_doc.openFile());
-   ui->comboBox_ctssuite->setCurrentIndex(0);
+    m_ctsSuite = m_doc.selectDirectory();
+    ui->lineEdit_ctssuite->setText(m_ctsSuite);
 }
 
 void MainWindow::on_pushButton_log_clicked()
 {
-    if (ui->comboBox_ctssuite->currentText().isEmpty())
+    if (ui->lineEdit_ctssuite->text().isEmpty())
     {
         QMessageBox::warning(this,"warning","please choose cts suite ...");
         return;
     }
-    QString path = ui->comboBox_ctssuite->currentText()+"../../../logs/latest/";
+    QString path = ui->lineEdit_ctssuite->text()+"../../../logs/latest/";
     if(!QDesktopServices::openUrl(QUrl(path))){
         QMessageBox::warning(this,"warning",QString("open folder failed#{%1}").arg(path));
     }
@@ -303,7 +302,7 @@ void MainWindow::on_pushButton_log_clicked()
 void MainWindow::slo_showCtsResult()
 {
 
-    if (ui->comboBox_ctssuite->currentText().isEmpty())
+    if (ui->lineEdit_ctssuite->text().isEmpty())
     {
         QMessageBox::warning(this,"warning","please choose cts suite ...");
         return;
@@ -343,6 +342,7 @@ void MainWindow::insertDataToTable()
 
 }
 
+#if 0
 void MainWindow::readfile()
 {
     cout;
@@ -363,4 +363,4 @@ void MainWindow::readfile()
         }
     }
 }
-
+#endif

@@ -44,11 +44,7 @@ public:
     FileOperation   *fileOperation = new FileOperation(this);
 
 public:
-//    QString         m_modulename;
-//    QString         m_totalTests;
-//    QString         m_pass;
-//    QStringList     m_test;
-//    QStringList     m_result;
+    QString         m_ctsSuite;
     QStringList     m_resolution;
 
     QLabel          *m_ccd_status;
@@ -81,7 +77,6 @@ private slots:
     void slotReciveDocument();
     void slo_reciveMessage(QString msg);
     void slo_reciveMessage(QProcess::ProcessState state);
-    void slo_showCtsSuite();
     void slo_showCtsResult();
     void slo_openDocument();
     void moveCursorToEnd();

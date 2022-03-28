@@ -20,6 +20,7 @@ public:
 
     void    onLoadDocument(QString doc);
     QString openFile();
+    QString selectDirectory();
 
 public:
     QString m_filePath;

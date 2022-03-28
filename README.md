@@ -67,3 +67,6 @@ Qt project
 * 状态栏分栏
 * 调整debug log格式
 * TODO:QThread: Destroyed while thread is still running
+
+2022年3月28日
+* 修改状态栏
