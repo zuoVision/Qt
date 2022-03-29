@@ -70,3 +70,7 @@ Qt project
 
 2022年3月28日
 * 修改状态栏
+
+2022年3月29日
+* 修改xts逻辑
+* TODO:QThread: Destroyed while thread is still running

@@ -51,12 +51,12 @@ void Document::onLoadDocument(QString doc)
     file.close();
 }
 
-QString Document::openFile()
+QString Document::openFile(QString filter)
 {
     QFileDialog *fd = new QFileDialog(this);
     QString filePath;
     fd->setWindowTitle("选择文件");
-    fd->setNameFilter("");
+    fd->setNameFilter(filter);
     fd->setViewMode(QFileDialog::Detail);
     if(fd->exec() == QDialog::Accepted){
         filePath = fd->selectedFiles()[0];
@@ -64,13 +64,13 @@ QString Document::openFile()
     return filePath;
 }
 
-QString Document::selectDirectory()
+QString Document::selectDirectory(QString dir)
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
-                                                     "/home",
+    QString path = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+                                                     dir,
                                                      QFileDialog::ShowDirsOnly
                                                      | QFileDialog::DontResolveSymlinks);
-    return dir;
+    return path;
 }
 
 void Document::closeEvent(QCloseEvent *)

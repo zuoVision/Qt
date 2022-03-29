@@ -37,7 +37,7 @@ signals:
 
 public slots:
     void process(QString cmd);
-    void process(QString cmd,unsigned long secs);
+    void process(QString cmd,QString *callback);
     void stopProcessor();
     void exitProcessor();
     void createProcessor();

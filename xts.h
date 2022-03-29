@@ -24,8 +24,9 @@ public:
 public:
     QThread                 *xts_Thread;
     CommandProcessThread    *xts_cpt;
-
-    QStringList             m_ctsSuite;
+    bool                    m_ctsComplete=false;
+    bool                    m_flag=false;
+    QString                 m_ctsSuite;
 
     QString                 m_totalRunTime;
     QString                 m_totalTests;
@@ -37,8 +38,8 @@ private:
 
 signals:
     void start();
-    void processCommand(QString cmd);
-    void processCommand(QString cmd,unsigned long secs);
+    void processCommand(QString);
+    void processCommand(QString,QString *);
     void stop();
     void exit();
     void sig_sendToMainWindow(QString);
@@ -51,6 +52,7 @@ public slots:
     void slo_reciveError(QString error);
     void slo_reciveInfo(QString info);
     void slo_reciveState(QProcess::ProcessState state);
+    void slo_reciveMainWindow(QString msg);
 };
 
 #endif // XTS_H

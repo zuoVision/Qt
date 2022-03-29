@@ -19,8 +19,8 @@ public:
 
 
     void    onLoadDocument(QString doc);
-    QString openFile();
-    QString selectDirectory();
+    QString openFile(QString filter="");
+    QString selectDirectory(QString dir);
 
 public:
     QString m_filePath;

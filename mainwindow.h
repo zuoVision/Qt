@@ -71,7 +71,7 @@ protected:
     void insertDataToTable();
     void readfile();
 signals:
-
+    void sig_sendToXts(QString);
 
 private slots:
     void slotReciveDocument();
@@ -99,5 +99,6 @@ private slots:
     void on_pushButton_loadctssuite_clicked();
     void on_pushButton_log_clicked();
 
+    void on_pushButton_result_clicked();
 };
 #endif // MAINWINDOW_H

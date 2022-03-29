@@ -120,6 +120,8 @@ void MainWindow::initConnect()
             this,SLOT(slo_reciveMessage(QProcess::ProcessState)));
 
     //XTS
+    connect(this,SIGNAL(sig_sendToXts(QString)),
+            xts,SLOT(slo_reciveMainWindow(QString)));
     connect(xts,SIGNAL(sig_sendToMainWindow(QString)),
             this,SLOT(slo_reciveMessage(QString)));
     connect(xts,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState)),
@@ -161,6 +163,10 @@ void MainWindow::slotReciveDocument()
 
 void MainWindow::slo_reciveMessage(QString msg)
 {
+    if(msg.startsWith("Warning")){
+        QMessageBox::warning(this,"warning",msg);
+        return;
+    }
     ui->textEdit->append(msg);
 }
 
@@ -282,8 +288,9 @@ void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1
 
 void MainWindow::on_pushButton_loadctssuite_clicked()
 {
-    m_ctsSuite = m_doc.selectDirectory();
+    m_ctsSuite = m_doc.selectDirectory("");
     ui->lineEdit_ctssuite->setText(m_ctsSuite);
+    emit sig_sendToXts(m_ctsSuite);
 }
 
 void MainWindow::on_pushButton_log_clicked()
@@ -301,24 +308,20 @@ void MainWindow::on_pushButton_log_clicked()
 
 void MainWindow::slo_showCtsResult()
 {
-
-    if (ui->lineEdit_ctssuite->text().isEmpty())
-    {
-        QMessageBox::warning(this,"warning","please choose cts suite ...");
-        return;
-    }
 #if 0
     QDesktopServices::openUrl(QUrl(ui->comboBox_ctssuite->currentText()+"../../../results/latest/test_result.html"));
 #endif
-    cout ;
-    QFile file("test_result.xml");
+    int index = xts->m_ctsSuite.lastIndexOf("/");
+    QString res = xts->m_ctsSuite.left(index) + "/../results/latest/test_result.xml";
+    cout << res;
+    QFile file(res);
     if(!file.exists()){
-        QMessageBox::warning(this,"warning","file not found!");
+        QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(res));
         return;
     }
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        QMessageBox::warning(this,"warning","file open failed!");
+        QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
         return;
     }
     if(fileOperation->readXml(&file)) insertDataToTable();
@@ -336,6 +339,7 @@ void MainWindow::insertDataToTable()
     ui->tableWidget_xts->setHorizontalHeaderLabels(*list);
     ui->tableWidget_xts->setRowCount(fileOperation->m_totalTests.toInt());
     for(int row=0;row<ui->tableWidget_xts->rowCount();row++){
+        //TODO:
         ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(fileOperation->m_test[row]));
         ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(fileOperation->m_result[row]));
     }
@@ -364,3 +368,22 @@ void MainWindow::readfile()
     }
 }
 #endif
+
+void MainWindow::on_pushButton_result_clicked()
+{
+    QString res = m_doc.openFile("*.xml");
+    if(!res.isEmpty()){
+        QFile file(res);
+        if(!file.exists()){
+            QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(res));
+            return;
+        }
+        if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
+            return;
+        }
+        if(fileOperation->readXml(&file)) insertDataToTable();
+        file.close();
+    }
+}

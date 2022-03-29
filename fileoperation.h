@@ -22,6 +22,8 @@ public:
     QStringList     m_test;
     QStringList     m_result;
 
+    QVector<QStringList>     *m_testResult;
+
 private:
     QXmlStreamReader xmlreader;
 signals:

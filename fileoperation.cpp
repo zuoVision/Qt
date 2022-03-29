@@ -68,6 +68,9 @@ void FileOperation::saveDataBase(QString filePath, QStringList *stringList)
 bool FileOperation::readXml(QFile *file)
 {
     cout ;
+    m_test.clear();
+    m_result.clear();
+    m_testResult = new QVector<QStringList>(/*m_totalTests.toInt()*/);
     QString nodename;
     QString output;
     QXmlStreamReader xmlreader(file);
@@ -78,7 +81,9 @@ bool FileOperation::readXml(QFile *file)
             m_modulename = xmlreader.attributes().value("name").toString();
             m_totalTests = xmlreader.attributes().value("total_tests").toString();
             m_pass       = xmlreader.attributes().value("pass").toString();
-//            cout << m_modulename << m_totalTests << m_pass;
+
+            int i=0;
+            cout << m_modulename << m_totalTests << m_pass << m_testResult->size();
             while (!(nodename == "Module" && xmlreader.isEndElement())) {// module not end
                 xmlreader.readNextStartElement();
                 nodename = xmlreader.name().toString();
@@ -89,15 +94,19 @@ bool FileOperation::readXml(QFile *file)
                         nodename = xmlreader.name().toString();
                         if(nodename == "Test" && xmlreader.isStartElement()){
                             QString name    = xmlreader.attributes().value("name").toString();
-                            QString result  = xmlreader.attributes().value("result").toString();
-                            m_test   << testcase+"#"+name;
+                            QString result  = xmlreader.attributes().value("result").toString();         
+                            m_test << testcase+"#"+name;
                             m_result << result;
+                            //TODO:
+                            m_testResult->insert(i,QStringList()<<testcase+"#"+name<<result);
+                            i++;
                         }
                     }
                 }
             }
         }
     }
+    cout << *m_testResult;
     if(m_modulename.isEmpty())
     {
         return false;

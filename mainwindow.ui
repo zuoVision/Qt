@@ -191,8 +191,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>756</width>
-             <height>364</height>
+             <width>744</width>
+             <height>327</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -520,8 +520,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>736</width>
-                <height>423</height>
+                <width>734</width>
+                <height>383</height>
                </rect>
               </property>
               <widget class="QPushButton" name="pushButton_flamegraph">
@@ -631,8 +631,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>756</width>
-             <height>457</height>
+             <width>758</width>
+             <height>433</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_2">
@@ -747,7 +747,14 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="lineEdit_ctssuite"/>
+                  <widget class="QLineEdit" name="lineEdit_ctssuite">
+                   <property name="font">
+                    <font>
+                     <family>Noto Sans CJK SC</family>
+                     <pointsize>9</pointsize>
+                    </font>
+                   </property>
+                  </widget>
                  </item>
                  <item>
                   <widget class="QPushButton" name="pushButton_loadctssuite">
@@ -913,7 +920,7 @@
                    </item>
                    <item>
                     <property name="text">
-                     <string>list module ( l r )</string>
+                     <string>list module ( l m )</string>
                     </property>
                    </item>
                    <item>
@@ -999,7 +1006,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -1034,7 +1041,7 @@
    <property name="minimumSize">
     <size>
      <width>89</width>
-     <height>111</height>
+     <height>113</height>
     </size>
    </property>
    <property name="maximumSize">

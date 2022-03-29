@@ -41,8 +41,8 @@ void Xts::init_connect()
             xts_cpt,SLOT(createProcessor()));
     connect(this,SIGNAL(processCommand(QString)),
             xts_cpt,SLOT(process(QString)));
-    connect(this,SIGNAL(processCommand(QString,unsigned long)),
-            xts_cpt,SLOT(process(QString,unsigned long)));
+    connect(this,SIGNAL(processCommand(QString,QString *)),
+            xts_cpt,SLOT(process(QString,QString *)));
     connect(this,SIGNAL(stop()),
             xts_cpt,SLOT(stopProcessor()));
     connect(this,SIGNAL(exit()),
@@ -61,8 +61,24 @@ void Xts::init_connect()
 void Xts::slo_reciveOutput(QString output)
 {
     cout << output;
-    if(output.contains("SuiteResultReporter: ")) analyzeResult(output);
-
+    if(output.contains("SuiteResultReporter: "))
+        m_ctsComplete = true;
+    if (m_flag && output.contains("cts-tradefed")) {
+        QStringList res = output.split("\n").filter("cts-tradefed");
+        if(res.isEmpty()){
+            emit sig_sendToMainWindow("Warning : No suite detected, please reselect cts suite!");
+            m_flag = false;
+            return;
+        }
+        if(res.size()>1){
+            emit sig_sendToMainWindow("Warning : Multiple suite detected, please reselect cts suite!");
+            m_flag = false;
+            m_ctsSuite.clear();
+            return;
+        }
+        m_ctsSuite = res.first();
+        return;
+    }
     emit sig_sendToMainWindow(output);
 }
 
@@ -80,20 +96,44 @@ void Xts::slo_reciveInfo(QString info)
 
 void Xts::slo_reciveState(QProcess::ProcessState state)
 {
-//    cout << state;
+    cout << state;
     emit sig_sendToMainWindow(state);
     if (state==QProcess::ProcessState::NotRunning)
     {
-        emit sig_sendToMainWindow("Done");
+        if(!m_flag)
+            emit sig_sendToMainWindow("Done");
+//        else{
+//            if(m_ctsSuite.isEmpty()){
+//                emit sig_sendToMainWindow("Warning : No suite detected, please reselect cts suite!");
+//                m_flag = false;
+//            }
+//            if (m_ctsSuite.size()>1){
+//                emit sig_sendToMainWindow("Warning : Multiple suite detected, please reselect cts suite!");
+//                m_flag = false;
+//                m_ctsSuite.clear();
+//            }
+//        }
+        if(m_ctsComplete){
+            emit sig_showCtsResult();
+            m_ctsComplete=false;
+        }
     }
+}
+
+void Xts::slo_reciveMainWindow(QString msg)
+{
+    m_ctsSuite.clear();
+    processCommand(QString("find %1 -name cts-tradefed").arg(msg));
+    m_flag = true;
 }
 
 void Xts::runCts(const QString arg1, const QString arg2, QString arg3, QString arg4)
 {
+    //arg1 deprecated
     cout << arg1 <<arg2 <<arg3 <<arg4;
     if (xts_cpt->processor->state() != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
-    if(arg1.isEmpty()) {
+    if(m_ctsSuite.isEmpty()) {
         emit sig_sendToMainWindow("please select cts suite!");
         return;
     }
@@ -104,7 +144,7 @@ void Xts::runCts(const QString arg1, const QString arg2, QString arg3, QString a
         arg4 = QString(" -t %1").arg(arg4);
         cout << arg4;
     }
-    QString cmd = arg1+" "+arg2+arg3+arg4;
+    QString cmd = m_ctsSuite +" "+arg2+arg3+arg4;
     cout << cmd;
     emit sig_sendToMainWindow(xts_cpt->m_userName+cmd);
     emit processCommand(cmd);
@@ -115,6 +155,7 @@ void Xts::stopProcessor()
     emit stop();
 }
 
+#if 0
 void Xts::analyzeResult(QString output)
 {
     QStringList list = output.split("\n");
@@ -125,5 +166,4 @@ void Xts::analyzeResult(QString output)
     cout << m_totalRunTime << m_totalTests << m_passed << m_failed;
     emit sig_showCtsResult();
 }
-
-
+#endif

@@ -96,9 +96,9 @@ void CommandProcessThread::process(QString cmd)
     qDebug() << MY_TAG << "[process]"<<" - ";
 }
 
-void CommandProcessThread::process(QString cmd, unsigned long secs)
+void CommandProcessThread::process(QString cmd, QString *callback)
 {
-    cout << " + " << secs;
+    cout << " + " <<"callback"<< *callback;
     if (cmd.isEmpty())
     {
         cout << "command is empty, please input command!";
@@ -112,11 +112,11 @@ void CommandProcessThread::process(QString cmd, unsigned long secs)
         return emit sig_sendInfo("please wait!");
     }
     processor->start(BASH,QStringList()<<"-c"<< cmd);
-    processor->waitForReadyRead();
-    if(!processor->waitForFinished(secs)){
+    if(!processor->waitForFinished()){
         cout << "time out";
         processor->close();
     }
+    cout <<"callback"<< callback << *callback;
     cout << " - ";
 }
 
