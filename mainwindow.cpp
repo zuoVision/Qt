@@ -47,19 +47,34 @@ void MainWindow::initUi()
 //    ui->checkBox_savecmd->setCheckState(Qt::Checked);
     setWindowIcon(QIcon(":/icon/icon/superman.ico"));
 //    ui->statusbar->showMessage(m_statusbarMsg);
-    const QString m_red_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:red";
-    const QString m_green_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:green";
-    const QString m_grey_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:grey";
-    const QString m_yellow_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:yellow";
     m_ccd_status = new QLabel("command",this);
     m_sim_status = new QLabel("simpleperf",this);
     m_xts_status = new QLabel("xts",this);
-    m_ccd_status->setStyleSheet(m_red_SheetStyle);//改成 红色圆形
-    m_sim_status->setStyleSheet(m_green_SheetStyle);//改成 绿色圆形
-    m_xts_status->setStyleSheet(m_yellow_SheetStyle);//改成 黄色圆形
-    m_ccd_status->setMinimumWidth(150);
-    m_sim_status->setMinimumWidth(150);
-    m_xts_status->setMinimumWidth(150);
+    m_ccd_status->setFixedSize(20,20);
+    m_sim_status->setFixedSize(20,20);
+    m_xts_status->setFixedSize(20,20);
+    led_red = new QPixmap(":/icon/icon/red.ico");
+    led_green = new QPixmap(":/icon/icon/green.ico");
+    led_yellow = new QPixmap(":/icon/icon/yellow.ico");
+    led_grey = new QPixmap(":/icon/icon/grey.ico");
+    led_blue = new QPixmap(":/icon/icon/blue.ico");
+    led_red->scaled(m_ccd_status->size(), Qt::KeepAspectRatio);
+    led_green->scaled(m_ccd_status->size(), Qt::KeepAspectRatio);
+    led_yellow->scaled(m_ccd_status->size(), Qt::KeepAspectRatio);
+    m_ccd_status->setScaledContents(true);
+    m_sim_status->setScaledContents(true);
+    m_xts_status->setScaledContents(true);
+    m_ccd_status->setPixmap(*led_grey);
+    m_sim_status->setPixmap(*led_grey);
+    m_xts_status->setPixmap(*led_grey);
+//    const QString m_red_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:red";
+//    const QString m_green_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:green";
+//    const QString m_grey_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:grey";
+//    const QString m_yellow_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:yellow";
+//    m_ccd_status->setStyleSheet(m_red_SheetStyle);//改成 红色圆形
+//    m_sim_status->setStyleSheet(m_green_SheetStyle);//改成 绿色圆形
+//    m_xts_status->setStyleSheet(m_yellow_SheetStyle);//改成 黄色圆形
+
     ui->statusbar->addWidget(m_ccd_status);
     ui->statusbar->addWidget(m_sim_status);
     ui->statusbar->addWidget(m_xts_status);
@@ -108,24 +123,24 @@ void MainWindow::initConnect()
     //commonCommand
     connect(ccd,SIGNAL(sig_sendToMainWindow(QString)),
             this,SLOT(slo_reciveMessage(QString)));
-    connect(ccd,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState)),
-            this,SLOT(slo_reciveMessage(QProcess::ProcessState)));
+    connect(ccd,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
+            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
 
     //simpleperf
     connect(&m_doc,SIGNAL(closed()),
             this,SLOT(slotReciveDocument()));
     connect(simpleperf,SIGNAL(sig_sendToMainWindow(QString)),
             this,SLOT(slo_reciveMessage(QString)));
-    connect(simpleperf,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState)),
-            this,SLOT(slo_reciveMessage(QProcess::ProcessState)));
+    connect(simpleperf,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
+            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
 
     //XTS
     connect(this,SIGNAL(sig_sendToXts(QString)),
             xts,SLOT(slo_reciveMainWindow(QString)));
     connect(xts,SIGNAL(sig_sendToMainWindow(QString)),
             this,SLOT(slo_reciveMessage(QString)));
-    connect(xts,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState)),
-            this,SLOT(slo_reciveMessage(QProcess::ProcessState)));
+    connect(xts,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
+            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
     connect(xts,SIGNAL(sig_showCtsResult()),
             this,SLOT(slo_showCtsResult()));
 
@@ -170,18 +185,26 @@ void MainWindow::slo_reciveMessage(QString msg)
     ui->textEdit->append(msg);
 }
 
-void MainWindow::slo_reciveMessage(QProcess::ProcessState state)
+void MainWindow::slo_reciveMessage(QProcess::ProcessState state,QString tag)
 {
-//    m_processState = state;
+
     if (state == QProcess::Running){
-        m_statusbarMsg = "    Process Running (you can input 'exit' to force quit!) ";
+        if (tag == "CommonCommand") m_ccd_status->setPixmap(*led_green);
+        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_green);
+        if (tag == "Xts") m_xts_status->setPixmap(*led_green);
+//            m_statusbarMsg = "    Process Running (you can input 'exit' to force quit!) ";
     }else if(state == QProcess::Starting){
-        m_statusbarMsg = "    Process Starting ";
+        if (tag == "CommonCommand") m_ccd_status->setPixmap(*led_blue);
+        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_blue);
+        if (tag == "Xts") m_xts_status->setPixmap(*led_blue);
+//            m_statusbarMsg = "    Process Starting ";
     }else{
-        m_statusbarMsg = "    Process Not Running ";
+        if (tag == "CommonCommand") m_ccd_status->setPixmap(*led_grey);
+        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_grey);
+        if (tag == "Xts") m_xts_status->setPixmap(*led_grey);
+//            m_statusbarMsg = "    Process Not Running ";
         if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
     }
-//    ui->statusbar->showMessage(m_statusbarMsg);
 }
 
 void MainWindow::slo_openDocument()

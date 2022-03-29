@@ -39,7 +39,7 @@ signals:
     void processCommand(QString cmd);
     void stop();
     void sig_sendToMainWindow(QString);
-    void sig_sendToMainWindow(QProcess::ProcessState);
+    void sig_sendToMainWindow(QProcess::ProcessState,QString);
 
 private slots:
     void slo_reciveOutput(QString output);

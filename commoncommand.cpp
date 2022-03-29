@@ -14,7 +14,7 @@ CommonCommand::CommonCommand(QObject *parent) : QObject(parent)
 
 CommonCommand::~CommonCommand()
 {
-    cout << "~Simpleperf";
+    cout ;
     delete ccd_cpt;
     delete ccd_Thread;
 }
@@ -70,7 +70,7 @@ void CommonCommand::slo_reciveInfo(QString info)
 void CommonCommand::slo_reciveState(QProcess::ProcessState state)
 {
 //    cout << state;
-    emit sig_sendToMainWindow(state);
+    emit sig_sendToMainWindow(state,MY_TAG);
     if (state==QProcess::ProcessState::NotRunning)
         emit sig_sendToMainWindow("Done");
 }

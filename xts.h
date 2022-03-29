@@ -43,7 +43,7 @@ signals:
     void stop();
     void exit();
     void sig_sendToMainWindow(QString);
-    void sig_sendToMainWindow(QProcess::ProcessState);
+    void sig_sendToMainWindow(QProcess::ProcessState,QString);
     void sig_findCtsSuite();
     void sig_showCtsResult();
 

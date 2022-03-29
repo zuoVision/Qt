@@ -6,7 +6,7 @@
 #include <QUrl>
 
 
-#define MY_TAG "simpleperf"
+#define MY_TAG "Simpleperf"
 #define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
 #define SIMPLEPERFSTAT   "pwd"
@@ -74,7 +74,7 @@ void Simpleperf::slo_reciveInfo(QString info)
 void Simpleperf::slo_reciveState(QProcess::ProcessState state)
 {
 //    qDebug() << MY_TAG << "slo_reciveState" << state;
-    emit sig_sendToMainWindow(state);
+    emit sig_sendToMainWindow(state,MY_TAG);
     if (state==QProcess::ProcessState::NotRunning)
         emit sig_sendToMainWindow("Done");
     m_state = state;

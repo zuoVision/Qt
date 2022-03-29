@@ -50,6 +50,11 @@ public:
     QLabel          *m_ccd_status;
     QLabel          *m_sim_status;
     QLabel          *m_xts_status;
+    QPixmap         *led_red;
+    QPixmap         *led_green;
+    QPixmap         *led_yellow;
+    QPixmap         *led_grey;
+    QPixmap         *led_blue;
 
 private:
     Ui::MainWindow *ui;
@@ -76,7 +81,7 @@ signals:
 private slots:
     void slotReciveDocument();
     void slo_reciveMessage(QString msg);
-    void slo_reciveMessage(QProcess::ProcessState state);
+    void slo_reciveMessage(QProcess::ProcessState state,QString tag);
     void slo_showCtsResult();
     void slo_openDocument();
     void moveCursorToEnd();

@@ -6,5 +6,15 @@
     </qresource>
     <qresource prefix="/icon">
         <file>icon/superman.ico</file>
+        <file>icon/blue.ico</file>
+        <file>icon/green.ico</file>
+        <file>icon/grey.ico</file>
+        <file>icon/led_green.ico</file>
+        <file>icon/led_red.ico</file>
+        <file>icon/led_yellow.ico</file>
+        <file>icon/orange.ico</file>
+        <file>icon/red.ico</file>
+        <file>icon/led_red1.ico</file>
+        <file>icon/yellow.ico</file>
     </qresource>
 </RCC>

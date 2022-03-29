@@ -3,7 +3,7 @@
 #include <QDataStream>
 #include <QDebug>
 
-#define MY_TAG          "XTS"
+#define MY_TAG          "Xts"
 #define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
 #define CTSSUITE        "~/XTS/Android_R/android-cts/tools/cts-tradefed "
@@ -97,7 +97,7 @@ void Xts::slo_reciveInfo(QString info)
 void Xts::slo_reciveState(QProcess::ProcessState state)
 {
     cout << state;
-    emit sig_sendToMainWindow(state);
+    emit sig_sendToMainWindow(state,MY_TAG);
     if (state==QProcess::ProcessState::NotRunning)
     {
         if(!m_flag)

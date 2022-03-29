@@ -74,3 +74,4 @@ Qt project
 2022年3月29日
 * 修改xts逻辑
 * TODO:QThread: Destroyed while thread is still running
+* 完善process过程状态栏led灯显示效果
