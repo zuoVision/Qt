@@ -67,13 +67,6 @@ void MainWindow::initUi()
     m_ccd_status->setPixmap(*led_grey);
     m_sim_status->setPixmap(*led_grey);
     m_xts_status->setPixmap(*led_grey);
-//    const QString m_red_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:red";
-//    const QString m_green_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:green";
-//    const QString m_grey_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:grey";
-//    const QString m_yellow_SheetStyle = "min-width: 16px; min-height: 16px;max-width:16px; max-height: 16px;border-radius: 8px;  border:1px solid black;background:yellow";
-//    m_ccd_status->setStyleSheet(m_red_SheetStyle);//改成 红色圆形
-//    m_sim_status->setStyleSheet(m_green_SheetStyle);//改成 绿色圆形
-//    m_xts_status->setStyleSheet(m_yellow_SheetStyle);//改成 黄色圆形
 
     ui->statusbar->addWidget(m_ccd_status);
     ui->statusbar->addWidget(m_sim_status);
@@ -86,10 +79,11 @@ void MainWindow::initUi()
     ui->tableWidget_xts->horizontalHeader()->show();
     //zi shi ying kuan du
     ui->tableWidget_xts->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-    ui->tableWidget_xts->setHorizontalHeaderLabels(QStringList()<<"Tests"<<"Result"<<"Resolution");
+    ui->tableWidget_xts->setHorizontalHeaderLabels(QStringList()<<"Tests"<<"Result"<<"Resolution"<<"Url");
     ui->tableWidget_xts->horizontalHeader()->setStyleSheet("QHeaderView::section{background:lightgreen;}");
     ui->tableWidget_xts->setSortingEnabled(true);
-    ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//禁止编辑
+    ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//
+    ui->tableWidget_xts->setColumnHidden(3,true);
 }
 
 void MainWindow::initEnvironment()
@@ -112,6 +106,9 @@ void MainWindow::initEnvironment()
     fileOperation->loadDataBase(":/config/cts_test_list.txt",&m_ctsTestList);
     test_completer->setModel(new QStringListModel(m_ctsTestList,this));
     ui->lineEdit_ctstest->setCompleter(test_completer);
+
+    //
+    loadCtsResulotion();
 }
 
 void MainWindow::initConnect()
@@ -143,14 +140,16 @@ void MainWindow::initConnect()
             this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
     connect(xts,SIGNAL(sig_showCtsResult()),
             this,SLOT(slo_showCtsResult()));
+    connect(ui->tableWidget_xts,SIGNAL(cellDoubleClicked(int ,int)),
+            this,SLOT(slo_openExternalLink(int ,int)));
 
     //cmd回车-> run button click
     connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
             ui->pushButton_run,SLOT(click()));
     connect(ui->textEdit,SIGNAL(textChanged()),
             this,SLOT(moveCursorToEnd()));
-    connect(ui->tableWidget_xts,SIGNAL(itemChanged(QTableWidgetItem*)),
-            this,SLOT(setTabelWidgetColor(QTableWidgetItem*)));
+//    connect(ui->tableWidget_xts,SIGNAL(itemChanged(QTableWidgetItem*)),
+//            this,SLOT(setTabelWidgetColor(QTableWidgetItem*)));
 
 }
 
@@ -169,7 +168,6 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             xts->stopProcessor();
     }
 }
-
 
 void MainWindow::slotReciveDocument()
 {
@@ -351,22 +349,64 @@ void MainWindow::slo_showCtsResult()
     file.close();
 }
 
+void MainWindow::slo_openExternalLink(int row,int col)
+{
+//    cout << row << col;
+    if(col == 2 && ui->tableWidget_xts->item(row,3)) QDesktopServices::openUrl(QUrl(ui->tableWidget_xts->item(row,3)->text()));
+}
+
+void MainWindow::loadCtsResulotion()
+{
+    QString csv = ":/config/cts_resulotion.csv";
+    QFile file(csv);
+    if(!file.exists()){
+        QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(csv));
+        return;
+    }
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(csv));
+        return;
+    }
+    if(!fileOperation->readCsv(&file)){
+        ui->textEdit->append("cts resulotion load fail ...");
+    }
+    file.close();
+}
+
 void MainWindow::insertDataToTable()
 {
     QStringList *list = new QStringList();
     QString test,result,fail;
+    QBrush redColor(Qt::red);
     fail = QString::number(fileOperation->m_totalTests.toInt() - fileOperation->m_pass.toInt());
     test = QString("Test(%1)").arg(fileOperation->m_totalTests);
     result = QString("Result(pass %1 fail %2)").arg(fileOperation->m_pass).arg(fail);
-    *list << test << result;
+    *list << test << result << "Resulotion" << "Url";
+    ui->tableWidget_xts->clear();
     ui->tableWidget_xts->setHorizontalHeaderLabels(*list);
     ui->tableWidget_xts->setRowCount(fileOperation->m_totalTests.toInt());
     for(int row=0;row<ui->tableWidget_xts->rowCount();row++){
         //TODO:
-        ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(fileOperation->m_test[row]));
-        ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(fileOperation->m_result[row]));
-    }
+        cout << fileOperation->m_testResult->at(row);
 
+        ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(0)));
+        if(fileOperation->m_testResult->at(row).at(1)=="fail") {
+            ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem("fail"));
+            ui->tableWidget_xts->item(row,1)->setForeground(Qt::red);
+        }else{
+            ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(1)));
+        }
+        if(!fileOperation->m_testResult->at(row).at(2).isEmpty())
+        {
+//            QLabel *lab = new QLabel(fileOperation->m_testResult->at(row).at(2));
+//            lab->setOpenExternalLinks(true);
+//            ui->tableWidget_xts->setCellWidget(row,2,lab);
+            ui->tableWidget_xts->setItem(row,2,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(2)));
+            ui->tableWidget_xts->setItem(row,3,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(3)));
+
+        }
+    }
 }
 
 #if 0

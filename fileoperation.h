@@ -13,19 +13,17 @@ public:
     void loadDataBase(QString filePath,QStringList *stringList);
     void saveDataBase(QString filePath,QStringList *stringList);
     bool readXml(QFile *file);
-    bool readExcel(QFile *file);
+    bool readCsv(QFile *file);
 
 public:
-    QString         m_modulename;
-    QString         m_totalTests;
-    QString         m_pass;
-    QStringList     m_test;
-    QStringList     m_result;
-
-    QVector<QStringList>     *m_testResult;
+    QString                 m_modulename;
+    QString                 m_totalTests;
+    QString                 m_pass;
+    QStringList             *m_resulotion=new QStringList();
+    QVector<QStringList>    *m_testResult=new QVector<QStringList>();
 
 private:
-    QXmlStreamReader xmlreader;
+    QXmlStreamReader        xmlreader;
 signals:
 
 };
