@@ -22,6 +22,11 @@ MyTableView::~MyTableView()
 
 void MyTableView::init()
 {
+    this->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    this->setAutoScroll(true);
+    this->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
     html_format="<a href=\"%1\">%2";
     lab_resulotion = new QLabel();
     lab_resulotion->setOpenExternalLinks(true);
@@ -39,12 +44,12 @@ void MyTableView::setData(QVector<QStringList> *data)
         cout << "data is empty!";
         return;
     }
-    QString link;
+    QString link = "<a href=\'https://www.baidu.com\'>baidu";
     for(int row=0;row<data->size();row++){
-        cout << data->at(row);
+//        cout << data->at(row);
 //        link = html_format.arg(data->at(row).at(3)).arg(data->at(row).at(2));
-        link = data->at(row).at(2);
-        cout << link;
+//        link = data->at(row).at(2);
+//        cout << link;
         lab_resulotion->setText(link);
         model->setItem(row,0,new QStandardItem(data->at(row).at(0)));
         model->setItem(row,1,new QStandardItem(data->at(row).at(1)));

@@ -7,7 +7,7 @@
 #include <QStringListModel>
 #include <QTableView>
 #include <QXmlStreamReader>
-#include <QBoxLayout>
+#include <QVBoxLayout>
 
 #include <stdlib.h>
 
@@ -88,7 +88,18 @@ void MainWindow::initUi()
     ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//
     ui->tableWidget_xts->setColumnHidden(3,true);
 
-    mtv->setParent(ui->tab_test);
+    mtv->setParent(ui->widget_table);
+    QGridLayout *gl = new QGridLayout();
+    gl->addWidget(mtv);
+    ui->widget_table->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    mtv->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+//    ui->widget_table->setGeometry(9,195,800,300);
+//    QGridLayout *xtsLayout = new QGridLayout();
+//    xtsLayout->addWidget(ui->widget_xts,0,0);
+//    xtsLayout->addWidget(ui->widget_table,1,0);
+//    QGridLayout *tableLayout = new QGridLayout();
+//    tableLayout->addWidget(mtv);
 }
 
 void MainWindow::initEnvironment()

@@ -77,6 +77,7 @@ protected:
     void loadCtsResulotion();
     void insertDataToTable();
     void readfile();
+
 signals:
     void sig_sendToXts(QString);
 
