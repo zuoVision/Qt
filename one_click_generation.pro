@@ -28,6 +28,7 @@ SOURCES += \
     listenerthread.cpp \
     main.cpp \
     mainwindow.cpp \
+    mytableview.cpp \
     simpleperf.cpp \
     xts.cpp
 
@@ -38,6 +39,7 @@ HEADERS += \
     fileoperation.h \
     listenerthread.h \
     mainwindow.h \
+    mytableview.h \
     simpleperf.h \
     xts.h
 

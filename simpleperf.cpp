@@ -102,9 +102,10 @@ void Simpleperf::runRecord()
     //    excuteCmd(PYTHON2_7,m_cmd);
 
     //    2.bash
-    QString cmd1 = SIMPLEPERFRECORD;
-    QString cmd2 = "adb pull /data/local/tmp/perf.data";
-    emit processCommand(cmd1+";"+cmd2);
+    QString cmd1 = "adb shell rm /data/local/tmp/perf.data";
+    QString cmd2 = SIMPLEPERFRECORD;
+    QString cmd3 = "adb pull /data/local/tmp/perf.data";
+    emit processCommand(cmd1+";"+cmd2+";"+cmd3);
 
 }
 

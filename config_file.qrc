@@ -18,4 +18,7 @@
         <file>icon/led_red1.ico</file>
         <file>icon/yellow.ico</file>
     </qresource>
+    <qresource prefix="/file">
+        <file>test_result.xml</file>
+    </qresource>
 </RCC>

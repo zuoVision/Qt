@@ -7,6 +7,8 @@
 #include <QStringListModel>
 #include <QTableView>
 #include <QXmlStreamReader>
+#include <QBoxLayout>
+
 #include <stdlib.h>
 
 #define MY_TAG          "MainWindow"
@@ -47,6 +49,8 @@ void MainWindow::initUi()
 //    ui->checkBox_savecmd->setCheckState(Qt::Checked);
     setWindowIcon(QIcon(":/icon/icon/superman.ico"));
 //    ui->statusbar->showMessage(m_statusbarMsg);
+
+    //status bar
     m_ccd_status = new QLabel("command",this);
     m_sim_status = new QLabel("simpleperf",this);
     m_xts_status = new QLabel("xts",this);
@@ -67,7 +71,6 @@ void MainWindow::initUi()
     m_ccd_status->setPixmap(*led_grey);
     m_sim_status->setPixmap(*led_grey);
     m_xts_status->setPixmap(*led_grey);
-
     ui->statusbar->addWidget(m_ccd_status);
     ui->statusbar->addWidget(m_sim_status);
     ui->statusbar->addWidget(m_xts_status);
@@ -84,6 +87,8 @@ void MainWindow::initUi()
     ui->tableWidget_xts->setSortingEnabled(true);
     ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//
     ui->tableWidget_xts->setColumnHidden(3,true);
+
+    mtv->setParent(ui->tab_test);
 }
 
 void MainWindow::initEnvironment()
@@ -185,7 +190,6 @@ void MainWindow::slo_reciveMessage(QString msg)
 
 void MainWindow::slo_reciveMessage(QProcess::ProcessState state,QString tag)
 {
-
     if (state == QProcess::Running){
         if (tag == "CommonCommand") m_ccd_status->setPixmap(*led_green);
         if (tag == "Simpleperf") m_sim_status->setPixmap(*led_green);
@@ -407,6 +411,8 @@ void MainWindow::insertDataToTable()
 
         }
     }
+
+    mtv->setData(fileOperation->m_testResult);
 }
 
 #if 0

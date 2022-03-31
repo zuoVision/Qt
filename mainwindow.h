@@ -21,6 +21,7 @@
 #include "fileoperation.h"
 #include "xts.h"
 #include "commoncommand.h"
+#include "mytableview.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -42,7 +43,7 @@ public:
     QCompleter      *cmd_completer;
     QCompleter      *test_completer;
     FileOperation   *fileOperation = new FileOperation(this);
-
+    MyTableView     *mtv = new MyTableView();
 public:
     QString         m_ctsSuite;
     QStringList     m_resolution;
