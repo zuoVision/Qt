@@ -191,8 +191,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>852</width>
-             <height>364</height>
+             <width>840</width>
+             <height>327</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -520,8 +520,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>832</width>
-                <height>423</height>
+                <width>830</width>
+                <height>383</height>
                </rect>
               </property>
               <widget class="QPushButton" name="pushButton_flamegraph">
@@ -631,8 +631,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>853</width>
-             <height>440</height>
+             <width>854</width>
+             <height>433</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_13">
@@ -647,74 +647,16 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>170</height>
+                <height>150</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
                 <width>16777215</width>
-                <height>180</height>
+                <height>160</height>
                </size>
               </property>
               <layout class="QGridLayout" name="gridLayout_14">
-               <item row="0" column="0">
-                <layout class="QHBoxLayout" name="horizontalLayout">
-                 <item>
-                  <widget class="QLabel" name="label_ctssuite">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="minimumSize">
-                    <size>
-                     <width>80</width>
-                     <height>0</height>
-                    </size>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <family>Noto Sans CJK SC</family>
-                     <pointsize>9</pointsize>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>suite:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QLineEdit" name="lineEdit_ctssuite">
-                   <property name="font">
-                    <font>
-                     <family>Noto Sans CJK SC</family>
-                     <pointsize>9</pointsize>
-                    </font>
-                   </property>
-                  </widget>
-                 </item>
-                 <item>
-                  <widget class="QPushButton" name="pushButton_loadctssuite">
-                   <property name="sizePolicy">
-                    <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-                     <horstretch>0</horstretch>
-                     <verstretch>0</verstretch>
-                    </sizepolicy>
-                   </property>
-                   <property name="font">
-                    <font>
-                     <family>Noto Sans CJK SC</family>
-                     <pointsize>9</pointsize>
-                    </font>
-                   </property>
-                   <property name="text">
-                    <string>load</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </item>
                <item row="1" column="0">
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
                  <item>
@@ -824,6 +766,64 @@
                      <string/>
                     </property>
                    </item>
+                  </widget>
+                 </item>
+                </layout>
+               </item>
+               <item row="0" column="0">
+                <layout class="QHBoxLayout" name="horizontalLayout">
+                 <item>
+                  <widget class="QLabel" name="label_ctssuite">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>80</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>Noto Sans CJK SC</family>
+                     <pointsize>9</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>suite:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QLineEdit" name="lineEdit_ctssuite">
+                   <property name="font">
+                    <font>
+                     <family>Noto Sans CJK SC</family>
+                     <pointsize>9</pointsize>
+                    </font>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_loadctssuite">
+                   <property name="sizePolicy">
+                    <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                     <horstretch>0</horstretch>
+                     <verstretch>0</verstretch>
+                    </sizepolicy>
+                   </property>
+                   <property name="font">
+                    <font>
+                     <family>Noto Sans CJK SC</family>
+                     <pointsize>9</pointsize>
+                    </font>
+                   </property>
+                   <property name="text">
+                    <string>load</string>
+                   </property>
                   </widget>
                  </item>
                 </layout>
@@ -959,82 +959,7 @@
                  </item>
                 </layout>
                </item>
-               <item row="5" column="0">
-                <widget class="QTableWidget" name="tableWidget_xts">
-                 <property name="sizePolicy">
-                  <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                   <horstretch>0</horstretch>
-                   <verstretch>0</verstretch>
-                  </sizepolicy>
-                 </property>
-                 <property name="frameShape">
-                  <enum>QFrame::NoFrame</enum>
-                 </property>
-                 <property name="frameShadow">
-                  <enum>QFrame::Plain</enum>
-                 </property>
-                 <property name="lineWidth">
-                  <number>0</number>
-                 </property>
-                 <property name="sizeAdjustPolicy">
-                  <enum>QAbstractScrollArea::AdjustToContents</enum>
-                 </property>
-                 <property name="rowCount">
-                  <number>5</number>
-                 </property>
-                 <property name="columnCount">
-                  <number>4</number>
-                 </property>
-                 <attribute name="horizontalHeaderVisible">
-                  <bool>false</bool>
-                 </attribute>
-                 <attribute name="horizontalHeaderCascadingSectionResizes">
-                  <bool>false</bool>
-                 </attribute>
-                 <attribute name="horizontalHeaderMinimumSectionSize">
-                  <number>200</number>
-                 </attribute>
-                 <attribute name="horizontalHeaderDefaultSectionSize">
-                  <number>200</number>
-                 </attribute>
-                 <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-                  <bool>false</bool>
-                 </attribute>
-                 <attribute name="horizontalHeaderStretchLastSection">
-                  <bool>false</bool>
-                 </attribute>
-                 <attribute name="verticalHeaderVisible">
-                  <bool>false</bool>
-                 </attribute>
-                 <row/>
-                 <row/>
-                 <row/>
-                 <row/>
-                 <row/>
-                 <column/>
-                 <column/>
-                 <column/>
-                 <column/>
-                </widget>
-               </item>
               </layout>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QWidget" name="widget_table" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="inputMethodHints">
-               <set>Qt::ImhNone</set>
-              </property>
-              <layout class="QGridLayout" name="gridLayout_16"/>
              </widget>
             </item>
            </layout>
@@ -1059,7 +984,7 @@
      <x>0</x>
      <y>0</y>
      <width>896</width>
-     <height>23</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

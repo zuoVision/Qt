@@ -14,7 +14,7 @@ public:
     ~MyTableView();
 
     void init();
-    void setData(QVector<QStringList> * data);
+    void setData(QVector<QStringList> * data,QString arg1,QString arg2);
 
 public:
     QStandardItemModel  *model;

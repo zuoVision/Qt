@@ -78,28 +78,18 @@ void MainWindow::initUi()
     ui->textEdit->setReadOnly(true);
     ui->label_simpleperfdoc->setText(tr("<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"));
 
-    ui->tableWidget_xts->verticalHeader()->show();
-    ui->tableWidget_xts->horizontalHeader()->show();
-    //zi shi ying kuan du
-    ui->tableWidget_xts->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-    ui->tableWidget_xts->setHorizontalHeaderLabels(QStringList()<<"Tests"<<"Result"<<"Resolution"<<"Url");
-    ui->tableWidget_xts->horizontalHeader()->setStyleSheet("QHeaderView::section{background:lightgreen;}");
-    ui->tableWidget_xts->setSortingEnabled(true);
-    ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//
-    ui->tableWidget_xts->setColumnHidden(3,true);
+//    ui->tableWidget_xts->verticalHeader()->show();
+//    ui->tableWidget_xts->horizontalHeader()->show();
+//    //zi shi ying kuan du
+//    ui->tableWidget_xts->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
+//    ui->tableWidget_xts->setHorizontalHeaderLabels(QStringList()<<"Tests"<<"Result"<<"Resolution"<<"Url");
+//    ui->tableWidget_xts->horizontalHeader()->setStyleSheet("QHeaderView::section{background:lightgreen;}");
+//    ui->tableWidget_xts->setSortingEnabled(true);
+//    ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//
+//    ui->tableWidget_xts->setColumnHidden(3,true);
 
-    mtv->setParent(ui->widget_table);
-    QGridLayout *gl = new QGridLayout();
-    gl->addWidget(mtv);
-    ui->widget_table->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-    mtv->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-
-//    ui->widget_table->setGeometry(9,195,800,300);
-//    QGridLayout *xtsLayout = new QGridLayout();
-//    xtsLayout->addWidget(ui->widget_xts,0,0);
-//    xtsLayout->addWidget(ui->widget_table,1,0);
-//    QGridLayout *tableLayout = new QGridLayout();
-//    tableLayout->addWidget(mtv);
+    mtv->setParent(ui->tab_xts);
+    ui->tab_xts->layout()->addWidget(mtv);
 }
 
 void MainWindow::initEnvironment()
@@ -156,8 +146,6 @@ void MainWindow::initConnect()
             this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
     connect(xts,SIGNAL(sig_showCtsResult()),
             this,SLOT(slo_showCtsResult()));
-    connect(ui->tableWidget_xts,SIGNAL(cellDoubleClicked(int ,int)),
-            this,SLOT(slo_openExternalLink(int ,int)));
 
     //cmd回车-> run button click
     connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
@@ -360,14 +348,12 @@ void MainWindow::slo_showCtsResult()
         QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
         return;
     }
-    if(fileOperation->readXml(&file)) insertDataToTable();
-    file.close();
-}
+    if(fileOperation->readXml(&file)){
+        cout << "tests11111111111111";
+        mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
+    }
 
-void MainWindow::slo_openExternalLink(int row,int col)
-{
-//    cout << row << col;
-    if(col == 2 && ui->tableWidget_xts->item(row,3)) QDesktopServices::openUrl(QUrl(ui->tableWidget_xts->item(row,3)->text()));
+    file.close();
 }
 
 void MainWindow::loadCtsResulotion()
@@ -389,42 +375,39 @@ void MainWindow::loadCtsResulotion()
     file.close();
 }
 
-void MainWindow::insertDataToTable()
-{
-    QStringList *list = new QStringList();
-    QString test,result,fail;
-    QBrush redColor(Qt::red);
-    fail = QString::number(fileOperation->m_totalTests.toInt() - fileOperation->m_pass.toInt());
-    test = QString("Test(%1)").arg(fileOperation->m_totalTests);
-    result = QString("Result(pass %1 fail %2)").arg(fileOperation->m_pass).arg(fail);
-    *list << test << result << "Resulotion" << "Url";
-    ui->tableWidget_xts->clear();
-    ui->tableWidget_xts->setHorizontalHeaderLabels(*list);
-    ui->tableWidget_xts->setRowCount(fileOperation->m_totalTests.toInt());
-    for(int row=0;row<ui->tableWidget_xts->rowCount();row++){
-        //TODO:
-        cout << fileOperation->m_testResult->at(row);
+//void MainWindow::insertDataToTable()
+//{
+//    QStringList *list = new QStringList();
+//    QString test,result,fail;
+//    QBrush redColor(Qt::red);
+//    fail = QString::number(fileOperation->m_totalTests.toInt() - fileOperation->m_pass.toInt());
+//    test = QString("Test(%1)").arg(fileOperation->m_totalTests);
+//    result = QString("Result(pass %1 fail %2)").arg(fileOperation->m_pass).arg(fail);
+//    *list << test << result << "Resulotion";
+//    ui->tableWidget_xts->clear();
+//    ui->tableWidget_xts->setHorizontalHeaderLabels(*list);
+//    ui->tableWidget_xts->setRowCount(fileOperation->m_totalTests.toInt());
+//    for(int row=0;row<ui->tableWidget_xts->rowCount();row++){
+//        //TODO:
+//        cout << fileOperation->m_testResult->at(row);
 
-        ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(0)));
-        if(fileOperation->m_testResult->at(row).at(1)=="fail") {
-            ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem("fail"));
-            ui->tableWidget_xts->item(row,1)->setForeground(Qt::red);
-        }else{
-            ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(1)));
-        }
-        if(!fileOperation->m_testResult->at(row).at(2).isEmpty())
-        {
-//            QLabel *lab = new QLabel(fileOperation->m_testResult->at(row).at(2));
-//            lab->setOpenExternalLinks(true);
-//            ui->tableWidget_xts->setCellWidget(row,2,lab);
-            ui->tableWidget_xts->setItem(row,2,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(2)));
-            ui->tableWidget_xts->setItem(row,3,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(3)));
+//        ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(0)));
+//        if(fileOperation->m_testResult->at(row).at(1)=="fail") {
+//            ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem("fail"));
+//            ui->tableWidget_xts->item(row,1)->setForeground(Qt::red);
+//        }else{
+//            ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(1)));
+//        }
+//        if(!fileOperation->m_testResult->at(row).at(2).isEmpty())
+//        {
+//            ui->tableWidget_xts->setItem(row,2,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(2)));
+////            ui->tableWidget_xts->setItem(row,3,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(3)));
 
-        }
-    }
+//        }
+//    }
 
-    mtv->setData(fileOperation->m_testResult);
-}
+//
+//}
 
 #if 0
 void MainWindow::readfile()
@@ -463,7 +446,10 @@ void MainWindow::on_pushButton_result_clicked()
             QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
             return;
         }
-        if(fileOperation->readXml(&file)) insertDataToTable();
+        if(fileOperation->readXml(&file))
+        {
+            mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
+        }
         file.close();
     }
 }

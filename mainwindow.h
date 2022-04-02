@@ -86,7 +86,6 @@ private slots:
     void slo_reciveMessage(QString msg);
     void slo_reciveMessage(QProcess::ProcessState state,QString tag);
     void slo_showCtsResult();
-    void slo_openExternalLink(int row,int col);
     void slo_openDocument();
     void moveCursorToEnd();
     void setTabelWidgetColor(QTableWidgetItem *item);

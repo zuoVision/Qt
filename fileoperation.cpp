@@ -91,31 +91,28 @@ bool FileOperation::readXml(QFile *file)
                         if(nodename == "Test" && xmlreader.isStartElement()){
                             QString name    = xmlreader.attributes().value("name").toString();
                             QString result  = xmlreader.attributes().value("result").toString();
-                            QString resulotion_tag;
-                            QString resulotion_url;
+                            QString resulotion;
                             if(result == "fail"){
                                 if(name.contains("[0]")||name.contains("[1]")){
                                     if (!m_resulotion->filter(name.left(name.size()-3)).isEmpty()){
-                                        resulotion_tag = m_resulotion->filter(name.left(name.size()-3)).first().split(",")[1];
-                                        resulotion_url = m_resulotion->filter(name.left(name.size()-3)).first().split(",")[2];
+                                        resulotion = m_resulotion->filter(name.left(name.size()-3)).first().split(",")[1];
                                     }
                                 }else{
                                     if(!m_resulotion->filter(name).isEmpty()){
-                                        resulotion_tag = m_resulotion->filter(name).first().split(",")[1];
-                                        resulotion_url = m_resulotion->filter(name).first().split(",")[2];
+                                        resulotion = m_resulotion->filter(name).first().split(",")[1];
                                     }
 
                                 }
                             }
-                            cout << name << result << resulotion_tag << resulotion_url;
-                            m_testResult->push_back(QStringList()<<testcase+"#"+name << result << resulotion_tag << resulotion_url);
+//                            cout << name << result << resulotion;
+                            m_testResult->push_back(QStringList()<<testcase+"#"+name << result << resulotion);
                         }
                     }
                 }
             }
         }
     }
-    cout <<"end"<< m_testResult->size();
+    cout <<"end"<< m_testResult;
     if(m_modulename.isEmpty())
     {
         return false;
