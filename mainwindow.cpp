@@ -25,6 +25,8 @@
 
 #define TESTRESULT      "test_result.xml"
 
+#define SIMPLEPERFDOC   "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -48,7 +50,6 @@ void MainWindow::initUi()
 {
 //    ui->checkBox_savecmd->setCheckState(Qt::Checked);
     setWindowIcon(QIcon(":/icon/icon/superman.ico"));
-//    ui->statusbar->showMessage(m_statusbarMsg);
 
     //status bar
     m_ccd_status = new QLabel("command",this);
@@ -76,17 +77,7 @@ void MainWindow::initUi()
     ui->statusbar->addWidget(m_xts_status);
 
     ui->textEdit->setReadOnly(true);
-    ui->label_simpleperfdoc->setText(tr("<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"));
-
-//    ui->tableWidget_xts->verticalHeader()->show();
-//    ui->tableWidget_xts->horizontalHeader()->show();
-//    //zi shi ying kuan du
-//    ui->tableWidget_xts->horizontalHeader()->setSectionResizeMode(0, QHeaderView::ResizeToContents);
-//    ui->tableWidget_xts->setHorizontalHeaderLabels(QStringList()<<"Tests"<<"Result"<<"Resolution"<<"Url");
-//    ui->tableWidget_xts->horizontalHeader()->setStyleSheet("QHeaderView::section{background:lightgreen;}");
-//    ui->tableWidget_xts->setSortingEnabled(true);
-//    ui->tableWidget_xts->setEditTriggers(QAbstractItemView::NoEditTriggers);//
-//    ui->tableWidget_xts->setColumnHidden(3,true);
+    ui->label_simpleperfdoc->setText(SIMPLEPERFDOC);
 
     mtv->setParent(ui->tab_xts);
     ui->tab_xts->layout()->addWidget(mtv);
@@ -267,7 +258,13 @@ void MainWindow::on_pushButton_oemunlock_clicked()
 
 void MainWindow::on_pushButton_stat_clicked()
 {
-    simpleperf->runStat();
+    cout;
+    if(getStatParams()){
+        simpleperf->runStat(&m_statParams);
+    }else{
+        simpleperf->runStat();
+    }
+
 }
 
 void MainWindow::on_pushButton_record_clicked()
@@ -373,6 +370,47 @@ void MainWindow::loadCtsResulotion()
         ui->textEdit->append("cts resulotion load fail ...");
     }
     file.close();
+}
+
+bool MainWindow::getStatParams()
+{
+    cout;
+    m_statParams = {
+        {"pid",""},
+        {"tid",""},
+        {"duration","10"},
+        {"systemwide",""},
+        {"event",""},
+        {"cpu",""},
+    };
+    bool flag=false;
+    if(!ui->lineEdit_statpid->text().isEmpty()){
+        m_statParams["pid"] = ui->lineEdit_statpid->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_stattid->text().isEmpty()){
+        m_statParams["tid"] = ui->lineEdit_stattid->text();
+        flag = true;
+    }
+    if(ui->spinBox_statduration->value()!=10 &&
+       ui->spinBox_statduration->value()!=0)
+    {
+        m_statParams["duration"] = ui->spinBox_statduration->text();
+        flag = true;
+    }
+    if(ui->checkBox_statsw->checkState()==Qt::Checked) {
+        m_statParams["systemwide"] = "-a";
+        flag = true;
+    }
+    if(!ui->lineEdit_statevent->text().isEmpty()) {
+        m_statParams["event"] = ui->lineEdit_statevent->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_statcpu->text().isEmpty()) {
+        m_statParams["cpu"] = ui->lineEdit_statcpu->text();
+        flag = true;
+    }
+    return flag;
 }
 
 //void MainWindow::insertDataToTable()

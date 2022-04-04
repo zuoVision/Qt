@@ -55,7 +55,7 @@ void Simpleperf::init_connect()
 
 void Simpleperf::slo_reciveOutput(QString output)
 {
-    qDebug() << MY_TAG << "slo_reciveOutput" << output;
+    cout;
     emit sig_sendToMainWindow(output);
 }
 
@@ -82,16 +82,47 @@ void Simpleperf::slo_reciveState(QProcess::ProcessState state)
 
 void Simpleperf::runStat()
 {
-    qDebug() << MY_TAG << "runStat";
+    cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
     emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFSTAT);
     emit processCommand(SIMPLEPERFSTAT);
 }
 
+void Simpleperf::runStat(std::map<QString, QString> *statParams)
+{
+    cout << statParams->at("pid")
+         << statParams->at("tid")
+         << statParams->at("duration")
+         << statParams->at("systemwide")
+         << statParams->at("event")
+         << statParams->at("cpu");
+    QString cmd = "adb shell simpleperf";
+    if (!statParams->at("pid").isEmpty()){
+        cmd += " -p " + statParams->at("pid");
+    }
+    if (!statParams->at("tid").isEmpty()){
+        cmd += " -t " + statParams->at("tid");
+    }
+    if (!statParams->at("duration").isEmpty()){
+        cmd += " --duration " + statParams->at("duration");
+    }
+    if (!statParams->at("systemwide").isEmpty()){
+        cmd += " -a ";
+    }
+    if (!statParams->at("event").isEmpty()){
+        cmd += " -e " + statParams->at("event");
+    }
+    if (!statParams->at("cpu").isEmpty()){
+        cmd += " --cpu " + statParams->at("cpu");
+    }
+    emit sig_sendToMainWindow(sim_cpt->m_userName+cmd);
+    emit processCommand(cmd);
+}
+
 void Simpleperf::runRecord()
 {
-    qDebug() << MY_TAG << "runRecord";
+    cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
     emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFRECORD);
@@ -111,7 +142,7 @@ void Simpleperf::runRecord()
 
 void Simpleperf::runReport()
 {
-    qDebug() << MY_TAG << "runReport";
+    cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
     emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFREPORT);
@@ -121,7 +152,7 @@ void Simpleperf::runReport()
 
 void Simpleperf::runFlamegraph()
 {
-    qDebug() << MY_TAG << "runFlamegraph";
+    cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
     QString cmd1 = "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";

@@ -78,3 +78,6 @@ Qt project
 
 2022年3月30日
 * 增加resolution超链接
+
+2022年4月4日
+* 增加simpleperf stat/record参数

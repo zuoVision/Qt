@@ -24,6 +24,7 @@ public:
     void processKeyPressEvent(QKeyEvent *event);
 
     void runStat();
+    void runStat(std::map<QString,QString>* statParams);
     void runRecord();
     void runReport();
     void runFlamegraph();

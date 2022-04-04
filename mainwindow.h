@@ -69,6 +69,10 @@ protected:
     QString                     m_statusbarMsg="Process Not Running";
     Document                    m_doc;
 
+    //simpleperf
+    std::map<QString,QString>   m_statParams;
+
+
 protected:
     void initUi();
     void initEnvironment();
@@ -77,6 +81,8 @@ protected:
     void loadCtsResulotion();
     void insertDataToTable();
     void readfile();
+    bool getStatParams();
+    void getRecordParams();
 
 signals:
     void sig_sendToXts(QString);
