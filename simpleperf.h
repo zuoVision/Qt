@@ -23,11 +23,14 @@ public:
     void init_connect();
     void processKeyPressEvent(QKeyEvent *event);
 
+    void runList();
     void runStat();
     void runStat(std::map<QString,QString>* statParams);
     void runRecord();
+    void runRecord(std::map<QString,QString>* recordParams);
     void runReport();
     void runFlamegraph();
+    void runQuickGeneration();
     void stopProcessor();
 
 private:

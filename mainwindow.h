@@ -71,6 +71,8 @@ protected:
 
     //simpleperf
     std::map<QString,QString>   m_statParams;
+    std::map<QString,QString>   m_recordParams;
+
 
 
 protected:
@@ -82,7 +84,7 @@ protected:
     void insertDataToTable();
     void readfile();
     bool getStatParams();
-    void getRecordParams();
+    bool getRecordParams();
 
 signals:
     void sig_sendToXts(QString);
@@ -94,25 +96,35 @@ private slots:
     void slo_showCtsResult();
     void slo_openDocument();
     void moveCursorToEnd();
-    void setTabelWidgetColor(QTableWidgetItem *item);
 
+    //command
     void on_pushButton_run_clicked();
     void on_pushButton_devices_clicked();
     void on_pushButton_root_clicked();
     void on_pushButton_remount_clicked();
     void on_pushButton_oemunlock_clicked();
+    void on_pushButton_screencapture_clicked();
+    void on_pushButton_screenrecord_clicked();
 
+    //simpleperf
+    void on_pushButton_list_clicked();
     void on_pushButton_stat_clicked();
     void on_pushButton_record_clicked();
     void on_pushButton_report_clicked();
     void on_pushButton_flamegraph_clicked();
+    void on_pushButton_quickgeneration_clicked();
+    void on_pushButton_statclear_clicked();
+    void on_pushButton_recclear_clicked();
 
-
+    //xts
     void on_pushButton_runcts_clicked();
     void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
     void on_pushButton_loadctssuite_clicked();
     void on_pushButton_log_clicked();
-
     void on_pushButton_result_clicked();
+
+
+
+
 };
 #endif // MAINWINDOW_H

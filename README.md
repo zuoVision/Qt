@@ -81,3 +81,6 @@ Qt project
 
 2022年4月4日
 * 增加simpleperf stat/record参数
+
+2022年4月5日
+* TODO：xts 二次打开result会crash

@@ -1,22 +1,22 @@
-android.hardware.camera2.cts.AllocationTest#testAllocationFromCameraFlexibleYuv,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13800];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.AllocationTest#testParamSensitivity,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13801];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.AllocationTest#testAllocationFromCameraFlexibleYuv,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13802];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.AllocationTest#testBlackWhite,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13803];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.BurstCaptureRawTest#testRawSensorSize,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13804];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.BurstCaptureRawTest#testMetadataRoundDown,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13805];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.BurstCaptureRawTest#testManualAutoSwitch,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13806];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.BurstCaptureRawTest#testTimestamp,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13807];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.BurstCaptureTest#testYuvBurstWithStillBokeh,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13808];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.BurstCaptureTest#testJpegBurst,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13809];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.BurstCaptureTest#testYuvBurst,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13810];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceZSLTemplate,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13811];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.CameraDeviceTest#testSessionConfiguration,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13812];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.CameraDeviceTest#testCameraDevicePreviewTemplate,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13813];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceVideoSnapShotTemplate,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13814];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceCapture,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13815];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceAbort,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13816];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.CameraDeviceTest#testCreateCustomSession,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13817];<a href=""https://www.baidu.com"">baidu"
-android.hardware.camera2.cts.CameraDeviceTest#testInvalidCapture,"<a href=""http://online.mediatek.com/FAQ#/SW/FAQ13800"">[FAQ13818];<a href=""https://www.baidu.com"">baidu"
+android.hardware.camera2.cts.AllocationTest#testAllocationFromCameraFlexibleYuv,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13800];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.AllocationTest#testParamSensitivity,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13801];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.AllocationTest#testAllocationFromCameraFlexibleYuv,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13802];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.AllocationTest#testBlackWhite,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13803];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.BurstCaptureRawTest#testRawSensorSize,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13804];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.BurstCaptureRawTest#testMetadataRoundDown,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13805];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.BurstCaptureRawTest#testManualAutoSwitch,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13806];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.BurstCaptureRawTest#testTimestamp,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13807];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.BurstCaptureTest#testYuvBurstWithStillBokeh,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13808];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.BurstCaptureTest#testJpegBurst,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13809];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.BurstCaptureTest#testYuvBurst,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13810];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceZSLTemplate,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13811];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.CameraDeviceTest#testSessionConfiguration,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13812];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.CameraDeviceTest#testCameraDevicePreviewTemplate,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13813];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceVideoSnapShotTemplate,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13814];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceCapture,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13815];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceAbort,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13816];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.CameraDeviceTest#testCreateCustomSession,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13817];<a href="https://www.baidu.com">baidu
+android.hardware.camera2.cts.CameraDeviceTest#testInvalidCapture,<a href="http://online.mediatek.com/FAQ#/SW/FAQ13800">[FAQ13818];<a href="https://www.baidu.com">baidu
 android.hardware.camera2.cts.CameraDeviceTest#testCameraDeviceRecordingTemplate,
 android.hardware.camera2.cts.CameraDeviceTest#testPrepare,
 android.hardware.camera2.cts.CameraDeviceTest#testSessionParametersStateLeak,

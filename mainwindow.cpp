@@ -9,6 +9,7 @@
 #include <QXmlStreamReader>
 #include <QVBoxLayout>
 
+#include <QTime>
 #include <stdlib.h>
 
 #define MY_TAG          "MainWindow"
@@ -143,8 +144,6 @@ void MainWindow::initConnect()
             ui->pushButton_run,SLOT(click()));
     connect(ui->textEdit,SIGNAL(textChanged()),
             this,SLOT(moveCursorToEnd()));
-//    connect(ui->tableWidget_xts,SIGNAL(itemChanged(QTableWidgetItem*)),
-//            this,SLOT(setTabelWidgetColor(QTableWidgetItem*)));
 
 }
 
@@ -214,14 +213,6 @@ void MainWindow::moveCursorToEnd()
     ui->textEdit->setTextCursor(cursor);
 }
 
-void MainWindow::setTabelWidgetColor(QTableWidgetItem *item)
-{
-    if(item->text() == "fail"){
-        QBrush redColor(Qt::red);
-        item->setForeground(redColor);
-    }
-}
-
 void MainWindow::on_pushButton_run_clicked()
 {
     //动态更新cmd_completer模型库
@@ -256,20 +247,30 @@ void MainWindow::on_pushButton_oemunlock_clicked()
     ccd->runCommand(ADBOEMUNLOCK);
 }
 
-void MainWindow::on_pushButton_stat_clicked()
+void MainWindow::on_pushButton_list_clicked()
 {
     cout;
+    simpleperf->runList();
+}
+
+void MainWindow::on_pushButton_stat_clicked()
+{
+//    cout;
     if(getStatParams()){
         simpleperf->runStat(&m_statParams);
     }else{
         simpleperf->runStat();
     }
-
 }
 
 void MainWindow::on_pushButton_record_clicked()
 {
-    simpleperf->runRecord();
+//    cout;
+    if(getRecordParams()){
+        simpleperf->runRecord(&m_recordParams);
+    }else{
+        simpleperf->runRecord();
+    }
 }
 
 void MainWindow::on_pushButton_report_clicked()
@@ -280,6 +281,34 @@ void MainWindow::on_pushButton_report_clicked()
 void MainWindow::on_pushButton_flamegraph_clicked()
 {
     simpleperf->runFlamegraph();
+}
+
+void MainWindow::on_pushButton_quickgeneration_clicked()
+{
+    simpleperf->runQuickGeneration();
+}
+
+void MainWindow::on_pushButton_statclear_clicked()
+{
+    ui->lineEdit_statpid->clear();
+    ui->lineEdit_stattid->clear();
+    ui->spinBox_statduration->setValue(10);
+    ui->checkBox_statsw->setCheckState(Qt::CheckState::Unchecked);
+    ui->lineEdit_statevent->clear();
+    ui->lineEdit_statcpu->clear();
+}
+
+void MainWindow::on_pushButton_recclear_clicked()
+{
+    ui->lineEdit_recpid->clear();
+    ui->lineEdit_rectid->clear();
+    ui->spinBox_recduration->setValue(10);
+    ui->checkBox_recsw->setCheckState(Qt::CheckState::Unchecked);
+    ui->lineEdit_recevent->clear();
+    ui->lineEdit_reccpu->clear();
+    ui->lineEdit_recfilename->clear();
+    ui->lineEdit_recfreq->clear();
+    ui->lineEdit_reccallgraph->clear();
 }
 
 void MainWindow::on_pushButton_runcts_clicked()
@@ -413,6 +442,62 @@ bool MainWindow::getStatParams()
     return flag;
 }
 
+bool MainWindow::getRecordParams()
+{
+    cout;
+    m_recordParams = {
+        {"pid",""},
+        {"tid",""},
+        {"duration","10"},
+        {"systemwide",""},
+        {"event",""},
+        {"cpu",""},
+        {"callgraph",""},
+        {"frequent",""},
+        {"filename","perd.data"},
+    };
+    bool flag=false;
+    if(!ui->lineEdit_recpid->text().isEmpty()){
+        m_recordParams["pid"] = ui->lineEdit_recpid->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_rectid->text().isEmpty()){
+        m_recordParams["tid"] = ui->lineEdit_rectid->text();
+        flag = true;
+    }
+    if(ui->spinBox_recduration->value()!=10 &&
+       ui->spinBox_recduration->value()!=0)
+    {
+        m_recordParams["duration"] = ui->spinBox_recduration->text();
+        flag = true;
+    }
+    if(ui->checkBox_recsw->checkState()==Qt::Checked) {
+        m_recordParams["systemwide"] = "-a";
+        flag = true;
+    }
+    if(!ui->lineEdit_recevent->text().isEmpty()) {
+        m_recordParams["event"] = ui->lineEdit_recevent->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_reccpu->text().isEmpty()) {
+        m_recordParams["cpu"] = ui->lineEdit_reccpu->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_reccallgraph->text().isEmpty()) {
+        m_recordParams["callgraph"] = ui->lineEdit_reccallgraph->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_recfreq->text().isEmpty()) {
+        m_recordParams["frequent"] = ui->lineEdit_recfreq->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_recfilename->text().isEmpty()) {
+        m_recordParams["filename"] = ui->lineEdit_recfilename->text();
+        flag = true;
+    }
+    return flag;
+}
+
 //void MainWindow::insertDataToTable()
 //{
 //    QStringList *list = new QStringList();
@@ -491,3 +576,16 @@ void MainWindow::on_pushButton_result_clicked()
         file.close();
     }
 }
+
+void MainWindow::on_pushButton_screencapture_clicked()
+{
+    cout;
+}
+
+void MainWindow::on_pushButton_screenrecord_clicked()
+{
+    cout <<QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
+}
+
+
+

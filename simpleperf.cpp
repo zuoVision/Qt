@@ -80,6 +80,15 @@ void Simpleperf::slo_reciveState(QProcess::ProcessState state)
     m_state = state;
 }
 
+void Simpleperf::runList()
+{
+    cout;
+    if (m_state != QProcess::ProcessState::NotRunning)
+        return emit sig_sendToMainWindow("please wait!");
+    emit sig_sendToMainWindow(sim_cpt->m_userName+"simpleperf list");
+//    emit processCommand();
+}
+
 void Simpleperf::runStat()
 {
     cout;
@@ -140,6 +149,19 @@ void Simpleperf::runRecord()
 
 }
 
+void Simpleperf::runRecord(std::map<QString, QString> *recordParams)
+{
+    cout << recordParams->at("pid")
+         << recordParams->at("tid")
+         << recordParams->at("duration")
+         << recordParams->at("systemwide")
+         << recordParams->at("event")
+         << recordParams->at("cpu")
+         << recordParams->at("callgraph")
+         << recordParams->at("frequent")
+         << recordParams->at("filename");
+}
+
 void Simpleperf::runReport()
 {
     cout;
@@ -167,6 +189,12 @@ void Simpleperf::runFlamegraph()
         emit sig_sendToMainWindow("FlameGraph open Failed !");
 //        emit sig_sendToMainWindow("<font color=\"#ee0000\">Open FlameGraph Failed !</font> ");
     }
+}
+
+void Simpleperf::runQuickGeneration()
+{
+    cout;
+
 }
 
 void Simpleperf::stopProcessor()
