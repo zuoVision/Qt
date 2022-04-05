@@ -34,7 +34,7 @@
   * software pmu ==> cpu-clock事件等
   * tracepoint pmu ==> sched:sched_switch事件
 
-# Excutable
+## Excutable
 
 ### simpleperf commands
 
@@ -48,7 +48,7 @@
 
 > list 命令列出设备上所有可用的事件。不同的设备可能支持不同的事件，因为它们具有不同的硬件和内核
 
-```
+```shell
 List of hardware events:
   branch-misses
   bus-cycles
@@ -76,7 +76,7 @@ List of software events:
 2. 内核在配置的进程运行时启用计数器。
 3. 分析后，simpleperf 从内核读取计数器，并报告计数器摘要。
 
-```
+```shell
 $ simpleperf stat -h
 Usage: simpleperf stat [options] [command [command-args]]
        Gather performance counter information of running [command].
@@ -105,7 +105,7 @@ Total test time: 1.001893 seconds.
 
 ![image-20220404150923199](C:\Users\zuozhe\AppData\Roaming\Typora\typora-user-images\image-20220404150923199.png)
 
-```
+```shell
 $ simpleperf record -h
 Usage: simpleperf record [options] [--] [command [command-args]]
        Gather sampling information of running [command].
@@ -137,7 +137,7 @@ stack[]                - user stack data up to 64k
 
 #### report 
 
-```
+```shell
 $ simpleperf report
 Cmdline: /system/bin/simpleperf record -g sleep 1
 Arch: arm64
@@ -153,5 +153,48 @@ Overhead  Command     Pid    Tid    Shared Object                    Symbol
 ...
 ```
 
+## scripts
+
+* app_profiler.py:用于记录Android app和native executables的profile data
+
+```shell
+# Record an Android application.
+$ ./app_profiler.py -p simpleperf.example.cpp
+
+# Record an Android application with Java code compiled into native instructions.
+$ ./app_profiler.py -p simpleperf.example.cpp --compile_java_code
+
+# Record the launch of an Activity of an Android application.
+$ ./app_profiler.py -p simpleperf.example.cpp -a .SleepActivity
+
+# Record a native process.
+$ ./app_profiler.py -np surfaceflinger
+
+# Record a native process given its pid.
+$ ./app_profiler.py --pid 11324
+
+# Record a command.
+$ ./app_profiler.py -cmd \
+    "dex2oat --dex-file=/data/local/tmp/app-debug.apk --oat-file=/data/local/tmp/a.oat"
+
+# Record an Android application, and use -r to send custom options to the record command.
+$ ./app_profiler.py -p simpleperf.example.cpp \
+    -r "-e cpu-clock -g --duration 30"
+
+# Record both on CPU time and off CPU time.
+$ ./app_profiler.py -p simpleperf.example.cpp \
+    -r "-e task-clock -g -f 1000 --duration 10 --trace-offcpu"
+
+# Save profiling data in a custom file (like perf_custom.data) instead of perf.data.
+$ ./app_profiler.py -p simpleperf.example.cpp -o perf_custom.data
+```
 
 
+
+## 查看profile（可视化）
+
+我们使用simpleperf record或app_profiler.py后，会得到一个perf.data，该文件包含样本列表，每个simple都有一个时间戳，一个线程id，一个调用堆栈以及事件等。我们可以按时间顺序显示样本，或者火焰图。
+
+* pprof
+* Firefox profiler
+* FlameScope
