@@ -84,3 +84,6 @@ Qt project
 
 2022年4月5日
 * TODO：xts 二次打开result会crash
+
+2022年4月6日
+* 新增mtk cts resulotion爬取脚本
