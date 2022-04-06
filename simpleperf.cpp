@@ -7,17 +7,20 @@
 
 
 #define MY_TAG "Simpleperf"
-#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
-#define SIMPLEPERFSTAT   "pwd"
-#define SIMPLEPERFRECORD "python scripts/app_profiler.py -p com.tcl.camera"
-#define SIMPLEPERFREPORT "python scripts/report_sample.py > out.perf"
+#define PERFIX "adb shell data/local/tmp/simpleperf "
+#define LIST   "list"
+#define STAT   "stat -e cache-references,cache-misses -a --duration 10 "
+#define RECORD "record -o /data/local/tmp/perf.data -e task-clock:u -f 1000 -g --duration 10 --log info --app com.tcl.camera"
+#define REPORT "python scripts/report_sample.py > out.perf"
 
 
 Simpleperf::Simpleperf(QObject *parent):
 QObject(parent)
 {
-    qDebug() << MY_TAG << "Simpleperf" <<QThread::currentThreadId();
+    cout << QThread::currentThreadId();
+    init();
     sim_Thread = new QThread(this);
     sim_cpt = new CommandProcessThread();
     init_connect();
@@ -29,12 +32,18 @@ QObject(parent)
 
 Simpleperf::~Simpleperf()
 {
-    qDebug() << MY_TAG << "~Simpleperf +";
+    cout << " +";
     sim_Thread->exit(0);
     delete sim_cpt;
     delete sim_Thread;
-    qDebug() << MY_TAG << "~Simpleperf -";
+    cout << " -";
 }
+
+void Simpleperf::init()
+{
+    m_hostStyle = QString("<font color=\'#006400\'>%1 </font>");
+}
+
 void Simpleperf::init_connect()
 {
     connect(this,SIGNAL(start()),
@@ -55,25 +64,25 @@ void Simpleperf::init_connect()
 
 void Simpleperf::slo_reciveOutput(QString output)
 {
-    cout;
+//    cout;
     emit sig_sendToMainWindow(output);
 }
 
 void Simpleperf::slo_reciveError(QString error)
 {
-//    qDebug() << MY_TAG << "slo_reciveError" << error;
+//    cout << "slo_reciveError" << error;
     emit sig_sendToMainWindow(error);
 }
 
 void Simpleperf::slo_reciveInfo(QString info)
 {
-//    qDebug() << MY_TAG << "slo_reciveInfo" << info;
+//    cout << "slo_reciveInfo" << info;
     emit sig_sendToMainWindow(info);
 }
 
 void Simpleperf::slo_reciveState(QProcess::ProcessState state)
 {
-//    qDebug() << MY_TAG << "slo_reciveState" << state;
+//    cout << "slo_reciveState" << state;
     emit sig_sendToMainWindow(state,MY_TAG);
     if (state==QProcess::ProcessState::NotRunning)
         emit sig_sendToMainWindow("Done");
@@ -85,8 +94,7 @@ void Simpleperf::runList()
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
-    emit sig_sendToMainWindow(sim_cpt->m_userName+"simpleperf list");
-//    emit processCommand();
+    process(PERFIX LIST);
 }
 
 void Simpleperf::runStat()
@@ -94,39 +102,21 @@ void Simpleperf::runStat()
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
-    emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFSTAT);
-    emit processCommand(SIMPLEPERFSTAT);
+    process(QString(PERFIX STAT));
 }
 
 void Simpleperf::runStat(std::map<QString, QString> *statParams)
 {
-    cout << statParams->at("pid")
-         << statParams->at("tid")
-         << statParams->at("duration")
-         << statParams->at("systemwide")
-         << statParams->at("event")
-         << statParams->at("cpu");
-    QString cmd = "adb shell simpleperf";
-    if (!statParams->at("pid").isEmpty()){
-        cmd += " -p " + statParams->at("pid");
+    if (m_state != QProcess::ProcessState::NotRunning)
+        return emit sig_sendToMainWindow("please wait!");
+    QString cmd = PERFIX "stat";
+    std::map<QString, QString>::iterator it;
+    for (it=statParams->begin();it!=statParams->end();it++)
+    {
+        if(!it->second.isEmpty()) cmd += it->second;
     }
-    if (!statParams->at("tid").isEmpty()){
-        cmd += " -t " + statParams->at("tid");
-    }
-    if (!statParams->at("duration").isEmpty()){
-        cmd += " --duration " + statParams->at("duration");
-    }
-    if (!statParams->at("systemwide").isEmpty()){
-        cmd += " -a ";
-    }
-    if (!statParams->at("event").isEmpty()){
-        cmd += " -e " + statParams->at("event");
-    }
-    if (!statParams->at("cpu").isEmpty()){
-        cmd += " --cpu " + statParams->at("cpu");
-    }
-    emit sig_sendToMainWindow(sim_cpt->m_userName+cmd);
-    emit processCommand(cmd);
+//    cout << cmd;
+    process(cmd);
 }
 
 void Simpleperf::runRecord()
@@ -134,32 +124,26 @@ void Simpleperf::runRecord()
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
-    emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFRECORD);
-    // 1. python
-    //    QStringList m_cmd ;
-    //    m_cmd << QCoreApplication::applicationDirPath() + "/scripts/app_profiler.py"
-    //        << "-p" << "com.tcl.camera";
-    //    excuteCmd(PYTHON2_7,m_cmd);
+    emit sig_sendToMainWindow(sim_cpt->m_userName+RECORD);
 
-    //    2.bash
     QString cmd1 = "adb shell rm /data/local/tmp/perf.data";
-    QString cmd2 = SIMPLEPERFRECORD;
+    QString cmd2 = PERFIX RECORD;
     QString cmd3 = "adb pull /data/local/tmp/perf.data";
-    emit processCommand(cmd1+";"+cmd2+";"+cmd3);
+    process(cmd1+";"+cmd2+";"+cmd3);
 
 }
 
 void Simpleperf::runRecord(std::map<QString, QString> *recordParams)
 {
-    cout << recordParams->at("pid")
-         << recordParams->at("tid")
-         << recordParams->at("duration")
-         << recordParams->at("systemwide")
-         << recordParams->at("event")
-         << recordParams->at("cpu")
-         << recordParams->at("callgraph")
-         << recordParams->at("frequent")
-         << recordParams->at("filename");
+    if (m_state != QProcess::ProcessState::NotRunning)
+        return emit sig_sendToMainWindow("please wait!");
+    QString cmd = PERFIX " record ";
+    std::map<QString, QString>::iterator it;
+    for (it=recordParams->begin();it!=recordParams->end();it++){
+        if(!it->second.isEmpty()) cmd += it->second;
+    }
+//    cout << cmd;
+    process(cmd);
 }
 
 void Simpleperf::runReport()
@@ -167,8 +151,7 @@ void Simpleperf::runReport()
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
-    emit sig_sendToMainWindow(sim_cpt->m_userName+SIMPLEPERFREPORT);
-    emit processCommand(SIMPLEPERFREPORT);
+    process(REPORT);
 }
 
 
@@ -179,8 +162,7 @@ void Simpleperf::runFlamegraph()
         return emit sig_sendToMainWindow("please wait!");
     QString cmd1 = "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
     QString cmd2 = "FlameGraph/flamegraph.pl out.folded > graph.svg";
-    emit sig_sendToMainWindow(sim_cpt->m_userName+cmd1+cmd2);
-    emit processCommand(cmd1+";"+cmd2);
+    process(cmd1+";"+cmd2);
 
     if(QDesktopServices::openUrl(QUrl("graph.svg"))){
         emit sig_sendToMainWindow("FlameGraph Opened");
@@ -194,7 +176,14 @@ void Simpleperf::runFlamegraph()
 void Simpleperf::runQuickGeneration()
 {
     cout;
+//    process();
+}
 
+void Simpleperf::process(QString cmd)
+{
+    cout;
+    emit sig_sendToMainWindow(m_hostStyle.arg(sim_cpt->m_userName)+cmd);
+    emit processCommand(cmd);
 }
 
 void Simpleperf::stopProcessor()

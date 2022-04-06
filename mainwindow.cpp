@@ -15,8 +15,9 @@
 #define MY_TAG          "MainWindow"
 #define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
-#define DATABASE        ":/config/native_cmd_list.txt"
-#define CTSTEST         ":/config/cts_test_list.txt"
+#define DATABASE        ":/config/config/native_cmd_list.txt"
+#define CTSTESTLIST     ":/config/config/cts_test_list.txt"
+#define CTSRESULOTION   ":/config/config/cts_resulotion.csv"
 #define PYTHON2_7       "/usr/bin/python2.7"
 
 #define ADBDEVICES      "adb devices"
@@ -24,7 +25,7 @@
 #define ADBREMOUNT      "adb remount"
 #define ADBOEMUNLOCK    "xxxxx"
 
-#define TESTRESULT      "test_result.xml"
+#define TESTRESULT      ":/config/config/test_result.xml"
 
 #define SIMPLEPERFDOC   "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"
 
@@ -101,7 +102,7 @@ void MainWindow::initEnvironment()
     test_completer->setMaxVisibleItems(10);
     test_completer->setCaseSensitivity(Qt::CaseInsensitive);
     test_completer->setFilterMode(Qt::MatchContains);
-    fileOperation->loadDataBase(":/config/cts_test_list.txt",&m_ctsTestList);
+    fileOperation->loadDataBase(CTSTESTLIST,&m_ctsTestList);
     test_completer->setModel(new QStringListModel(m_ctsTestList,this));
     ui->lineEdit_ctstest->setCompleter(test_completer);
 
@@ -384,7 +385,7 @@ void MainWindow::slo_showCtsResult()
 
 void MainWindow::loadCtsResulotion()
 {
-    QString csv = ":/config/cts_resulotion.csv";
+    QString csv = CTSRESULOTION;
     QFile file(csv);
     if(!file.exists()){
         QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(csv));
@@ -405,38 +406,53 @@ bool MainWindow::getStatParams()
 {
     cout;
     m_statParams = {
+        {"app",""},
         {"pid",""},
         {"tid",""},
-        {"duration","10"},
         {"systemwide",""},
+        {"interval",""},
         {"event",""},
+        {"duration"," --duration 10"},
+        {"sort",""},
         {"cpu",""},
     };
     bool flag=false;
+    if(!ui->lineEdit_statapp->text().isEmpty()) {
+        m_statParams["app"] = " --app " + ui->lineEdit_statapp->text();
+        flag = true;
+    }
     if(!ui->lineEdit_statpid->text().isEmpty()){
-        m_statParams["pid"] = ui->lineEdit_statpid->text();
+        m_statParams["pid"] = " -p " + ui->lineEdit_statpid->text();
         flag = true;
     }
     if(!ui->lineEdit_stattid->text().isEmpty()){
-        m_statParams["tid"] = ui->lineEdit_stattid->text();
+        m_statParams["tid"] = " -t " + ui->lineEdit_stattid->text();
+        flag = true;
+    }
+    if(ui->checkBox_statsw->checkState()==Qt::Checked) {
+        m_statParams["systemwide"] = " -a ";
+        flag = true;
+    }
+    if(!ui->lineEdit_statinterval->text().isEmpty()) {
+        m_statParams["interval"] = " --interval " + ui->lineEdit_statinterval->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_statevent->text().isEmpty()) {
+        m_statParams["event"] = " -e " + ui->lineEdit_statevent->text();
         flag = true;
     }
     if(ui->spinBox_statduration->value()!=10 &&
        ui->spinBox_statduration->value()!=0)
     {
-        m_statParams["duration"] = ui->spinBox_statduration->text();
+        m_statParams["duration"] = " --duration " + ui->spinBox_statduration->text();
         flag = true;
     }
-    if(ui->checkBox_statsw->checkState()==Qt::Checked) {
-        m_statParams["systemwide"] = "-a";
-        flag = true;
-    }
-    if(!ui->lineEdit_statevent->text().isEmpty()) {
-        m_statParams["event"] = ui->lineEdit_statevent->text();
+    if(!ui->lineEdit_statsort->text().isEmpty()) {
+        m_statParams["sort"] = " --sort " + ui->lineEdit_statsort->text();
         flag = true;
     }
     if(!ui->lineEdit_statcpu->text().isEmpty()) {
-        m_statParams["cpu"] = ui->lineEdit_statcpu->text();
+        m_statParams["cpu"] = " --cpu " + ui->lineEdit_statcpu->text();
         flag = true;
     }
     return flag;
@@ -446,91 +462,72 @@ bool MainWindow::getRecordParams()
 {
     cout;
     m_recordParams = {
+        {"app",""},
         {"pid",""},
         {"tid",""},
-        {"duration","10"},
         {"systemwide",""},
         {"event",""},
-        {"cpu",""},
+        {"group",""},
+        {"toc",""},
         {"callgraph",""},
+        {"cpu",""},
         {"frequent",""},
-        {"filename","perd.data"},
+        {"duration"," --duration 10"},
+        {"filename"," -o perf.data"},
     };
     bool flag=false;
+    if(!ui->lineEdit_recapp->text().isEmpty()){
+        m_recordParams["app"] = " --app " + ui->lineEdit_recapp->text();
+        flag = true;
+    }
     if(!ui->lineEdit_recpid->text().isEmpty()){
-        m_recordParams["pid"] = ui->lineEdit_recpid->text();
+        m_recordParams["pid"] = " -p " + ui->lineEdit_recpid->text();
         flag = true;
     }
     if(!ui->lineEdit_rectid->text().isEmpty()){
-        m_recordParams["tid"] = ui->lineEdit_rectid->text();
+        m_recordParams["tid"] = " -t " + ui->lineEdit_rectid->text();
+        flag = true;
+    }
+    if(ui->checkBox_recsw->checkState()==Qt::Checked) {
+        m_recordParams["systemwide"] = " -a ";
+        flag = true;
+    }
+    if(!ui->lineEdit_recevent->text().isEmpty()) {
+        m_recordParams["event"] = " -e " + ui->lineEdit_recevent->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_recgroup->text().isEmpty()) {
+        m_recordParams["group"] = " --group " + ui->lineEdit_recgroup->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_rectoc->text().isEmpty()) {
+        m_recordParams["toc"] = " --trace-offcpu " + ui->lineEdit_rectoc->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_reccallgraph->text().isEmpty()) {
+        m_recordParams["callgraph"] = " --call-graph " + ui->lineEdit_reccallgraph->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_reccpu->text().isEmpty()) {
+        m_recordParams["cpu"] =  " --cpu " + ui->lineEdit_reccpu->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_recfreq->text().isEmpty()) {
+        m_recordParams["frequent"] = " -f " + ui->lineEdit_recfreq->text();
         flag = true;
     }
     if(ui->spinBox_recduration->value()!=10 &&
        ui->spinBox_recduration->value()!=0)
     {
-        m_recordParams["duration"] = ui->spinBox_recduration->text();
-        flag = true;
-    }
-    if(ui->checkBox_recsw->checkState()==Qt::Checked) {
-        m_recordParams["systemwide"] = "-a";
-        flag = true;
-    }
-    if(!ui->lineEdit_recevent->text().isEmpty()) {
-        m_recordParams["event"] = ui->lineEdit_recevent->text();
-        flag = true;
-    }
-    if(!ui->lineEdit_reccpu->text().isEmpty()) {
-        m_recordParams["cpu"] = ui->lineEdit_reccpu->text();
-        flag = true;
-    }
-    if(!ui->lineEdit_reccallgraph->text().isEmpty()) {
-        m_recordParams["callgraph"] = ui->lineEdit_reccallgraph->text();
-        flag = true;
-    }
-    if(!ui->lineEdit_recfreq->text().isEmpty()) {
-        m_recordParams["frequent"] = ui->lineEdit_recfreq->text();
+        m_recordParams["duration"] = " --duration " + ui->spinBox_recduration->text();
         flag = true;
     }
     if(!ui->lineEdit_recfilename->text().isEmpty()) {
-        m_recordParams["filename"] = ui->lineEdit_recfilename->text();
+        m_recordParams["filename"] = " -o " + ui->lineEdit_recfilename->text();
         flag = true;
     }
     return flag;
 }
-
-//void MainWindow::insertDataToTable()
-//{
-//    QStringList *list = new QStringList();
-//    QString test,result,fail;
-//    QBrush redColor(Qt::red);
-//    fail = QString::number(fileOperation->m_totalTests.toInt() - fileOperation->m_pass.toInt());
-//    test = QString("Test(%1)").arg(fileOperation->m_totalTests);
-//    result = QString("Result(pass %1 fail %2)").arg(fileOperation->m_pass).arg(fail);
-//    *list << test << result << "Resulotion";
-//    ui->tableWidget_xts->clear();
-//    ui->tableWidget_xts->setHorizontalHeaderLabels(*list);
-//    ui->tableWidget_xts->setRowCount(fileOperation->m_totalTests.toInt());
-//    for(int row=0;row<ui->tableWidget_xts->rowCount();row++){
-//        //TODO:
-//        cout << fileOperation->m_testResult->at(row);
-
-//        ui->tableWidget_xts->setItem(row,0,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(0)));
-//        if(fileOperation->m_testResult->at(row).at(1)=="fail") {
-//            ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem("fail"));
-//            ui->tableWidget_xts->item(row,1)->setForeground(Qt::red);
-//        }else{
-//            ui->tableWidget_xts->setItem(row,1,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(1)));
-//        }
-//        if(!fileOperation->m_testResult->at(row).at(2).isEmpty())
-//        {
-//            ui->tableWidget_xts->setItem(row,2,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(2)));
-////            ui->tableWidget_xts->setItem(row,3,new QTableWidgetItem(fileOperation->m_testResult->at(row).at(3)));
-
-//        }
-//    }
-
-//
-//}
 
 #if 0
 void MainWindow::readfile()

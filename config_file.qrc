@@ -1,9 +1,10 @@
 <RCC>
     <qresource prefix="/config">
-        <file>native_cmd_list.txt</file>
         <file>README.md</file>
-        <file>cts_test_list.txt</file>
-        <file>cts_resulotion.csv</file>
+        <file>config/cts_resulotion.csv</file>
+        <file>config/cts_test_list.txt</file>
+        <file>config/native_cmd_list.txt</file>
+        <file>config/test_result.xml</file>
     </qresource>
     <qresource prefix="/icon">
         <file>icon/superman.ico</file>
@@ -17,8 +18,5 @@
         <file>icon/red.ico</file>
         <file>icon/led_red1.ico</file>
         <file>icon/yellow.ico</file>
-    </qresource>
-    <qresource prefix="/file">
-        <file>test_result.xml</file>
     </qresource>
 </RCC>

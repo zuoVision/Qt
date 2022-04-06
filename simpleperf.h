@@ -20,6 +20,7 @@ public:
     QThread                 *sim_Thread;
     CommandProcessThread    *sim_cpt;
 
+    void init();
     void init_connect();
     void processKeyPressEvent(QKeyEvent *event);
 
@@ -31,11 +32,12 @@ public:
     void runReport();
     void runFlamegraph();
     void runQuickGeneration();
+    void process(QString cmd);
     void stopProcessor();
 
 private:
     QProcess::ProcessState m_state = QProcess::ProcessState::NotRunning;
-
+    QString m_hostStyle;
 protected:
 
 signals:

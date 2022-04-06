@@ -136,6 +136,6 @@ bool FileOperation::readCsv(QFile *file)
             *m_resulotion << line;
         }
     }
-    cout << *m_resulotion;
+//    cout << *m_resulotion;
     return true;
 }

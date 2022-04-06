@@ -29,7 +29,7 @@ void MyTableView::init()
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 
     this->setStyleSheet("QHeaderView::section{background:lightgreen;}");
-//    model->horizontalHeader()->setStyleSheet("QHeaderView::section{background:lightgreen;}");
+
     html_format="<a href=\"%1\">%2";
     lab_resulotion = new QLabel();
     lab_resulotion->setOpenExternalLinks(true);
