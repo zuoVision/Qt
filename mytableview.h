@@ -19,7 +19,7 @@ public:
 public:
     QStandardItemModel  *model;
     QString             html_format;
-    QLabel              *lab_resulotion;
+//    QLabel              *lab_resulotion;
 };
 
 #endif // MYTABLEVIEW_H

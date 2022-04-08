@@ -554,6 +554,7 @@ void MainWindow::readfile()
 
 void MainWindow::on_pushButton_result_clicked()
 {
+    cout;
     QString res = m_doc.openFile("*.xml");
     if(!res.isEmpty()){
         QFile file(res);
@@ -568,10 +569,14 @@ void MainWindow::on_pushButton_result_clicked()
         }
         if(fileOperation->readXml(&file))
         {
+            cout <<"xxxxxxxxxxxxxxxxxxxxxx2";
             mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
         }
+        cout <<"xxxxxxxxxxxxxxxxxxxxxx4";
         file.close();
+        cout <<"xxxxxxxxxxxxxxxxxxxxxx5";
     }
+    cout <<"xxxxxxxxxxxxxxxxxxxxxx6";
 }
 
 void MainWindow::on_pushButton_screencapture_clicked()

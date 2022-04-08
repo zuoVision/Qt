@@ -163,7 +163,6 @@ void Simpleperf::runFlamegraph()
     QString cmd1 = "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
     QString cmd2 = "FlameGraph/flamegraph.pl out.folded > graph.svg";
     process(cmd1+";"+cmd2);
-
     if(QDesktopServices::openUrl(QUrl("graph.svg"))){
         emit sig_sendToMainWindow("FlameGraph Opened");
 //        emit sig_sendToMainWindow("<font color=\"#00cc00\">FlameGraph Opened  </font>");

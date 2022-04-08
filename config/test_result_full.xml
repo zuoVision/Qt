@@ -1,0 +1,988 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no' ?><?xml-stylesheet type="text/xsl" href="compatibility_result.xsl"?>
+<Result start="1646822263777" end="1646822541450" start_display="Wed Mar 09 18:37:43 CST 2022" end_display="Wed Mar 09 18:42:21 CST 2022" command_line_args="cts-dev -m CtsCameraTestCases" suite_name="CTS" suite_variant="CTS" suite_version="12_r1" suite_plan="cts-dev" suite_build_number="7483472" report_version="5.0" devices="6DEEWKM7MBL7HMV4" host_name="41000453-1" os_name="Linux" os_version="5.4.0-42-generic" os_arch="amd64" java_vendor="Oracle Corporation" java_version="11.0.4">
+  <Build invocation-id="3" run_history='[{"startTime":1646818215020,"endTime":1646820257418,"passedTests":603,"failedTests":47,"commandLineArgs":"cts-dev -m CtsCameraTestCases","hostName":"41000453-1"}]' command_line_args="cts-dev -m CtsCameraTestCases" adb_version="1.0.39 subVersion: 1:8.1.0+r23-5~18.04 install path: /usr/lib/android-sdk/platform-tools/adb" java_version="11.0.4" java_classpath="/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/tools/compatibility-host-util.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/tools/compatibility-tradefed.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/tools/cts-tradefed.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/tools/cts-tradefed-tests.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/tools/loganalysis.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/tools/tradefed.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/tools/tradefed-no-fwk.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/tools/tradefed-test-framework.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/android.core.vm-tests-tf.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/compatibility-host-provider-preconditions.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/compatibility-host-telephony-preconditions.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/compatibility-host-vm-targetprep.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAbiOverrideHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAccountsHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAdbHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAdbManagerHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAngleIntegrationHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsApexTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAppBindingHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAppCompatHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAppSearchHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAppSecurityHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAppUsageHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsAtraceHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsBackupHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsBlobStoreHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsBootStatsTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsCallLogTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsCarHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsClassloaderSplitsHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsClasspathsTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsCodePathHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsCompilationTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsCppToolsTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/cts-dalvik-device-test-runner.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/cts-dalvik-host-test-runner.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsDeqpTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsDeviceIdleHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsDevicePolicyManagerTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsDexMetadataHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsDomainVerificationHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsDumpsysHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsDynamicMimeHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsEdiHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsExtractNativeLibsHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsFrameRateOverrideTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsGpuProfilingDataTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsGpuToolsHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsHarmfulAppWarningHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsHdmiCecHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsHostsideHiddenapiTests.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsHostsideNetworkTests.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsHostsideNumberBlockingTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsHostsideTvTests.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsHostsideWebViewTests.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsHostTzDataTests.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsIcu4cTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsIncidentHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsIncrementalInstallHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsInputMethodServiceCommon.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsInputMethodServiceHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsInputMethodServiceLib.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsInstalledLoadingProgressHostTests.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsInstallHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJdwpApp.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJdwpSecurityHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJdwpTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJdwpTunnelHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiAttachingHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRedefineClassesHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1900HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1901HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1902HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1903HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1904HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1906HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1907HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1908HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1909HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1910HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1911HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1912HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1913HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1914HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1915HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1916HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1917HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1920HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1921HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1922HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1923HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1924HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1925HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1926HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1927HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1928HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1930HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1931HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1932HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1933HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1934HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1936HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1937HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1939HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1941HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1942HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1943HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1953HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1958HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1962HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1967HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1968HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1969HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1970HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1971HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1974HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1975HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1976HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1977HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1978HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1979HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1981HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1982HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1983HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1984HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1988HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1989HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1990HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1991HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1992HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1994HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1995HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1996HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1997HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1998HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest1999HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest2001HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest2002HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest2003HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest2004HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest2005HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest2006HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest2007HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest902HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest903HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest904HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest905HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest906HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest907HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest908HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest910HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest911HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest912HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest913HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest914HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest915HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest917HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest918HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest919HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest920HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest922HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest923HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest924HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest926HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest927HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest928HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest930HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest931HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest932HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest940HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest942HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest944HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest945HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest947HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest951HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest982HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest983HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest984HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest985HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest986HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest988HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest989HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest990HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest991HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest992HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest993HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest994HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest995HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest996HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiRunTest997HostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiTaggingHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsJvmtiTrackingHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsLocationTimeZoneManagerHostTest.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsMediaBitstreamsTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsMediaHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsMediaParserHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsMonkeyTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsMultiUserHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsOsHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsPackageManagerBootTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsPackageManagerMultiUserHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsPackageManagerParsingHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsPackageManagerPreferredActivityHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsPackageManagerStatsHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsRollbackManagerHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSampleHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsScopedStorageCoreHostTest.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsScopedStorageHostTest.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSeccompHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSecurityBulletinHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSecurityHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSettingsHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsShortcutHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSignedConfigHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSilentUpdateHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsStagedInstallHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsStatsdAtomHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsStatsdHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsStrictJavaPackagesTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSustainedPerformanceHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSyncContentHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsSystemUiHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsTaggingHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsTelephonyHostCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsTelephonyProviderHostCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsTestHarnessModeTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsThemeHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsTrustedVoiceHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsUsbTests.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsUserspaceRebootHostSideTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsUsesLibraryHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsUsesNativeLibraryTest.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/CtsWifiBroadcastsHostTestCases.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/ICU4CTestRunner.jar:/home/administrator/CTS/AndroidS/android-cts/tools/../../android-cts/testcases/jdi-support.jar" server_reference="f430e513-5cc7-481d-aef4-fd266d1006ed" setup_time_ms="2276" test-type-count_ResultsPlayer="572" tf_fetch_build_start_timestamp="1646822263754" test_crash_failures="23" device_done_timestamp="1646822541372" soft_restart_after_module="1" push_file_time_ms="28" teardown_disk_usage_bytes="0" tf_dynamic_resolver_pair_timestamp="1646822263742:1646822263753" tf_invocation_start_timestamp="1646822263740" fetch_build_time_ms="3" tf_setup_start_timestamp="1646822263838" tf_teardown_end_timestamp="1646822541364" device_count="1" tf_fetch_build_end_timestamp="1646822263757" tf_fetch_build_pair_timestamp="1646822263754:1646822263757" tf_module_setup_pair_timestamp="1646822269147:1646822273369" tf_setup_end_timestamp="1646822266114" tf_teardown_pair_timestamp="1646822538624:1646822541364" device_release_state="AVAILABLE" tf_test_pair_timestamp="1646822266114:1646822532091" uncaught_test_crash_failures="23" tf_setup_pair_timestamp="1646822263837:1646822263838,1646822263838:1646822266114" tf_teardown_start_timestamp="1646822538624" push_file_count="1" tf_module_teardown_pair_timestamp="1646822531111:1646822532077" tf_invocation_end_timestamp="1646822541426" tf_objects_tracking="com.android.compatibility.common.tradefed.targetprep.ApkInstrumentationPreparer=2,com.android.tradefed.testtype.suite.retry.ResultsPlayer=1,com.android.compatibility.common.tradefed.targetprep.ApkPreconditionCheck=1,com.android.compatibility.common.tradefed.testtype.suite.CompatibilityTestSuite=1,com.android.tradefed.testtype.InstrumentationTest=1,com.android.compatibility.common.tradefed.targetprep.PreconditionPreparer=12,com.android.compatibility.common.tradefed.targetprep.PropertyCheck=3,com.android.compatibility.common.tradefed.build.CompatibilityBuildProvider=1,com.android.compatibility.common.tradefed.targetprep.BuildFingerPrintPreparer=1,com.android.tradefed.targetprep.DeviceSetup=1,com.android.compatibility.common.tradefed.targetprep.PackageDisabler=1,com.android.tradefed.targetprep.RunCommandTargetPreparer=3,com.android.compatibility.common.tradefed.targetprep.DeviceFileCollector=2,com.android.compatibility.common.tradefed.targetprep.ReportLogCollector=1,com.android.tradefed.device.metric.BaseDeviceMetricCollector=1,com.android.tradefed.testtype.AndroidJUnitTest=1,com.android.compatibility.common.tradefed.targetprep.WifiCheck=1,com.android.tradefed.targetprep.suite.SuiteApkInstaller=1,com.android.compatibility.common.tradefed.targetprep.DynamicConfigPusher=1,com.android.tradefed.targetprep.BaseTargetPreparer=20,com.android.compatibility.common.tradefed.targetprep.DeviceInfoCollector=1,com.android.compatibility.common.tradefed.targetprep.StayAwakePreparer=1,com.android.tradefed.testtype.suite.BaseTestSuite=1,com.android.tradefed.testtype.suite.ITestSuite=1,com.android.compatibility.common.tradefed.targetprep.SettingsPreparer=3,com.android.tradefed.device.metric.CountTestCasesCollector=1,com.android.tradefed.targetprep.TestAppInstallSetup=1" build_manufacturer="TCL" build_abis_32="armeabi-v7a,armeabi" build_reference_fingerprint="" build_product="T767G" build_tags="test-keys" build_version_incremental="GP13-4" build_brand="TCL" build_fingerprint="TCL/T767G/Buffalo_CAN:12/SP1A.210812.016/GP13-4:userdebug/test-keys" build_model="T767G" build_device="Buffalo_CAN" build_id="SP1A.210812.016" build_version_sdk="31" build_serial="6DEEWKM7MBL7HMV4" build_version_security_patch="2022-03-05" build_abi="arm64-v8a" build_abis_64="arm64-v8a" build_vendor_fingerprint="TCL/T767G/Buffalo_CAN:12/SP1A.210812.016/GP13-4:userdebug/test-keys" build_version_base_os="" build_abis="arm64-v8a,armeabi-v7a,armeabi" build_board="MT6853" build_type="userdebug" build_version_release="12" build_abi2="" />
+  <RunHistory>
+    <Run start="1646818215020" end="1646820257418" pass="603" failed="47" command_line_args="cts-dev -m CtsCameraTestCases" host_name="41000453-1" />
+  </RunHistory>
+  <Summary pass="627" failed="23" modules_done="1" modules_total="1" />
+  <Module name="CtsCameraTestCases" abi="arm64-v8a" runtime="2278705" done="true" pass="627" total_tests="650">
+    <TestCase name="android.hardware.camera2.cts.CameraExtensionCharacteristicsTest">
+      <Test result="pass" name="testExtensionSizes" />
+      <Test result="pass" name="testExtensionAvailability" />
+      <Test result="pass" name="testIllegalArguments" />
+      <Test result="pass" name="testExtensionLatencyRanges" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.CtsUtilsTest">
+      <Test result="pass" name="testCopyPad0to0" />
+      <Test result="pass" name="testCopyPad0to3" />
+      <Test result="pass" name="testCopyPad3to0" />
+      <Test result="pass" name="testCopyPad3to3" />
+      <Test result="pass" name="testCopyPad3to5" />
+      <Test result="pass" name="testCopyPad5to3" />
+      <Test result="pass" name="testCopyYuv" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.PerformanceTest">
+      <Test result="pass" name="testCameraLaunch" />
+      <Test result="pass" name="testSingleCapture" />
+      <Test result="pass" name="testReprocessingCaptureStall" />
+      <Test result="pass" name="testReprocessingLatency" />
+      <Test result="pass" name="testHighQualityReprocessingThroughput" />
+      <Test result="pass" name="testHighQualityReprocessingLatency" />
+      <Test result="pass" name="testReprocessingThroughput" />
+      <Test result="fail" name="testMultipleCapture">
+        <Failure message="java.lang.RuntimeException: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>java.lang.RuntimeException: Number of cameras changed from 2 to 0
+	at android.hardware.camera2.cts.testcases.Camera2AndroidTestRule.after(Camera2AndroidTestRule.java:291)
+	at org.junit.rules.ExternalResource$1.evaluate(ExternalResource.java:59)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:27)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+	at androidx.test.internal.runner.TestExecutor.execute(TestExecutor.java:56)
+	at androidx.test.runner.AndroidJUnitRunner.onStart(AndroidJUnitRunner.java:442)
+	at android.app.Instrumentation$InstrumentationThread.run(Instrumentation.java:2439)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.SimpleObjectsTest">
+      <Test result="pass" name="CameraKeysTest" />
+    </TestCase>
+    <TestCase name="android.hardware.cts.CameraGLTest">
+      <Test result="pass" name="testSetPreviewTextureBothCallbacks" />
+      <Test result="pass" name="testCameraToSurfaceTextureMetadata" />
+      <Test result="pass" name="testSetPreviewTextureTextureCallback" />
+      <Test result="pass" name="testSetPreviewTexturePreviewCallback" />
+    </TestCase>
+    <TestCase name="android.hardware.cts.CameraTest">
+      <Test result="pass" name="testMultipleCameras" />
+      <Test result="pass" name="testSceneMode" />
+      <Test result="pass" name="testEnableShutterSound" />
+      <Test result="pass" name="testSetPreviewDisplay" />
+      <Test result="pass" name="testAutoWhiteBalanceLock" />
+      <Test result="pass" name="testGetParameterDuringFocus" />
+      <Test result="pass" name="test3ALockInteraction" />
+      <Test result="pass" name="testJpegCallbackStartPreview" />
+      <Test result="pass" name="testMultiCameraRelease" />
+      <Test result="pass" name="testSetOneShotPreviewCallback" />
+      <Test result="pass" name="testParameters" />
+      <Test result="pass" name="testMeteringAreas" />
+      <Test result="pass" name="testInvalidParameters" />
+      <Test result="pass" name="testPreviewCallbackWithPicture" />
+      <Test result="pass" name="testJpegExif" />
+      <Test result="pass" name="testStabilizationOneShotPreviewCallback" />
+      <Test result="pass" name="testLockUnlock" />
+      <Test result="pass" name="testCameraExternalConnected" />
+      <Test result="pass" name="testPreviewFpsRange" />
+      <Test result="pass" name="testRecordingHint" />
+      <Test result="pass" name="testPreviewCallbackWithBuffer" />
+      <Test result="pass" name="testCancelAutofocus" />
+      <Test result="pass" name="testVideoSnapshot" />
+      <Test result="pass" name="testDisplayOrientation" />
+      <Test result="pass" name="testSmoothZoom" />
+      <Test result="pass" name="testFocusAreas" />
+      <Test result="pass" name="testPreviewFormats" />
+      <Test result="pass" name="testImmediateZoom" />
+      <Test result="pass" name="testAutoExposureLock" />
+      <Test result="fail" name="testPreviewCallback">
+        <Failure message="junit.framework.AssertionFailedError: Fail to open camera 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Fail to open camera 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at junit.framework.Assert.assertNotNull(Assert.java:218)
+	at android.hardware.cts.CameraTest.initializeMessageLooper(CameraTest.java:214)
+	at android.hardware.cts.CameraTest.initializeMessageLooper(CameraTest.java:160)
+	at android.hardware.cts.CameraTest.testPreviewCallbackByCamera(CameraTest.java:523)
+	at android.hardware.cts.CameraTest.testPreviewCallback(CameraTest.java:505)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testPreviewPictureSizesCombination" />
+      <Test result="fail" name="testTakePicture">
+        <Failure message="junit.framework.AssertionFailedError: Shutter callback not received&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Shutter callback not received
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.cts.CameraTest.subtestTakePictureByCamera(CameraTest.java:478)
+	at android.hardware.cts.CameraTest.testTakePicture(CameraTest.java:462)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="fail" name="testFaceDetection">
+        <Failure message="junit.framework.AssertionFailedError: Fail to open camera 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Fail to open camera 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at junit.framework.Assert.assertNotNull(Assert.java:218)
+	at android.hardware.cts.CameraTest.initializeMessageLooper(CameraTest.java:214)
+	at android.hardware.cts.CameraTest.initializeMessageLooper(CameraTest.java:160)
+	at android.hardware.cts.CameraTest.testFaceDetectionByCamera(CameraTest.java:3255)
+	at android.hardware.cts.CameraTest.testFaceDetection(CameraTest.java:3195)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testFocusDistances" />
+      <Test result="pass" name="testJpegThumbnailSize" />
+    </TestCase>
+    <TestCase name="android.hardware.cts.Camera_ParametersTest">
+      <Test result="pass" name="testAccessMethods" />
+    </TestCase>
+    <TestCase name="android.hardware.cts.Camera_SizeTest">
+      <Test result="pass" name="testConstructor" />
+      <Test result="pass" name="testMaxAspectRatios" />
+    </TestCase>
+    <TestCase name="android.hardware.multiprocess.camera.cts.CameraEvictionTest">
+      <Test result="pass" name="testBasicCamera2ActivityEviction" />
+      <Test result="pass" name="testBasicCamera2ActivityEvictionOomScoreOffset" />
+      <Test result="pass" name="testCamera1ActivityEviction" />
+      <Test result="pass" name="testCamera2AccessCallback" />
+      <Test result="pass" name="testCamera2NativeAccessCallback" />
+      <Test result="pass" name="testCamera2OomScoreOffsetPermissions" />
+      <Test result="pass" name="testMediaRecorderCameraActivityEviction" />
+    </TestCase>
+    <TestCase name="android.camera.cts.HeifWriterTest">
+      <Test result="pass" name="testHeif[0]" />
+      <Test result="pass" name="testHeif[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.AllocationTest">
+      <Test result="pass" name="testParamSensitivity[0]" />
+      <Test result="pass" name="testParamSensitivity[1]" />
+      <Test result="pass" name="testBlackWhite[0]" />
+      <Test result="pass" name="testBlackWhite[1]" />
+      <Test result="pass" name="testAllocationFromCameraFlexibleYuv[0]" />
+      <Test result="fail" name="testAllocationFromCameraFlexibleYuv[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.AllocationTest.tearDown(AllocationTest.java:122)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.BurstCaptureRawTest">
+      <Test result="pass" name="testRawSensorSize[0]" />
+      <Test result="pass" name="testRawSensorSize[1]" />
+      <Test result="pass" name="testManualAutoSwitch[0]" />
+      <Test result="pass" name="testManualAutoSwitch[1]" />
+      <Test result="pass" name="testTimestamp[0]" />
+      <Test result="pass" name="testTimestamp[1]" />
+      <Test result="pass" name="testMetadataRoundDown[0]" />
+      <Test result="pass" name="testMetadataRoundDown[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.BurstCaptureTest">
+      <Test result="pass" name="testYuvBurstWithStillBokeh[0]" />
+      <Test result="pass" name="testYuvBurstWithStillBokeh[1]" />
+      <Test result="pass" name="testYuvBurst[0]" />
+      <Test result="pass" name="testYuvBurst[1]" />
+      <Test result="pass" name="testJpegBurst[0]" />
+      <Test result="fail" name="testJpegBurst[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.CameraDeviceTest">
+      <Test result="pass" name="testCameraDeviceZSLTemplate[0]" />
+      <Test result="pass" name="testCameraDeviceZSLTemplate[1]" />
+      <Test result="pass" name="testSessionConfiguration[0]" />
+      <Test result="pass" name="testSessionConfiguration[1]" />
+      <Test result="pass" name="testCameraDevicePreviewTemplate[0]" />
+      <Test result="pass" name="testCameraDevicePreviewTemplate[1]" />
+      <Test result="pass" name="testCameraDeviceVideoSnapShotTemplate[0]" />
+      <Test result="pass" name="testCameraDeviceVideoSnapShotTemplate[1]" />
+      <Test result="pass" name="testCameraDeviceCapture[0]" />
+      <Test result="pass" name="testCameraDeviceCapture[1]" />
+      <Test result="pass" name="testCreateCustomSession[0]" />
+      <Test result="pass" name="testCreateCustomSession[1]" />
+      <Test result="pass" name="testInvalidCapture[0]" />
+      <Test result="pass" name="testInvalidCapture[1]" />
+      <Test result="pass" name="testCameraDeviceRecordingTemplate[0]" />
+      <Test result="pass" name="testCameraDeviceRecordingTemplate[1]" />
+      <Test result="pass" name="testPrepare[0]" />
+      <Test result="pass" name="testPrepare[1]" />
+      <Test result="pass" name="testSessionParametersStateLeak[0]" />
+      <Test result="pass" name="testSessionParametersStateLeak[1]" />
+      <Test result="pass" name="testAudioRestrictionMultipleDevices[0]" />
+      <Test result="pass" name="testAudioRestrictionMultipleDevices[1]" />
+      <Test result="pass" name="testCameraDeviceSetErrorListener[0]" />
+      <Test result="pass" name="testCameraDeviceSetErrorListener[1]" />
+      <Test result="pass" name="testPrepareForSharedSurfaces[0]" />
+      <Test result="pass" name="testPrepareForSharedSurfaces[1]" />
+      <Test result="pass" name="testCameraDeviceRepeatingBurst[0]" />
+      <Test result="pass" name="testCameraDeviceRepeatingBurst[1]" />
+      <Test result="pass" name="testCameraDeviceRepeatingRequest[0]" />
+      <Test result="pass" name="testCameraDeviceRepeatingRequest[1]" />
+      <Test result="pass" name="testCameraDeviceManualTemplate[0]" />
+      <Test result="pass" name="testCameraDeviceManualTemplate[1]" />
+      <Test result="pass" name="testChainedOperation[0]" />
+      <Test result="pass" name="testChainedOperation[1]" />
+      <Test result="pass" name="testAudioRestrictionSingleDevice[0]" />
+      <Test result="pass" name="testAudioRestrictionSingleDevice[1]" />
+      <Test result="pass" name="testCreateSessions[0]" />
+      <Test result="pass" name="testCreateSessions[1]" />
+      <Test result="pass" name="testCreateSessionWithParameters[0]" />
+      <Test result="pass" name="testCreateSessionWithParameters[1]" />
+      <Test result="pass" name="testCameraDeviceCaptureBurst[0]" />
+      <Test result="pass" name="testCameraDeviceCaptureBurst[1]" />
+      <Test result="pass" name="testCameraDeviceStillTemplate[0]" />
+      <Test result="pass" name="testCameraDeviceStillTemplate[1]" />
+      <Test result="pass" name="testCameraDeviceCreateCaptureBuilder[0]" />
+      <Test result="pass" name="testCameraDeviceCreateCaptureBuilder[1]" />
+      <Test result="pass" name="testCameraDeviceAbort[0]" />
+      <Test result="pass" name="testCameraDeviceAbort[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.CameraExtensionSessionTest">
+      <Test result="pass" name="testMultiFrameCapture[0]" />
+      <Test result="pass" name="testMultiFrameCapture[1]" />
+      <Test result="pass" name="testCloseCaptureSession[0]" />
+      <Test result="pass" name="testCloseCaptureSession[1]" />
+      <Test result="pass" name="testRepeatingAndCaptureCombined[0]" />
+      <Test result="pass" name="testRepeatingAndCaptureCombined[1]" />
+      <Test result="pass" name="testIllegalArguments[0]" />
+      <Test result="pass" name="testIllegalArguments[1]" />
+      <Test result="pass" name="testRepeatingCapture[0]" />
+      <Test result="pass" name="testRepeatingCapture[1]" />
+      <Test result="pass" name="testGetDevice[0]" />
+      <Test result="pass" name="testGetDevice[1]" />
+      <Test result="pass" name="testBasicExtensionLifecycle[0]" />
+      <Test result="pass" name="testBasicExtensionLifecycle[1]" />
+      <Test result="pass" name="testCloseExtensionSession[0]" />
+      <Test result="pass" name="testCloseExtensionSession[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.CameraManagerTest">
+      <Test result="pass" name="testCameraManagerGetCameraCharacteristics[0]" />
+      <Test result="pass" name="testCameraManagerGetCameraCharacteristics[1]" />
+      <Test result="pass" name="testCameraManagerListenerCallbacks[0]" />
+      <Test result="pass" name="testCameraManagerListenerCallbacks[1]" />
+      <Test result="pass" name="testCameraManagerOpenAllCameras[0]" />
+      <Test result="pass" name="testCameraManagerOpenAllCameras[1]" />
+      <Test result="pass" name="testNoLegacyOnQ[0]" />
+      <Test result="pass" name="testNoLegacyOnQ[1]" />
+      <Test result="pass" name="testCameraManagerInvalidDevice[0]" />
+      <Test result="pass" name="testCameraManagerInvalidDevice[1]" />
+      <Test result="pass" name="testCameraManagerOpenCamerasSerially[0]" />
+      <Test result="pass" name="testCameraManagerOpenCamerasSerially[1]" />
+      <Test result="pass" name="testCameraManagerListener[0]" />
+      <Test result="pass" name="testCameraManagerListener[1]" />
+      <Test result="pass" name="testCameraManagerOpenCameraTwice[0]" />
+      <Test result="pass" name="testCameraManagerOpenCameraTwice[1]" />
+      <Test result="pass" name="testCameraManagerGetDeviceIdList[0]" />
+      <Test result="pass" name="testCameraManagerGetDeviceIdList[1]" />
+      <Test result="pass" name="testCameraManagerWithDnD[0]" />
+      <Test result="pass" name="testCameraManagerWithDnD[1]" />
+      <Test result="pass" name="testCameraCharacteristicsNdkFromSdk[0]" />
+      <Test result="pass" name="testCameraCharacteristicsNdkFromSdk[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.CaptureRequestTest">
+      <Test result="pass" name="testDynamicBlackWhiteLevel[0]" />
+      <Test result="pass" name="testDynamicBlackWhiteLevel[1]" />
+      <Test result="pass" name="testCameraStabilizations[0]" />
+      <Test result="pass" name="testCameraStabilizations[1]" />
+      <Test result="pass" name="testSettingsBinderParcel[0]" />
+      <Test result="pass" name="testSettingsBinderParcel[1]" />
+      <Test result="pass" name="testAfModes[0]" />
+      <Test result="pass" name="testAfModes[1]" />
+      <Test result="pass" name="testNoiseReductionModeControlFastFps[0]" />
+      <Test result="pass" name="testNoiseReductionModeControlFastFps[1]" />
+      <Test result="pass" name="testColorCorrectionControl[0]" />
+      <Test result="pass" name="testColorCorrectionControl[1]" />
+      <Test result="pass" name="testFocusDistanceControl[0]" />
+      <Test result="pass" name="testFocusDistanceControl[1]" />
+      <Test result="pass" name="testEdgeModeControl[0]" />
+      <Test result="pass" name="testEdgeModeControl[1]" />
+      <Test result="pass" name="testExtendedSceneModes[0]" />
+      <Test result="pass" name="testExtendedSceneModes[1]" />
+      <Test result="pass" name="testDigitalZoomPreviewCombinations[0]" />
+      <Test result="pass" name="testDigitalZoomPreviewCombinations[1]" />
+      <Test result="pass" name="testFlashControl[0]" />
+      <Test result="pass" name="testFlashControl[1]" />
+      <Test result="pass" name="testNoiseReductionModeControl[0]" />
+      <Test result="pass" name="testNoiseReductionModeControl[1]" />
+      <Test result="pass" name="testEffectModes[0]" />
+      <Test result="pass" name="testEffectModes[1]" />
+      <Test result="pass" name="testSceneModes[0]" />
+      <Test result="pass" name="testSceneModes[1]" />
+      <Test result="pass" name="testEdgeModeControlFastFps[0]" />
+      <Test result="pass" name="testEdgeModeControlFastFps[1]" />
+      <Test result="pass" name="testFaceDetection[0]" />
+      <Test result="pass" name="testFaceDetection[1]" />
+      <Test result="pass" name="testLensShadingMap[0]" />
+      <Test result="pass" name="testLensShadingMap[1]" />
+      <Test result="pass" name="testZoomRatio[0]" />
+      <Test result="pass" name="testAeModeAndLock[0]" />
+      <Test result="pass" name="testFlashTurnOff[0]" />
+      <Test result="pass" name="testAwbModeAndLock[0]" />
+      <Test result="pass" name="testDigitalZoom[0]" />
+      <Test result="pass" name="testToneMapControl[0]" />
+      <Test result="pass" name="testAntiBandingModes[0]" />
+      <Test result="pass" name="testBlackLevelLock[0]" />
+      <Test result="fail" name="testZoomRatio[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.CaptureRequestTest.tearDown(CaptureRequestTest.java:146)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testAeModeAndLock[1]" />
+      <Test result="pass" name="testFlashTurnOff[1]" />
+      <Test result="fail" name="testAwbModeAndLock[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.CaptureRequestTest.tearDown(CaptureRequestTest.java:146)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testDigitalZoom[1]" />
+      <Test result="fail" name="testToneMapControl[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.CaptureRequestTest.tearDown(CaptureRequestTest.java:146)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testAntiBandingModes[1]" />
+      <Test result="fail" name="testBlackLevelLock[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.CaptureRequestTest.tearDown(CaptureRequestTest.java:146)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.CaptureResultTest">
+      <Test result="pass" name="testCameraCaptureResultAllKeys[0]" />
+      <Test result="pass" name="testCameraCaptureResultAllKeys[1]" />
+      <Test result="pass" name="testResultTimestamps[0]" />
+      <Test result="pass" name="testResultTimestamps[1]" />
+      <Test result="pass" name="testPartialResult[0]" />
+      <Test result="pass" name="testPartialResult[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.ConcurrentCameraTest">
+      <Test result="pass" name="testMandatoryConcurrentStreamCombination[0]" />
+      <Test result="pass" name="testMandatoryConcurrentStreamCombination[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.DngCreatorTest">
+      <Test result="pass" name="testSingleImageThumbnail[0]" />
+      <Test result="pass" name="testSingleImageThumbnail[1]" />
+      <Test result="pass" name="testSingleImageBasicMaximumResolution[0]" />
+      <Test result="pass" name="testSingleImageBasicMaximumResolution[1]" />
+      <Test result="pass" name="testDngRenderingByBitmapFactor[0]" />
+      <Test result="pass" name="testDngRenderingByBitmapFactor[1]" />
+      <Test result="pass" name="testRaw16JpegConsistency[0]" />
+      <Test result="pass" name="testRaw16JpegConsistency[1]" />
+      <Test result="pass" name="testRaw16JpegMaximumResolutionConsistency[0]" />
+      <Test result="pass" name="testRaw16JpegMaximumResolutionConsistency[1]" />
+      <Test result="pass" name="testSingleImageBasic[0]" />
+      <Test result="pass" name="testSingleImageBasic[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.ExtendedCameraCharacteristicsTest">
+      <Test result="pass" name="testStaticBurstCharacteristics[0]" />
+      <Test result="pass" name="testStaticBurstCharacteristics[1]" />
+      <Test result="pass" name="testOpticalBlackRegions[0]" />
+      <Test result="pass" name="testOpticalBlackRegions[1]" />
+      <Test result="pass" name="testRemosaicReprocessingCharacteristics[0]" />
+      <Test result="pass" name="testRemosaicReprocessingCharacteristics[1]" />
+      <Test result="pass" name="testLogicalCameraCharacteristics[0]" />
+      <Test result="pass" name="testLogicalCameraCharacteristics[1]" />
+      <Test result="pass" name="testReprocessingCharacteristics[0]" />
+      <Test result="pass" name="testReprocessingCharacteristics[1]" />
+      <Test result="pass" name="testCameraPerfClassCharacteristics[0]" />
+      <Test result="pass" name="testCameraPerfClassCharacteristics[1]" />
+      <Test result="pass" name="testKeys[0]" />
+      <Test result="pass" name="testKeys[1]" />
+      <Test result="pass" name="testStaticRawCharacteristics[0]" />
+      <Test result="pass" name="testStaticRawCharacteristics[1]" />
+      <Test result="pass" name="testRotateAndCropCharacteristics[0]" />
+      <Test result="pass" name="testRotateAndCropCharacteristics[1]" />
+      <Test result="pass" name="testRecommendedStreamConfigurations[0]" />
+      <Test result="pass" name="testRecommendedStreamConfigurations[1]" />
+      <Test result="pass" name="testMonochromeCharacteristics[0]" />
+      <Test result="pass" name="testMonochromeCharacteristics[1]" />
+      <Test result="pass" name="testStreamConfigurationMap[0]" />
+      <Test result="pass" name="testStreamConfigurationMap[1]" />
+      <Test result="pass" name="testConstrainedHighSpeedCapability[0]" />
+      <Test result="pass" name="testConstrainedHighSpeedCapability[1]" />
+      <Test result="pass" name="testAvailableStreamConfigs[0]" />
+      <Test result="pass" name="testAvailableStreamConfigs[1]" />
+      <Test result="pass" name="testDepthOutputCharacteristics[0]" />
+      <Test result="pass" name="testDepthOutputCharacteristics[1]" />
+      <Test result="pass" name="testCameraOrientationAlignedWithDevice[0]" />
+      <Test result="pass" name="testCameraOrientationAlignedWithDevice[1]" />
+      <Test result="pass" name="testLegacyCameraDeviceParity[0]" />
+      <Test result="pass" name="testLegacyCameraDeviceParity[1]" />
+      <Test result="pass" name="testStaticSessionKeys[0]" />
+      <Test result="pass" name="testStaticSessionKeys[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.FastBasicsTest">
+      <Test result="pass" name="testCamera1[0]" />
+      <Test result="pass" name="testCamera1[1]" />
+      <Test result="pass" name="testCamera2[0]" />
+      <Test result="fail" name="testCamera2[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.FlashlightTest">
+      <Test result="pass" name="testTorchCallback[0]" />
+      <Test result="pass" name="testTorchCallback[1]" />
+      <Test result="pass" name="testTorchModeExceptions[0]" />
+      <Test result="pass" name="testTorchModeExceptions[1]" />
+      <Test result="pass" name="testCameraDeviceOpenAfterTorchOn[0]" />
+      <Test result="pass" name="testCameraDeviceOpenAfterTorchOn[1]" />
+      <Test result="pass" name="testSetTorchModeOnOff[0]" />
+      <Test result="pass" name="testSetTorchModeOnOff[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.IdleUidTest">
+      <Test result="pass" name="testCameraAccessBecomingInactiveUid[0]" />
+      <Test result="pass" name="testCameraAccessBecomingInactiveUid[1]" />
+      <Test result="pass" name="testCameraAccessForIdleUid[0]" />
+      <Test result="pass" name="testCameraAccessForIdleUid[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.ImageReaderTest">
+      <Test result="pass" name="testInvalidAccessTest[0]" />
+      <Test result="pass" name="testInvalidAccessTest[1]" />
+      <Test result="pass" name="testRaw[0]" />
+      <Test result="pass" name="testRaw[1]" />
+      <Test result="pass" name="testHeic[0]" />
+      <Test result="pass" name="testHeic[1]" />
+      <Test result="pass" name="testJpeg[0]" />
+      <Test result="pass" name="testJpeg[1]" />
+      <Test result="pass" name="testP010[0]" />
+      <Test result="pass" name="testP010[1]" />
+      <Test result="pass" name="testDiscardFreeBuffers[0]" />
+      <Test result="pass" name="testDiscardFreeBuffers[1]" />
+      <Test result="pass" name="testFlexibleYuv[0]" />
+      <Test result="pass" name="testFlexibleYuv[1]" />
+      <Test result="pass" name="testY8[0]" />
+      <Test result="pass" name="testY8[1]" />
+      <Test result="pass" name="testImageReaderYuvAndRaw[0]" />
+      <Test result="pass" name="testImageReaderYuvAndRaw[1]" />
+      <Test result="pass" name="testRepeatingRaw[0]" />
+      <Test result="pass" name="testRepeatingRaw[1]" />
+      <Test result="pass" name="testRepeatingHeic[0]" />
+      <Test result="pass" name="testRepeatingHeic[1]" />
+      <Test result="pass" name="testRepeatingJpeg[0]" />
+      <Test result="pass" name="testRepeatingJpeg[1]" />
+      <Test result="pass" name="testImageReaderYuvAndRawWithUsageFlag[0]" />
+      <Test result="pass" name="testImageReaderYuvAndRawWithUsageFlag[1]" />
+      <Test result="pass" name="testAllOutputYUVResolutions[0]" />
+      <Test result="pass" name="testAllOutputYUVResolutions[1]" />
+      <Test result="pass" name="testLongProcessingRepeatingRaw[0]" />
+      <Test result="pass" name="testLongProcessingRepeatingRaw[1]" />
+      <Test result="pass" name="testLongProcessingRepeatingFlexibleYuv[0]" />
+      <Test result="pass" name="testLongProcessingRepeatingFlexibleYuv[1]" />
+      <Test result="pass" name="testYuvAndJpeg[0]" />
+      <Test result="pass" name="testYuvAndJpeg[1]" />
+      <Test result="pass" name="testYuvAndJpegWithUsageFlag[0]" />
+      <Test result="pass" name="testYuvAndJpegWithUsageFlag[1]" />
+      <Test result="pass" name="testDepthPointCloud[0]" />
+      <Test result="pass" name="testDepthPointCloud[1]" />
+      <Test result="pass" name="testDepth16[0]" />
+      <Test result="pass" name="testDepth16[1]" />
+      <Test result="pass" name="testUsageRespected[0]" />
+      <Test result="pass" name="testUsageRespected[1]" />
+      <Test result="pass" name="testImageReaderPrivateWithProtectedUsageFlag[0]" />
+      <Test result="pass" name="testImageReaderPrivateWithProtectedUsageFlag[1]" />
+      <Test result="pass" name="testDynamicDepth[0]" />
+      <Test result="pass" name="testDynamicDepth[1]" />
+      <Test result="pass" name="testRawPrivate[0]" />
+      <Test result="pass" name="testRawPrivate[1]" />
+      <Test result="pass" name="testRepeatingRawPrivate[0]" />
+      <Test result="pass" name="testRepeatingRawPrivate[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.ImageWriterTest">
+      <Test result="pass" name="testWriterReaderBlobFormats[0]" />
+      <Test result="pass" name="testWriterReaderBlobFormats[1]" />
+      <Test result="pass" name="testWriterFormatOverride[0]" />
+      <Test result="pass" name="testWriterFormatOverride[1]" />
+      <Test result="pass" name="testYuvImageWriterReaderOperationAlt[0]" />
+      <Test result="pass" name="testYuvImageWriterReaderOperationAlt[1]" />
+      <Test result="pass" name="testAbandonedSurfaceExceptions[0]" />
+      <Test result="pass" name="testAbandonedSurfaceExceptions[1]" />
+      <Test result="pass" name="testYuvImageWriterReaderOperation[0]" />
+      <Test result="pass" name="testYuvImageWriterReaderOperation[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.LogicalCameraDeviceTest">
+      <Test result="pass" name="testInvalidPhysicalCameraRequests[0]" />
+      <Test result="pass" name="testInvalidPhysicalCameraRequests[1]" />
+      <Test result="pass" name="testActivePhysicalId[0]" />
+      <Test result="pass" name="testActivePhysicalId[1]" />
+      <Test result="pass" name="testInvalidPhysicalCameraIdInOutputConfiguration[0]" />
+      <Test result="pass" name="testInvalidPhysicalCameraIdInOutputConfiguration[1]" />
+      <Test result="pass" name="testDefaultFov[0]" />
+      <Test result="pass" name="testDefaultFov[1]" />
+      <Test result="pass" name="testBasicLogicalPhysicalStreamCombination[0]" />
+      <Test result="pass" name="testBasicLogicalPhysicalStreamCombination[1]" />
+      <Test result="pass" name="testBasicPhysicalStreaming[0]" />
+      <Test result="pass" name="testBasicPhysicalStreaming[1]" />
+      <Test result="pass" name="testLogicalCameraZoomSwitch[0]" />
+      <Test result="pass" name="testLogicalCameraZoomSwitch[1]" />
+      <Test result="pass" name="testBasicPhysicalRequests[0]" />
+      <Test result="pass" name="testBasicPhysicalRequests[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.MultiResolutionImageReaderTest">
+      <Test result="pass" name="testMultiResolutionImageReaderRepeatingPrivate[0]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRepeatingPrivate[1]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRaw[0]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRaw[1]" />
+      <Test result="pass" name="testMultiResolutionCaptureCharacteristics[0]" />
+      <Test result="pass" name="testMultiResolutionCaptureCharacteristics[1]" />
+      <Test result="pass" name="testMultiResolutionImageReaderFlexibleYuv[0]" />
+      <Test result="pass" name="testMultiResolutionImageReaderFlexibleYuv[1]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRepeatingJpeg[0]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRepeatingJpeg[1]" />
+      <Test result="pass" name="testMultiResolutionImageReaderJpeg[0]" />
+      <Test result="pass" name="testMultiResolutionImageReaderJpeg[1]" />
+      <Test result="pass" name="testMultiResolutionMandatoryStreamCombinationTest[0]" />
+      <Test result="pass" name="testMultiResolutionMandatoryStreamCombinationTest[1]" />
+      <Test result="pass" name="testMultiResolutionImageReaderPrivate[0]" />
+      <Test result="pass" name="testMultiResolutionImageReaderPrivate[1]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRepeatingFlexibleYuv[0]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRepeatingFlexibleYuv[1]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRepeatingRaw[0]" />
+      <Test result="pass" name="testMultiResolutionImageReaderRepeatingRaw[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.MultiResolutionReprocessCaptureTest">
+      <Test result="pass" name="testMultiResolutionOpaqueToJpegReprocessing[0]" />
+      <Test result="pass" name="testMultiResolutionOpaqueToJpegReprocessing[1]" />
+      <Test result="pass" name="testMultiResolutionYuvToJpegReprocessing[0]" />
+      <Test result="pass" name="testMultiResolutionYuvToJpegReprocessing[1]" />
+      <Test result="pass" name="testMultiResolutionOpaqueToYuvReprocessing[0]" />
+      <Test result="pass" name="testMultiResolutionOpaqueToYuvReprocessing[1]" />
+      <Test result="pass" name="testMultiResolutionMandatoryStreamCombinationTest[0]" />
+      <Test result="pass" name="testMultiResolutionMandatoryStreamCombinationTest[1]" />
+      <Test result="pass" name="testMultiResolutionReprocessCharacteristics[0]" />
+      <Test result="pass" name="testMultiResolutionReprocessCharacteristics[1]" />
+      <Test result="pass" name="testMultiResolutionYuvToYuvReprocessing[0]" />
+      <Test result="pass" name="testMultiResolutionYuvToYuvReprocessing[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.MultiViewTest">
+      <Test result="pass" name="testTextureViewPreviewWithImageReader[0]" />
+      <Test result="pass" name="testTextureViewPreviewWithImageReader[1]" />
+      <Test result="pass" name="testSharedSurfaceSwitch[0]" />
+      <Test result="pass" name="testSharedSurfaceSwitch[1]" />
+      <Test result="pass" name="testDualTextureViewAndImageReaderPreview[0]" />
+      <Test result="pass" name="testDualTextureViewAndImageReaderPreview[1]" />
+      <Test result="pass" name="testDualCameraPreview[0]" />
+      <Test result="pass" name="testDualCameraPreview[1]" />
+      <Test result="pass" name="testSharedSurfaceBasic[0]" />
+      <Test result="pass" name="testSharedSurfaceBasic[1]" />
+      <Test result="pass" name="testSharedSurfaceLimit[0]" />
+      <Test result="pass" name="testSharedSurfaceLimit[1]" />
+      <Test result="pass" name="testSharedSurfaceImageReaderSwitch[0]" />
+      <Test result="pass" name="testSharedSurfaceImageReaderSwitch[1]" />
+      <Test result="pass" name="testTextureImageWriterReaderOperation[0]" />
+      <Test result="pass" name="testTextureViewPreview[0]" />
+      <Test result="pass" name="testSharedSurfaceYUVImageReaderSwitch[0]" />
+      <Test result="pass" name="testSharedSurfaces[0]" />
+      <Test result="pass" name="testDualTextureViewPreview[0]" />
+      <Test result="fail" name="testTextureImageWriterReaderOperation[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2MultiViewTestCase.tearDown(Camera2MultiViewTestCase.java:126)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testTextureViewPreview[1]" />
+      <Test result="fail" name="testSharedSurfaceYUVImageReaderSwitch[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2MultiViewTestCase.tearDown(Camera2MultiViewTestCase.java:126)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testSharedSurfaces[1]" />
+      <Test result="fail" name="testDualTextureViewPreview[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2MultiViewTestCase.tearDown(Camera2MultiViewTestCase.java:126)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.NativeCameraDeviceTest">
+      <Test result="pass" name="testCameraDeviceOpenAndClose[0]" />
+      <Test result="pass" name="testCameraDeviceOpenAndClose[1]" />
+      <Test result="pass" name="testCameraDeviceCreateCaptureRequest[0]" />
+      <Test result="pass" name="testCameraDeviceCreateCaptureRequest[1]" />
+      <Test result="pass" name="testCameraDeviceCaptureFailure[0]" />
+      <Test result="pass" name="testCameraDeviceCaptureFailure[1]" />
+      <Test result="pass" name="testCameraDeviceLogicalPhysicalStreaming[0]" />
+      <Test result="pass" name="testCameraDeviceLogicalPhysicalStreaming[1]" />
+      <Test result="pass" name="testCameraDeviceSessionOpenAndClose[0]" />
+      <Test result="pass" name="testCameraDeviceSessionOpenAndClose[1]" />
+      <Test result="pass" name="testCameraDeviceLogicalPhysicalSettings[0]" />
+      <Test result="pass" name="testCameraDeviceLogicalPhysicalSettings[1]" />
+      <Test result="pass" name="testCameraDeviceSharedOutputUpdate[0]" />
+      <Test result="pass" name="testCameraDeviceSharedOutputUpdate[1]" />
+      <Test result="pass" name="testCameraDeviceSimplePreview[0]" />
+      <Test result="fail" name="testCameraDevicePreviewWithSessionParameters[0]">
+        <Failure message="junit.framework.AssertionFailedError: Camera 0 should be available now&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Camera 0 should be available now
+	at android.hardware.camera2.cts.NativeCameraDeviceTest.testCameraDevicePreviewWithSessionParametersNative(Native Method)
+	at android.hardware.camera2.cts.NativeCameraDeviceTest.testCameraDevicePreviewWithSessionParameters(NativeCameraDeviceTest.java:80)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testCameraDeviceSimplePreview[1]" />
+      <Test result="fail" name="testCameraDevicePreviewWithSessionParameters[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.NativeCameraManagerTest">
+      <Test result="pass" name="testCameraManagerExtendedAvailabilityCallback[0]" />
+      <Test result="pass" name="testCameraManagerExtendedAvailabilityCallback[1]" />
+      <Test result="pass" name="testCameraManagerAvailabilityCallback[0]" />
+      <Test result="pass" name="testCameraManagerAvailabilityCallback[1]" />
+      <Test result="pass" name="testCameraManagerGetAndClose[0]" />
+      <Test result="pass" name="testCameraManagerGetAndClose[1]" />
+      <Test result="pass" name="testCameraManagerCameraCharacteristics[0]" />
+      <Test result="pass" name="testCameraManagerCameraCharacteristics[1]" />
+      <Test result="pass" name="testCameraManagerGetCameraIds[0]" />
+      <Test result="pass" name="testCameraManagerGetCameraIds[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.NativeImageReaderTest">
+      <Test result="pass" name="testHeic[0]" />
+      <Test result="pass" name="testHeic[1]" />
+      <Test result="pass" name="testJpeg[0]" />
+      <Test result="pass" name="testJpeg[1]" />
+      <Test result="pass" name="testY8[0]" />
+      <Test result="pass" name="testY8[1]" />
+      <Test result="pass" name="testDepthJpeg[0]" />
+      <Test result="pass" name="testDepthJpeg[1]" />
+      <Test result="pass" name="testImageReaderCloseAcquiredImages[0]" />
+      <Test result="pass" name="testImageReaderCloseAcquiredImages[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.OfflineSessionTest">
+      <Test result="pass" name="testUnsupportedOfflineSessionOutputs[0]" />
+      <Test result="pass" name="testUnsupportedOfflineSessionOutputs[1]" />
+      <Test result="pass" name="testOfflineCallbacks[0]" />
+      <Test result="pass" name="testOfflineCallbacks[1]" />
+      <Test result="pass" name="testOfflineDepthJpeg[0]" />
+      <Test result="pass" name="testOfflineDepthJpeg[1]" />
+      <Test result="pass" name="testDeviceCloseAndOpen[0]" />
+      <Test result="pass" name="testDeviceCloseAndOpen[1]" />
+      <Test result="pass" name="testOfflineHEIC[0]" />
+      <Test result="pass" name="testOfflineHEIC[1]" />
+      <Test result="pass" name="testInvalidOutput[0]" />
+      <Test result="pass" name="testInvalidOutput[1]" />
+      <Test result="pass" name="testOfflineSessionClose[0]" />
+      <Test result="pass" name="testOfflineSessionClose[1]" />
+      <Test result="pass" name="testRepeatingSequenceAbort[0]" />
+      <Test result="pass" name="testRepeatingSequenceAbort[1]" />
+      <Test result="pass" name="testOfflineSessionWithRegularSession[0]" />
+      <Test result="pass" name="testOfflineSessionWithRegularSession[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.RecordingTest">
+      <Test result="pass" name="testRecordingFramerateLowToHigh[0]" />
+      <Test result="pass" name="testRecordingFramerateLowToHigh[1]" />
+      <Test result="pass" name="testSupportedVideoSizes[0]" />
+      <Test result="pass" name="testSupportedVideoSizes[1]" />
+      <Test result="pass" name="testConstrainedHighSpeedRecording[0]" />
+      <Test result="pass" name="testConstrainedHighSpeedRecording[1]" />
+      <Test result="pass" name="testAbandonedHighSpeedRequest[0]" />
+      <Test result="pass" name="testAbandonedHighSpeedRequest[1]" />
+      <Test result="pass" name="testRecordingWithDifferentPreviewSizes[0]" />
+      <Test result="pass" name="testRecordingWithDifferentPreviewSizes[1]" />
+      <Test result="pass" name="testVideoPreviewSurfaceSharing[0]" />
+      <Test result="pass" name="testVideoPreviewSurfaceSharing[1]" />
+      <Test result="pass" name="testBurstVideoSnapshot[0]" />
+      <Test result="pass" name="testBurstVideoSnapshot[1]" />
+      <Test result="pass" name="testSlowMotionRecording[0]" />
+      <Test result="pass" name="testSlowMotionRecording[1]" />
+      <Test result="pass" name="testBasicVideoStabilizationRecording[0]" />
+      <Test result="pass" name="testBasicVideoStabilizationRecording[1]" />
+      <Test result="pass" name="testTimelapseRecording[0]" />
+      <Test result="pass" name="testTimelapseRecording[1]" />
+      <Test result="pass" name="testBasicRecording[0]" />
+      <Test result="pass" name="testBasicRecording[1]" />
+      <Test result="pass" name="testMediaCodecRecording[0]" />
+      <Test result="pass" name="testMediaCodecRecording[1]" />
+      <Test result="pass" name="testIntermediateSurfaceRecording[0]" />
+      <Test result="pass" name="testIntermediateSurfaceRecording[1]" />
+      <Test result="pass" name="testRecordingFromPersistentSurface[0]" />
+      <Test result="pass" name="testRecordingFromPersistentSurface[1]" />
+      <Test result="pass" name="testCameraRecorderOrdering[0]" />
+      <Test result="pass" name="testCameraRecorderOrdering[1]" />
+      <Test result="pass" name="testVideoSnapshot[0]" />
+      <Test result="pass" name="testVideoSnapshot[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.ReprocessCaptureTest">
+      <Test result="pass" name="testBasicYuvToHeicReprocessing[0]" />
+      <Test result="pass" name="testBasicYuvToHeicReprocessing[1]" />
+      <Test result="pass" name="testBasicOpaqueToYuvReprocessing[0]" />
+      <Test result="pass" name="testBasicOpaqueToYuvReprocessing[1]" />
+      <Test result="pass" name="testReprocessJpegExif[0]" />
+      <Test result="pass" name="testReprocessJpegExif[1]" />
+      <Test result="pass" name="testReprocessRequestKeys[0]" />
+      <Test result="pass" name="testReprocessRequestKeys[1]" />
+      <Test result="pass" name="testReprocessAbort[0]" />
+      <Test result="pass" name="testReprocessAbort[1]" />
+      <Test result="pass" name="testReprocessingSizeFormat[0]" />
+      <Test result="pass" name="testReprocessingSizeFormat[1]" />
+      <Test result="pass" name="testCrossSessionCaptureException[0]" />
+      <Test result="pass" name="testCrossSessionCaptureException[1]" />
+      <Test result="pass" name="testReprocessTimestamps[0]" />
+      <Test result="pass" name="testReprocessTimestamps[1]" />
+      <Test result="pass" name="testBasicOpaqueToJpegReprocessing[0]" />
+      <Test result="pass" name="testBasicOpaqueToJpegReprocessing[1]" />
+      <Test result="pass" name="testBasicOpaqueToHeicReprocessing[0]" />
+      <Test result="pass" name="testBasicOpaqueToHeicReprocessing[1]" />
+      <Test result="pass" name="testRecreateReprocessingSessions[0]" />
+      <Test result="pass" name="testRecreateReprocessingSessions[1]" />
+      <Test result="pass" name="testBasicYuvToYuvReprocessing[0]" />
+      <Test result="pass" name="testBasicYuvToYuvReprocessing[1]" />
+      <Test result="pass" name="testBasicYuvToJpegReprocessing[0]" />
+      <Test result="pass" name="testBasicYuvToJpegReprocessing[1]" />
+      <Test result="pass" name="testQueueImageWithoutRequest[0]" />
+      <Test result="pass" name="testQueueImageWithoutRequest[1]" />
+      <Test result="pass" name="testMixedBurstReprocessing[0]" />
+      <Test result="pass" name="testBurstReprocessing[0]" />
+      <Test result="pass" name="testReprocessingSizeFormatWithPreview[0]" />
+      <Test result="fail" name="testMixedBurstReprocessing[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testBurstReprocessing[1]" />
+      <Test result="fail" name="testReprocessingSizeFormatWithPreview[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.RobustnessTest">
+      <Test result="pass" name="testOisDataMode[0]" />
+      <Test result="pass" name="testOisDataMode[1]" />
+      <Test result="pass" name="testConfigureAbandonedSurface[0]" />
+      <Test result="pass" name="testConfigureAbandonedSurface[1]" />
+      <Test result="pass" name="testMandatoryMaximumResolutionReprocessConfigurations[0]" />
+      <Test result="pass" name="testMandatoryMaximumResolutionReprocessConfigurations[1]" />
+      <Test result="pass" name="testSimultaneousTriggers[0]" />
+      <Test result="pass" name="testSimultaneousTriggers[1]" />
+      <Test result="pass" name="testAeAndAfCausality[0]" />
+      <Test result="pass" name="testAeAndAfCausality[1]" />
+      <Test result="pass" name="testVerifyReprocessMandatoryOutputCombinationTables[0]" />
+      <Test result="pass" name="testVerifyReprocessMandatoryOutputCombinationTables[1]" />
+      <Test result="pass" name="testAfThenAeTrigger[0]" />
+      <Test result="pass" name="testAfThenAeTrigger[1]" />
+      <Test result="pass" name="testBadSurfaceDimensions[0]" />
+      <Test result="pass" name="testBadSurfaceDimensions[1]" />
+      <Test result="pass" name="testMandatoryReprocessConfigurations[0]" />
+      <Test result="pass" name="testMandatoryReprocessConfigurations[1]" />
+      <Test result="pass" name="testAbandonRepeatingRequestSurface[0]" />
+      <Test result="pass" name="testAbandonRepeatingRequestSurface[1]" />
+      <Test result="pass" name="testMandatoryMaximumResolutionOutputCombinations[0]" />
+      <Test result="pass" name="testMandatoryMaximumResolutionOutputCombinations[1]" />
+      <Test result="pass" name="testAfSceneChange[0]" />
+      <Test result="pass" name="testAfSceneChange[1]" />
+      <Test result="pass" name="testVerifyMandatoryOutputCombinationTables[0]" />
+      <Test result="pass" name="testVerifyMandatoryOutputCombinationTables[1]" />
+      <Test result="pass" name="testMandatoryOutputCombinations[0]" />
+      <Test result="pass" name="testMandatoryOutputCombinations[1]" />
+      <Test result="pass" name="testAeThenAfTrigger[0]" />
+      <Test result="pass" name="testAeThenAfTrigger[1]" />
+      <Test result="pass" name="testConfigureInvalidSensorPixelModes[0]" />
+      <Test result="pass" name="testConfigureInvalidSensorPixelModes[1]" />
+      <Test result="pass" name="testBasicTriggerSequence[0]" />
+      <Test result="pass" name="testBasicTriggerSequence[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.StaticMetadataTest">
+      <Test result="pass" name="testMaxNumOutputStreams[0]" />
+      <Test result="pass" name="testMaxNumOutputStreams[1]" />
+      <Test result="pass" name="testCapabilities[0]" />
+      <Test result="pass" name="testCapabilities[1]" />
+      <Test result="pass" name="testLensFacing[0]" />
+      <Test result="pass" name="testLensFacing[1]" />
+      <Test result="pass" name="testHwSupportedLevel[0]" />
+      <Test result="pass" name="testHwSupportedLevel[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.StillCaptureTest">
+      <Test result="pass" name="testAePrecaptureTriggerCancelJpegCapture[0]" />
+      <Test result="pass" name="testAePrecaptureTriggerCancelJpegCapture[1]" />
+      <Test result="pass" name="testDynamicDepthCapture[0]" />
+      <Test result="pass" name="testDynamicDepthCapture[1]" />
+      <Test result="pass" name="testTouchForFocus[0]" />
+      <Test result="pass" name="testTouchForFocus[1]" />
+      <Test result="pass" name="testFocalLengths[0]" />
+      <Test result="pass" name="testFocalLengths[1]" />
+      <Test result="pass" name="testAllocateBitmap[0]" />
+      <Test result="pass" name="testAllocateBitmap[1]" />
+      <Test result="pass" name="testHeicExif[0]" />
+      <Test result="pass" name="testHeicExif[1]" />
+      <Test result="pass" name="testFullRawCapture[0]" />
+      <Test result="pass" name="testFullRawCapture[1]" />
+      <Test result="pass" name="testJpegExif[0]" />
+      <Test result="pass" name="testJpegExif[1]" />
+      <Test result="pass" name="testBasicRawCapture[0]" />
+      <Test result="pass" name="testBasicRawCapture[1]" />
+      <Test result="pass" name="testStillPreviewCombination[0]" />
+      <Test result="pass" name="testStillPreviewCombination[1]" />
+      <Test result="pass" name="testBasicRawZslCapture[0]" />
+      <Test result="pass" name="testBasicRawZslCapture[1]" />
+      <Test result="pass" name="testAeCompensation[0]" />
+      <Test result="pass" name="testAeCompensation[1]" />
+      <Test result="pass" name="testTakePictureZsl[0]" />
+      <Test result="pass" name="testTakePictureZsl[1]" />
+      <Test result="pass" name="testAwbRegions[0]" />
+      <Test result="pass" name="testFullRawZSLCapture[0]" />
+      <Test result="pass" name="testAeRegions[0]" />
+      <Test result="pass" name="testTakePicture[0]" />
+      <Test result="pass" name="testPreviewPersistence[0]" />
+      <Test result="pass" name="testAfRegions[0]" />
+      <Test result="fail" name="testAwbRegions[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.StillCaptureTest.tearDown(StillCaptureTest.java:89)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testFullRawZSLCapture[1]" />
+      <Test result="fail" name="testAeRegions[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.StillCaptureTest.tearDown(StillCaptureTest.java:89)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testTakePicture[1]" />
+      <Test result="pass" name="testPreviewPersistence[1]" />
+      <Test result="fail" name="testAfRegions[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.StillCaptureTest.tearDown(StillCaptureTest.java:89)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.SurfaceViewPreviewTest">
+      <Test result="pass" name="testPreparePerformance[0]" />
+      <Test result="pass" name="testPreparePerformance[1]" />
+      <Test result="pass" name="testDeferredSurfaces[0]" />
+      <Test result="pass" name="testDeferredSurfaces[1]" />
+      <Test result="pass" name="testPreviewFpsRange[0]" />
+      <Test result="pass" name="testPreviewFpsRange[1]" />
+      <Test result="pass" name="testSurfaceSet[0]" />
+      <Test result="pass" name="testSurfaceSet[1]" />
+      <Test result="pass" name="testCameraPreview[0]" />
+      <Test result="pass" name="testBasicTestPatternPreview[0]" />
+      <Test result="pass" name="testSurfaceEquality[0]" />
+      <Test result="fail" name="testCameraPreview[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.SurfaceViewPreviewTest.tearDown(SurfaceViewPreviewTest.java:81)
+</StackTrace>
+        </Failure>
+      </Test>
+      <Test result="pass" name="testBasicTestPatternPreview[1]" />
+      <Test result="fail" name="testSurfaceEquality[1]">
+        <Failure message="junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0&#13;">
+          <StackTrace>junit.framework.AssertionFailedError: Number of cameras changed from 2 to 0
+	at junit.framework.Assert.fail(Assert.java:50)
+	at junit.framework.Assert.assertTrue(Assert.java:20)
+	at android.hardware.camera2.cts.Camera2ParameterizedTestCase.tearDown(Camera2ParameterizedTestCase.java:73)
+	at android.hardware.camera2.cts.testcases.Camera2SurfaceViewTestCase.tearDown(Camera2SurfaceViewTestCase.java:178)
+	at android.hardware.camera2.cts.SurfaceViewPreviewTest.tearDown(SurfaceViewPreviewTest.java:81)
+</StackTrace>
+        </Failure>
+      </Test>
+    </TestCase>
+    <TestCase name="android.hardware.camera2.cts.NativeStillCaptureTest">
+      <Test result="pass" name="testStillCapture[0]" />
+      <Test result="pass" name="testStillCapture[1]" />
+    </TestCase>
+    <TestCase name="android.hardware.cts.LegacyCameraPerformanceTest">
+      <Test result="pass" name="testLegacyApiPerformance" />
+    </TestCase>
+  </Module>
+</Result>

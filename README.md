@@ -87,3 +87,6 @@ Qt project
 
 2022年4月6日
 * 新增mtk cts resulotion爬取脚本
+
+2022年4月8日
+* 解决xts 二次打开result会crash：new QLabel野指针问题
