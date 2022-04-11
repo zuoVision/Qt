@@ -9,7 +9,7 @@
 #define MY_TAG "Simpleperf"
 #define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
-#define PERFIX "adb shell data/local/tmp/simpleperf "
+#define PERFIX "adb shell system/bin/simpleperf "
 #define LIST   "list"
 #define STAT   "stat -e cache-references,cache-misses -a --duration 10 "
 #define RECORD "record -o /data/local/tmp/perf.data -e task-clock:u -f 1000 -g --duration 10 --log info --app com.tcl.camera"

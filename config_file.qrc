@@ -5,6 +5,11 @@
         <file>config/cts_test_list.txt</file>
         <file>config/native_cmd_list.txt</file>
         <file>config/test_result.xml</file>
+        <file>config/commands.md</file>
+        <file>config/cts.py</file>
+        <file>config/mtk.html</file>
+        <file>config/simpleperf.md</file>
+        <file>config/test_result_full.xml</file>
     </qresource>
     <qresource prefix="/icon">
         <file>icon/superman.ico</file>

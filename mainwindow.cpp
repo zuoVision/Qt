@@ -9,13 +9,14 @@
 #include <QXmlStreamReader>
 #include <QVBoxLayout>
 
+#include <QDir>
 #include <QTime>
 #include <stdlib.h>
 
 #define MY_TAG          "MainWindow"
 #define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
 
-#define DATABASE        ":/config/config/native_cmd_list.txt"
+#define DATABASE        "config/native_cmd_list.txt"
 #define CTSTESTLIST     ":/config/config/cts_test_list.txt"
 #define CTSRESULOTION   ":/config/config/cts_resulotion.csv"
 #define PYTHON2_7       "/usr/bin/python2.7"
@@ -24,6 +25,8 @@
 #define ADBROOT         "adb root"
 #define ADBREMOUNT      "adb remount"
 #define ADBOEMUNLOCK    "xxxxx"
+#define SCREENCAPTURE   "adb shell screencap -p "
+#define SCREENRECORD    "adb shell screenrecord "
 
 #define TESTRESULT      ":/config/config/test_result.xml"
 
@@ -569,24 +572,27 @@ void MainWindow::on_pushButton_result_clicked()
         }
         if(fileOperation->readXml(&file))
         {
-            cout <<"xxxxxxxxxxxxxxxxxxxxxx2";
             mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
         }
-        cout <<"xxxxxxxxxxxxxxxxxxxxxx4";
         file.close();
-        cout <<"xxxxxxxxxxxxxxxxxxxxxx5";
     }
-    cout <<"xxxxxxxxxxxxxxxxxxxxxx6";
 }
 
 void MainWindow::on_pushButton_screencapture_clicked()
 {
-    cout;
+    QString img = QString("/storage/img_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".png");
+    cout << img;
+    QString path = "./capture";
+    QDir dir(path);
+    if(!dir.exists()) dir.mkpath(path);
+    ccd->runCommand(SCREENCAPTURE+img+QString(";adb pull %1 %2").arg(img).arg(path));
 }
 
 void MainWindow::on_pushButton_screenrecord_clicked()
 {
-    cout <<QDateTime::currentDateTime().toString("yyyyMMddhhmmss");
+    cout ;
+//    QString record = QString("/storage/record_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".mp4");
+//    ccd->runCommand(SCREENRECORD+record+QString(";adb pull %1 .").arg(record));
 }
 
 

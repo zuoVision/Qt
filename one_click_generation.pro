@@ -56,3 +56,15 @@ DISTFILES +=
 
 RESOURCES += \
     config_file.qrc
+
+#copy file/folder
+CONFIG += file_copies
+
+#addfile.files = $$PWD/filename
+#addfile.path = $$OUT_PWD/
+
+adddir.files = $$PWD/config
+adddir.path = $$OUT_PWD/
+
+COPIES += addfile
+COPIES += adddir

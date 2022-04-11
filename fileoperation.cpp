@@ -42,8 +42,8 @@ void FileOperation::loadDataBase(QString filePath, QStringList *stringList)
 
 void FileOperation::saveDataBase(QString filePath, QStringList *stringList)
 {
-//    cout <<filePath.split("/").last()<< *stringList;
-    QFile file(filePath.split("/").last());
+    QFile file(filePath);
+    cout << filePath;
     if(!file.exists()){
         QMessageBox::warning(NULL,"warning",QString("file:%1 does not exist!")
                              .arg(file.fileName()));
