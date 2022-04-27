@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include "basemodule.h"
 #include "commandprocessthread.h"
 
 class CommonCommand : public QObject
@@ -15,6 +16,7 @@ public:
     void init();
     void uninit();
     void init_connect();
+    void onCreateThread(QThread * prtThead,CommandProcessThread * ptrCPT);
     void runCommand(const QString cmd);
     void stopProcessor();
 

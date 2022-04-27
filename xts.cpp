@@ -1,16 +1,13 @@
 #include "xts.h"
+#include "cmd.h"
 
 #include <QDataStream>
 #include <QDebug>
 
 #define MY_TAG          "Xts"
-#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
+#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
-#define CTSSUITE        "~/XTS/Android_R/android-cts/tools/cts-tradefed "
-#define CTSCOMMAND      "run cts-dev "
-#define CTSMODULE       "-m CtsCameraTestCases "
 
-#define FINDCTSSUITE    "find ~/ -iname cts-tradefed"
 
 
 Xts::Xts(QObject *parent) : QObject(parent)
@@ -22,7 +19,6 @@ Xts::Xts(QObject *parent) : QObject(parent)
     xts_cpt->moveToThread(xts_Thread);
     xts_Thread->start();
     emit start();
-    QThread::sleep(1);
 }
 
 Xts::~Xts()
@@ -31,6 +27,7 @@ Xts::~Xts()
     emit exit();
     delete xts_cpt;
     xts_Thread->exit(0);
+    //TODO:QThread: Destroyed while thread is still running
     delete xts_Thread;
     cout<<"~Xts() -";
 }
@@ -61,7 +58,8 @@ void Xts::init_connect()
 void Xts::slo_reciveOutput(QString output)
 {
     cout << output;
-    if(output.contains("SuiteResultReporter: "))
+    if(output.contains("CommandScheduler: All done")) //"SuiteResultReporter: "
+        stopProcessor();
         m_ctsComplete = true;
     if (m_flag && output.contains("cts-tradefed")) {
         QStringList res = output.split("\n").filter("cts-tradefed");
@@ -102,19 +100,8 @@ void Xts::slo_reciveState(QProcess::ProcessState state)
     {
         if(!m_flag)
             emit sig_sendToMainWindow("Done");
-//        else{
-//            if(m_ctsSuite.isEmpty()){
-//                emit sig_sendToMainWindow("Warning : No suite detected, please reselect cts suite!");
-//                m_flag = false;
-//            }
-//            if (m_ctsSuite.size()>1){
-//                emit sig_sendToMainWindow("Warning : Multiple suite detected, please reselect cts suite!");
-//                m_flag = false;
-//                m_ctsSuite.clear();
-//            }
-//        }
         if(m_ctsComplete){
-            emit sig_showCtsResult();
+            if (m_ctsCommand.contains("run")) emit sig_showCtsResult();
             m_ctsComplete=false;
         }
     }
@@ -133,10 +120,7 @@ void Xts::runCts(const QString arg1, const QString arg2, QString arg3, QString a
     cout << arg1 <<arg2 <<arg3 <<arg4;
     if (xts_cpt->processor->state() != QProcess::ProcessState::NotRunning)
         return emit sig_sendToMainWindow("please wait!");
-    if(m_ctsSuite.isEmpty()) {
-        emit sig_sendToMainWindow("please select cts suite!");
-        return;
-    }
+    m_ctsCommand = arg2;
     if(!arg3.isEmpty()) {
         arg3 = QString(" -m %1").arg(arg3);
     }
@@ -155,15 +139,3 @@ void Xts::stopProcessor()
     emit stop();
 }
 
-#if 0
-void Xts::analyzeResult(QString output)
-{
-    QStringList list = output.split("\n");
-    m_totalRunTime  = list.filter("Total Run time:").first();
-    m_totalTests    = list.filter("Total Tests:").first();
-    m_passed        = list.filter("PASSED:").first();
-    m_failed        = list.filter("FAILED:").first();
-    cout << m_totalRunTime << m_totalTests << m_passed << m_failed;
-    emit sig_showCtsResult();
-}
-#endif

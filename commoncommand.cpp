@@ -3,8 +3,7 @@
 #include <QDebug>
 
 #define MY_TAG "CommonCommand"
-#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
-
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
 CommonCommand::CommonCommand(QObject *parent) : QObject(parent)
 {
@@ -22,13 +21,10 @@ CommonCommand::~CommonCommand()
 void CommonCommand::init()
 {
     cout <<QThread::currentThreadId();
-
     ccd_Thread = new QThread(this);
-    ccd_cpt = new CommandProcessThread();
+    ccd_cpt = new CommandProcessThread("commonCommand");
     init_connect();
-    ccd_cpt->moveToThread(ccd_Thread);
-    ccd_Thread->start();
-    emit start();
+    onCreateThread(ccd_Thread,ccd_cpt);
 }
 
 void CommonCommand::init_connect()
@@ -49,27 +45,34 @@ void CommonCommand::init_connect()
             this,SLOT(slo_reciveState(QProcess::ProcessState)));
 }
 
+void CommonCommand::onCreateThread(QThread * prtThead,CommandProcessThread * ptrCPT)
+{
+    ptrCPT->moveToThread(prtThead);
+    prtThead->start();
+    emit start();
+}
+
 void CommonCommand::slo_reciveOutput(QString output)
 {
-//    cout << output;
+    cout << output;
     emit sig_sendToMainWindow(output);
 }
 
 void CommonCommand::slo_reciveError(QString error)
 {
-//    cout << error;
+    cout << error;
     emit sig_sendToMainWindow(error);
 }
 
 void CommonCommand::slo_reciveInfo(QString info)
 {
-//    cout << info;
+    cout << info;
     emit sig_sendToMainWindow(info);
 }
 
 void CommonCommand::slo_reciveState(QProcess::ProcessState state)
 {
-//    cout << state;
+    cout << state;
     emit sig_sendToMainWindow(state,MY_TAG);
     if (state==QProcess::ProcessState::NotRunning)
         emit sig_sendToMainWindow("Done");
@@ -77,7 +80,7 @@ void CommonCommand::slo_reciveState(QProcess::ProcessState state)
 
 void CommonCommand::runCommand(const QString cmd)
 {
-//    cout << "runCommand";
+    cout << "runCommand";
     if(!cmd.isEmpty()&&
         ccd_cpt->processor->state()==QProcess::ProcessState::NotRunning)
         emit sig_sendToMainWindow(ccd_cpt->m_userName+cmd);

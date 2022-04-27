@@ -8,7 +8,7 @@
 #include <QMessageBox>
 
 #define MY_TAG          "Document"
-#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
 Document::Document(QWidget *parent) :
     QWidget(parent),
@@ -71,6 +71,32 @@ QString Document::selectDirectory(QString dir)
                                                      QFileDialog::ShowDirsOnly
                                                      | QFileDialog::DontResolveSymlinks);
     return path;
+}
+
+bool Document::searchHightlight(QString keyword,QTextDocument *document)
+{
+    bool isFound = false;
+    if (keyword.isEmpty()) return isFound;
+    QTextCursor highlightCursor(document);
+    QTextCursor cursor(document);
+    //***************开始***************
+    cursor.beginEditBlock();
+    QTextCharFormat plainFormat(highlightCursor.charFormat());
+    QTextCharFormat colorFormat = plainFormat;
+    colorFormat.setBackground(Qt::yellow);
+    while (!highlightCursor.isNull() && !highlightCursor.atEnd()) {
+        highlightCursor = document->find(keyword, highlightCursor);
+        if (!highlightCursor.isNull()) {
+//            highlightCursor.movePosition(QTextCursor::WordRight,
+//                    QTextCursor::KeepAnchor);
+            highlightCursor.mergeCharFormat(colorFormat);
+            isFound = true;
+//            cout<<isFound;
+        }
+    }
+    cursor.endEditBlock();
+    //***************结束***************
+    return isFound;
 }
 
 void Document::closeEvent(QCloseEvent *)

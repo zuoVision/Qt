@@ -22,9 +22,10 @@
 #include "xts.h"
 #include "commoncommand.h"
 #include "mytableview.h"
+#include "dialogbatterystats.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui { class MainWindow; class DialogBatterystats; }
 QT_END_NAMESPACE
 
 class MainWindow :
@@ -35,15 +36,20 @@ class MainWindow :
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    QString     m_userName;
+    QString         m_userName;
 
     CommonCommand   *ccd = new CommonCommand();
     Simpleperf      *simpleperf = new Simpleperf();
     Xts             *xts = new Xts(this);
+
+    DialogBatterystats *batterystats = new DialogBatterystats(this);;
     QCompleter      *cmd_completer;
     QCompleter      *test_completer;
     FileOperation   *fileOperation = new FileOperation(this);
     MyTableView     *mtv = new MyTableView();
+    QLineEdit       *lineEdit_filter;
+    bool            isHightlighted = false;
+
 public:
     QString         m_ctsSuite;
     QStringList     m_resolution;
@@ -80,6 +86,8 @@ protected:
     void initEnvironment();
     void initConnect();
     void keyPressEvent(QKeyEvent *event);
+//    void resizeEvent(QResizeEvent *event);
+    void onContrlSearchBar();
     void loadCtsResulotion();
     void insertDataToTable();
     void readfile();
@@ -91,11 +99,15 @@ signals:
 
 private slots:
     void slotReciveDocument();
+    void slo_batterystats(QString cmd);
     void slo_reciveMessage(QString msg);
     void slo_reciveMessage(QProcess::ProcessState state,QString tag);
     void slo_showCtsResult();
     void slo_openDocument();
     void moveCursorToEnd();
+    void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
+    void onTextFilter();
+
 
     //command
     void on_pushButton_run_clicked();
@@ -105,6 +117,20 @@ private slots:
     void on_pushButton_oemunlock_clicked();
     void on_pushButton_screencapture_clicked();
     void on_pushButton_screenrecord_clicked();
+    void on_pushButton_fastboot_clicked();
+    void on_pushButton_clearlogcat_clicked();
+    void on_pushButton_adbrestart_clicked();
+    void on_pushButton_sentest_clicked();
+    void on_pushButton_killcamera_clicked();
+    void on_pushButton_dumpcamera_clicked();
+    void on_pushButton_property_clicked();
+    void on_pushButton_drawid_clicked();
+    void on_pushButton_cpuinfo_clicked();
+    void on_pushButton_opencamera_clicked();
+    void on_pushButton_takepicture_clicked();
+    void on_pushButton_screensize_clicked();
+    void on_pushButton_clear_clicked();
+    void on_pushButton_batterystats_clicked();
 
     //simpleperf
     void on_pushButton_list_clicked();
@@ -118,13 +144,9 @@ private slots:
 
     //xts
     void on_pushButton_runcts_clicked();
-    void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
     void on_pushButton_loadctssuite_clicked();
-    void on_pushButton_log_clicked();
+    void on_comboBox_ctscommand_currentTextChanged(const QString &arg1);
     void on_pushButton_result_clicked();
-
-
-
-
+    void on_pushButton_log_clicked();
 };
 #endif // MAINWINDOW_H

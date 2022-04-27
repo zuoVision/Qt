@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QCloseEvent>
+#include <QTextDocument>
 
 namespace Ui {
 class Document;
@@ -18,9 +19,10 @@ public:
     void init();
 
 
-    void    onLoadDocument(QString doc);
-    QString openFile(QString filter="");
-    QString selectDirectory(QString dir);
+    void        onLoadDocument(QString doc);
+    QString     openFile(QString filter="");
+    QString     selectDirectory(QString dir);
+    bool        searchHightlight(QString keyword,QTextDocument *document);
 
 public:
     QString m_filePath;

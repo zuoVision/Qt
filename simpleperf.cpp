@@ -1,4 +1,5 @@
 #include "simpleperf.h"
+#include "cmd.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -7,13 +8,9 @@
 
 
 #define MY_TAG "Simpleperf"
-#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
-#define PERFIX "adb shell system/bin/simpleperf "
-#define LIST   "list"
-#define STAT   "stat -e cache-references,cache-misses -a --duration 10 "
-#define RECORD "record -o /data/local/tmp/perf.data -e task-clock:u -f 1000 -g --duration 10 --log info --app com.tcl.camera"
-#define REPORT "python scripts/report_sample.py > out.perf"
+
 
 
 Simpleperf::Simpleperf(QObject *parent):
@@ -27,6 +24,7 @@ QObject(parent)
     sim_cpt->moveToThread(sim_Thread);
     sim_Thread->start();
     emit start();
+
 
 }
 

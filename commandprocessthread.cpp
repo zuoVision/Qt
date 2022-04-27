@@ -4,14 +4,19 @@
 
 
 #define MY_TAG "CommandProcessThread"
-#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
 #define BASH "bash"
 
 CommandProcessThread::CommandProcessThread(QObject *parent):QObject(parent)
 {
     cout <<QThread::currentThreadId();
-//    init();
+    //    init();
+}
+
+CommandProcessThread::CommandProcessThread(QString threadName)
+{
+    m_ThreadName = threadName;
 }
 
 CommandProcessThread::~CommandProcessThread()
@@ -56,7 +61,7 @@ void CommandProcessThread::createProcessor()
     QStringList name = m_userName.split("\n");
     if(!name.isEmpty()) name.pop_back();
     m_userName = name.first().append("@").append(name.last()).append(":~$ ");
-    qDebug() << MY_TAG << QThread::currentThreadId() << m_userName;
+    cout << QThread::currentThreadId() << m_userName;
     init_connect();
 }
 
@@ -66,7 +71,7 @@ void CommandProcessThread::stopProcessor()
     if(processor->state()!=QProcess::ProcessState::NotRunning)
     {
         processor->close();
-        return emit sig_sendInfo("Force Exit!(Ctrl+D)");
+        return emit sig_sendInfo("Exit!");
     }
 }
 
@@ -93,7 +98,7 @@ void CommandProcessThread::process(QString cmd)
     }
     processor->start(BASH,QStringList()<<"-c"<< cmd);
     processor->waitForReadyRead();
-    qDebug() << MY_TAG << "[process]"<<" - ";
+    cout << "[process]"<<" - ";
 }
 
 void CommandProcessThread::process(QString cmd, QString *callback)
@@ -133,7 +138,7 @@ void CommandProcessThread::slo_processAllMsg()
 
 void CommandProcessThread::slo_processState(QProcess::ProcessState state)
 {
-//    qDebug() << MY_TAG << "[slo_reciveState]" << state;
+//    cout << state;
     emit sig_sendState(state);
 }
 

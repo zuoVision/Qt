@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "cmd.h"
 #include <QDesktopServices>
 #include <QLabel>
 #include <QListView>
@@ -14,20 +15,11 @@
 #include <stdlib.h>
 
 #define MY_TAG          "MainWindow"
-#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]"
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
 #define DATABASE        "config/native_cmd_list.txt"
 #define CTSTESTLIST     ":/config/config/cts_test_list.txt"
 #define CTSRESULOTION   ":/config/config/cts_resulotion.csv"
-#define PYTHON2_7       "/usr/bin/python2.7"
-
-#define ADBDEVICES      "adb devices"
-#define ADBROOT         "adb root"
-#define ADBREMOUNT      "adb remount"
-#define ADBOEMUNLOCK    "xxxxx"
-#define SCREENCAPTURE   "adb shell screencap -p "
-#define SCREENRECORD    "adb shell screenrecord "
-
 #define TESTRESULT      ":/config/config/test_result.xml"
 
 #define SIMPLEPERFDOC   "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"
@@ -86,6 +78,12 @@ void MainWindow::initUi()
 
     mtv->setParent(ui->tab_xts);
     ui->tab_xts->layout()->addWidget(mtv);
+
+    //find lineEdit
+    lineEdit_filter = new QLineEdit(ui->dockWidget_output);
+    lineEdit_filter->setPlaceholderText("Filter");
+    lineEdit_filter->setClearButtonEnabled(true);
+    lineEdit_filter->hide();
 }
 
 void MainWindow::initEnvironment()
@@ -145,9 +143,15 @@ void MainWindow::initConnect()
 
     //cmd回车-> run button click
     connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
-            ui->pushButton_run,SLOT(click()));
+            this,SLOT(on_pushButton_run_clicked()));
     connect(ui->textEdit,SIGNAL(textChanged()),
             this,SLOT(moveCursorToEnd()));
+    connect(lineEdit_filter,SIGNAL(textChanged(const QString)),
+            this,SLOT(onTextFilter()));
+
+    //battery historian
+    connect(batterystats,SIGNAL(sig_batterystat(QString)),
+            this,SLOT(slo_batterystats(QString)));
 
 }
 
@@ -165,11 +169,40 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         if(ui->tabWidget->currentIndex()==2)
             xts->stopProcessor();
     }
+    if(event->modifiers() == Qt::ControlModifier &&
+       event->key() == Qt::Key_F){
+        cout <<"CTRL + F";
+        onContrlSearchBar();
+    }
+}
+
+//void MainWindow::resizeEvent(QResizeEvent *event)
+//{
+        //window size change listener
+//}
+
+void MainWindow::onContrlSearchBar()
+{
+    if(lineEdit_filter->isHidden()){
+        lineEdit_filter->setGeometry(60,0,100,25);
+        lineEdit_filter->show();
+        lineEdit_filter->setFocus();
+    }else {
+        lineEdit_filter->clear();
+        lineEdit_filter->hide();
+        onTextFilter();
+    }
 }
 
 void MainWindow::slotReciveDocument()
 {
     ui->actionDocument->setEnabled(true);
+}
+
+void MainWindow::slo_batterystats(QString cmd)
+{
+    cout << cmd;
+    ccd->runCommand(cmd);
 }
 
 void MainWindow::slo_reciveMessage(QString msg)
@@ -227,12 +260,18 @@ void MainWindow::on_pushButton_run_clicked()
         m_nativeCmdList << ui->lineEdit_cmd->text();
         cmd_completer->setModel(new QStringListModel(m_nativeCmdList,this));
     }
+    if(ui->lineEdit_cmd->text()=="clear") {
+        ui->textEdit->clear();
+        ui->lineEdit_cmd->clear();
+        return;
+    }
     ccd->runCommand(ui->lineEdit_cmd->text());
     ui->lineEdit_cmd->clear();
 }
 
 void MainWindow::on_pushButton_devices_clicked()
 {
+    cout;
     ccd->runCommand(ADBDEVICES);
 }
 
@@ -248,6 +287,7 @@ void MainWindow::on_pushButton_remount_clicked()
 
 void MainWindow::on_pushButton_oemunlock_clicked()
 {
+    QMessageBox::information(this,"Info","Make sure 'OEM unlocking' turn on!");
     ccd->runCommand(ADBOEMUNLOCK);
 }
 
@@ -315,29 +355,21 @@ void MainWindow::on_pushButton_recclear_clicked()
     ui->lineEdit_reccallgraph->clear();
 }
 
-void MainWindow::on_pushButton_runcts_clicked()
-{
-    QString m_ctsSuite      = ui->lineEdit_ctssuite->text();
-    QString m_ctsCommand    = ui->comboBox_ctscommand->currentText();
-    QString m_ctsModule     = ui->comboBox_ctsmodule->currentText();
-    QString m_ctsTest       = ui->lineEdit_ctstest->text();
-    xts->runCts(m_ctsSuite,m_ctsCommand,m_ctsModule,m_ctsTest);
-}
-
 void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1)
 {
-//    qDebug() << "on_comboBox_completeregular_currentIndexChanged"<<arg1;
-    Qt::MatchFlags mf;
-    if(arg1==0){
-        mf = Qt::MatchStartsWith;
-    }else if(arg1==1){
-        mf = Qt::MatchContains;
-    }else if(arg1==2){
-        mf = Qt::MatchEndsWith;
-    }else {
-        mf = Qt::MatchStartsWith;
-    }
-    cmd_completer->setFilterMode(mf);
+    int offset = 1;
+    cmd_completer->setFilterMode(Qt::MatchFlags(arg1+offset));
+//    cout << cmd_completer->filterMode();
+}
+
+void MainWindow::onTextFilter()
+{
+//    cout<<lineEdit_filter->text();
+
+    QString keyWord = lineEdit_filter->text();
+    QTextDocument *document = ui->textEdit->document();
+    if(isHightlighted) document->undo();
+    isHightlighted = m_doc.searchHightlight(keyWord,document);
 }
 
 void MainWindow::on_pushButton_loadctssuite_clicked()
@@ -347,6 +379,57 @@ void MainWindow::on_pushButton_loadctssuite_clicked()
     emit sig_sendToXts(m_ctsSuite);
 }
 
+void MainWindow::on_comboBox_ctscommand_currentTextChanged(const QString &arg1)
+{
+    cout<<arg1;
+    if(arg1 == "list modules" || arg1 == "list results"){
+        ui->comboBox_ctsmodule->setCurrentIndex(1);
+        ui->comboBox_ctsmodule->setEnabled(false);
+        ui->lineEdit_ctstest->clear();
+        ui->lineEdit_ctstest->setEnabled(false);
+    }else{
+        ui->comboBox_ctsmodule->setEnabled(true);
+        ui->lineEdit_ctstest->setEnabled(true);
+    }
+}
+
+void MainWindow::on_pushButton_runcts_clicked()
+{
+    QString m_ctsSuite      = ui->lineEdit_ctssuite->text();
+    QString m_ctsCommand    = ui->comboBox_ctscommand->currentText();
+    QString m_ctsModule     = ui->comboBox_ctsmodule->currentText();
+    QString m_ctsTest       = ui->lineEdit_ctstest->text();
+    if(m_ctsSuite.isEmpty()){
+        QMessageBox::warning(this,"Warning","please select cts suite!");
+        return;
+    }
+    xts->runCts(m_ctsSuite,m_ctsCommand,m_ctsModule,m_ctsTest);
+}
+
+void MainWindow::on_pushButton_result_clicked()
+{
+    cout;
+    QString res = m_doc.openFile("*.xml");
+    if(!res.isEmpty()){
+        QFile file(res);
+        if(!file.exists()){
+            QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(res));
+            return;
+        }
+        if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
+            return;
+        }
+        ui->textEdit->append("Open Result : "+res);
+        if(fileOperation->readXml(&file))
+        {
+            mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
+        }
+        file.close();
+    }
+}
+
 void MainWindow::on_pushButton_log_clicked()
 {
     if (ui->lineEdit_ctssuite->text().isEmpty())
@@ -354,7 +437,7 @@ void MainWindow::on_pushButton_log_clicked()
         QMessageBox::warning(this,"warning","please choose cts suite ...");
         return;
     }
-    QString path = ui->lineEdit_ctssuite->text()+"../../../logs/latest/";
+    QString path = ui->lineEdit_ctssuite->text()+"/logs/latest/";
     if(!QDesktopServices::openUrl(QUrl(path))){
         QMessageBox::warning(this,"warning",QString("open folder failed#{%1}").arg(path));
     }
@@ -378,8 +461,8 @@ void MainWindow::slo_showCtsResult()
         QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
         return;
     }
+    ui->textEdit->append("Open Result : "+res);
     if(fileOperation->readXml(&file)){
-        cout << "tests11111111111111";
         mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
     }
 
@@ -555,34 +638,13 @@ void MainWindow::readfile()
 }
 #endif
 
-void MainWindow::on_pushButton_result_clicked()
-{
-    cout;
-    QString res = m_doc.openFile("*.xml");
-    if(!res.isEmpty()){
-        QFile file(res);
-        if(!file.exists()){
-            QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(res));
-            return;
-        }
-        if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        {
-            QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
-            return;
-        }
-        if(fileOperation->readXml(&file))
-        {
-            mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
-        }
-        file.close();
-    }
-}
+
 
 void MainWindow::on_pushButton_screencapture_clicked()
 {
     QString img = QString("/storage/img_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".png");
     cout << img;
-    QString path = "./capture";
+    QString path = "capture";
     QDir dir(path);
     if(!dir.exists()) dir.mkpath(path);
     ccd->runCommand(SCREENCAPTURE+img+QString(";adb pull %1 %2").arg(img).arg(path));
@@ -593,6 +655,78 @@ void MainWindow::on_pushButton_screenrecord_clicked()
     cout ;
 //    QString record = QString("/storage/record_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".mp4");
 //    ccd->runCommand(SCREENRECORD+record+QString(";adb pull %1 .").arg(record));
+}
+
+
+
+void MainWindow::on_pushButton_fastboot_clicked()
+{
+    ccd->runCommand(FASTBOOT);
+}
+
+void MainWindow::on_pushButton_clearlogcat_clicked()
+{
+    ccd->runCommand(CLEARLOGCAT);
+}
+
+void MainWindow::on_pushButton_adbrestart_clicked()
+{
+    ccd->runCommand(ADBRESTART);
+}
+
+void MainWindow::on_pushButton_sentest_clicked()
+{
+    ccd->runCommand(SENTEST);
+}
+
+void MainWindow::on_pushButton_killcamera_clicked()
+{
+    ccd->runCommand(KILLCAMERASERVER);
+}
+
+void MainWindow::on_pushButton_dumpcamera_clicked()
+{
+    ccd->runCommand(DUMPCAMERA);
+}
+
+void MainWindow::on_pushButton_property_clicked()
+{
+    ccd->runCommand(PROPERTY);
+}
+
+void MainWindow::on_pushButton_drawid_clicked()
+{
+    ccd->runCommand(DRAWID);
+}
+
+void MainWindow::on_pushButton_opencamera_clicked()
+{
+    ccd->runCommand(OPENCAMERA);
+}
+
+void MainWindow::on_pushButton_takepicture_clicked()
+{
+    ccd->runCommand(TAKEPICTURE);
+}
+
+void MainWindow::on_pushButton_screensize_clicked()
+{
+    ccd->runCommand(SCREENSIZE);
+}
+
+void MainWindow::on_pushButton_cpuinfo_clicked()
+{
+    ccd->runCommand(CPUINFO);
+}
+
+void MainWindow::on_pushButton_clear_clicked()
+{
+    ui->textEdit->clear();
+}
+
+void MainWindow::on_pushButton_batterystats_clicked()
+{
+    batterystats->show();
 }
 
 

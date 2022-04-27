@@ -90,3 +90,10 @@ Qt project
 
 2022年4月8日
 * 解决xts 二次打开result会crash：new QLabel野指针问题
+
+2022年4月19日
+* 新增textEdit搜索功能
+
+2022年4月27日
+* 新增SSH模块
+* 新增Batterystats功能

@@ -5,7 +5,7 @@
 #include <QTextEdit>
 
 #define MY_TAG  "MyTableView"
-#define cout    qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]" << __LINE__
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
 MyTableView::MyTableView()
 {

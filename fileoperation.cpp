@@ -6,7 +6,7 @@
 #include <QFile>
 
 #define MY_TAG "FileOperation"
-#define cout            qDebug() << MY_TAG <<"[" << __FUNCTION__ <<"]" << __LINE__
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
 FileOperation::FileOperation(QObject *parent) :QObject(parent)
 {

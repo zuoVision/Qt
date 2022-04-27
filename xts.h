@@ -27,7 +27,7 @@ public:
     bool                    m_ctsComplete=false;
     bool                    m_flag=false;
     QString                 m_ctsSuite;
-
+    QString                 m_ctsCommand;
     QString                 m_totalRunTime;
     QString                 m_totalTests;
     QString                 m_passed;

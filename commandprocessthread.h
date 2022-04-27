@@ -9,6 +9,7 @@ class CommandProcessThread : public QObject
     Q_OBJECT
 public:
     CommandProcessThread(QObject *parent=nullptr);
+    CommandProcessThread(QString threadName);
     ~CommandProcessThread();
 
 private:
@@ -18,6 +19,7 @@ private:
 
 
 public:
+    QString                 m_ThreadName=NULL;
     QProcess                *processor;
     QProcess::ProcessState  m_processState;
     QString                 m_userName;

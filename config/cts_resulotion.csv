@@ -134,7 +134,7 @@ android.hardware.camera2.cts.ReprocessCaptureTest#testReprocessRequestKeys,
 android.hardware.camera2.cts.ReprocessCaptureTest#testReprocessTimestamps,
 android.hardware.camera2.cts.ReprocessCaptureTest#testReprocessingSizeFormat,
 android.hardware.camera2.cts.ReprocessCaptureTest#testReprocessingSizeFormatWithPreview,
-android.hardware.camera2.cts.RobustnessTest#testAbandonRepeatingRequestSurface,<a href='http://online.mediatek.com/_layouts/15/mol/topic/ext/Topic.aspx?id=53'>[Topic.aspx?id=53]
+android.hardware.camera2.cts.RobustnessTest#testAbandonRepeatingRequestSurface,<a href='https://android-review.googlesource.com/q/I79bacdd3c0382a79786f8eb689eb4f89c830ddcc'>[googlesource]
 android.hardware.camera2.cts.RobustnessTest#testAeThenAfTrigger,
 android.hardware.camera2.cts.RobustnessTest#testAfThenAeTrigger,
 android.hardware.camera2.cts.RobustnessTest#testBadSurfaceDimensions,<a href='http://online.mediatek.com/FAQ#/SW/FAQ14945'>[FAQ14945]
