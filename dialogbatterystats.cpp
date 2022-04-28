@@ -51,23 +51,20 @@ void DialogBatterystats::onStart()
     //timer count
     int time = ui->spinBox_time->text().toInt();
     if(ui->radioButton_auto->isChecked() && !isTimerEnable){
+//        QString info = QString("stats start, auto stop after %1(s)").arg(time);
+//        cout << info;
+//        emit sig_batterystat(info);
         timer->start(time*1000);
         isTimerEnable = true;
     }else {
-        //manul
-//        onProcess();
+        cout << " Please stop manually! ";
     }
 }
 
 void DialogBatterystats::onStop()
 {
-    if(timer->isActive()){
-        cout << "actived";
-    }else{
-        cout << "inActived";
-    }
+    onProcess();
 }
-
 
 void DialogBatterystats::onTimeEnable(bool checked)
 {
@@ -79,7 +76,7 @@ void DialogBatterystats::onProcess()
 {
     cout;
     if(isTimerEnable){
-        QMessageBox::information(this,"timer","time out ");
+//        QMessageBox::information(this,"timer","time out ");
         timer->stop();
         isTimerEnable = false;
     }
@@ -101,9 +98,20 @@ void DialogBatterystats::onProcess()
 
     cout << cmd;
     emit sig_batterystat(cmd);
+
 }
 
-
+void DialogBatterystats::slo_reciveMessage(QProcess::ProcessState state, QString tag)
+{
+    cout << state << tag;
+    if(state == QProcess::ProcessState::NotRunning){
+        ui->pushButton_dumpdata->setText("start");
+        currentStatus = STATUS::startStats;
+    }else{
+        ui->pushButton_dumpdata->setText("stop");
+        currentStatus = STATUS::stopStats;
+    }
+}
 
 void DialogBatterystats::on_pushButton_open_clicked()
 {
@@ -117,12 +125,8 @@ void DialogBatterystats::on_pushButton_dumpdata_clicked()
     cout;
 
     if(currentStatus == STATUS::startStats){
-        ui->pushButton_dumpdata->setText("stop");
-        onStart();
-        currentStatus = STATUS::stopStats;
+        onStart();      
     }else {
-        ui->pushButton_dumpdata->setText("start");
         onStop();
-        currentStatus = STATUS::startStats;
     }
 }

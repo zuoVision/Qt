@@ -2,6 +2,7 @@
 #define DIALOGBATTERYSTATS_H
 
 #include <QDialog>
+#include <QProcess>
 #include <QTimer>
 
 namespace Ui {
@@ -42,7 +43,7 @@ signals:
 private slots:
     void onTimeEnable(bool checked);
     void onProcess();
-
+    void slo_reciveMessage(QProcess::ProcessState state,QString tag);
     void on_pushButton_open_clicked();
     void on_pushButton_dumpdata_clicked();
 };

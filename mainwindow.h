@@ -96,6 +96,7 @@ protected:
 
 signals:
     void sig_sendToXts(QString);
+    void sig_sendToBatterystats(QProcess::ProcessState,QString);
 
 private slots:
     void slotReciveDocument();
