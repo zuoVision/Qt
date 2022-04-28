@@ -61,7 +61,7 @@ void CommandProcessThread::createProcessor()
     QStringList name = m_userName.split("\n");
     if(!name.isEmpty()) name.pop_back();
     m_userName = name.first().append("@").append(name.last()).append(":~$ ");
-    cout << QThread::currentThreadId() << m_userName;
+//    cout << QThread::currentThreadId() << m_userName;
     init_connect();
 }
 
