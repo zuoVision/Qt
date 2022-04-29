@@ -25,13 +25,32 @@ public:
 private:
     void init();
     void initConnect();
+    void onCreate();
     void onStart();
+    void onStats();
     void onStop();
+    void onDump();
+    void onDestroy();
+
+    bool isNeedReset();
+    void setResetFlag(bool flag);
+
+    void selectMode();
+    bool isAutoMode();
+    bool isManulMode();
+
+
+    void onAutoStats();
+    void onManulStats();
 
 private:
-    QTimer  *timer;
-    bool    isTimerEnable = false;
+    bool                    mResetFlag=false;
+    bool                    mStatsFlag=false;
+    bool                    mDumpFlag=false;
 
+    QTimer                  *timer;
+    int                     mCounter;
+    QProcess::ProcessState  mState;
     STATUS currentStatus;
 
 private:
@@ -41,11 +60,12 @@ signals:
     void sig_batterystat(QString cmd);
 
 private slots:
-    void onTimeEnable(bool checked);
+    void onCount();
     void onProcess();
     void slo_reciveMessage(QProcess::ProcessState state,QString tag);
     void on_pushButton_open_clicked();
     void on_pushButton_dumpdata_clicked();
+    void on_radioButton_auto_toggled(bool checked);
 };
 
 #endif // DIALOGBATTERYSTATS_H

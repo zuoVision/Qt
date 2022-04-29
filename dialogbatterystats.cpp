@@ -15,7 +15,9 @@ DialogBatterystats::DialogBatterystats(QWidget *parent) :
 {
     ui->setupUi(this);
     init();
+    onCreate();
     initConnect();
+
 }
 
 DialogBatterystats::~DialogBatterystats()
@@ -23,63 +25,96 @@ DialogBatterystats::~DialogBatterystats()
     delete ui;
 }
 
+/**
+ * @brief DialogBatterystats::init
+ */
 void DialogBatterystats::init()
 {
     ui->label_batteryhistorianurl->setText(BATTERYHISTORIANURL);
     ui->label_batteryhistorianurl->setOpenExternalLinks(true);
-
-    //timer
-    timer = new QTimer();
-    currentStatus = STATUS::startStats;
+    ui->progressBar_timer->hide();
 }
 
+/**
+ * @brief DialogBatterystats::initConnect
+ */
 void DialogBatterystats::initConnect()
 {
     connect(timer,SIGNAL(timeout()),
-            this,SLOT(onProcess()));
-    connect(ui->radioButton_auto,SIGNAL(toggled(bool)),
-            this,SLOT(onTimeEnable(bool)));
+            this,SLOT(onCount()));
 }
 
+/**
+ * @brief DialogBatterystats::onCreate
+ */
+void DialogBatterystats::onCreate()
+{
+    cout;
+    //timer
+    timer = new QTimer();
+    currentStatus = STATUS::stopStats;
+}
+
+/**
+ * @brief DialogBatterystats::onStart
+ */
 void DialogBatterystats::onStart()
 {
     cout;
-    if(ui->checkBox_reset->isEnabled()){
+    if(isNeedReset()){
         emit sig_batterystat(BATTERYSTATS " --reset");
+    }else{
+        selectMode();
     }
 
-    //timer count
-    int time = ui->spinBox_time->text().toInt();
-    if(ui->radioButton_auto->isChecked() && !isTimerEnable){
-//        QString info = QString("stats start, auto stop after %1(s)").arg(time);
-//        cout << info;
-//        emit sig_batterystat(info);
-        timer->start(time*1000);
-        isTimerEnable = true;
-    }else {
-        cout << " Please stop manually! ";
-    }
+//    currentStatus = STATUS::startStats;
+//    ui->pushButton_dumpdata->setText("stop");
+
+//    //timer count
+//    if(ui->radioButton_auto->isChecked()){
+//        timer->start();
+//        timer->setInterval(1000);
+//        mCounter = 0;
+//        ui->progressBar_timer->show();
+//        ui->progressBar_timer->setMaximum(ui->spinBox_time->text().toInt());
+//        ui->progressBar_timer->setMinimum(0);
+//        ui->progressBar_timer->setFormat("stats...%p%");
+//        ui->pushButton_dumpdata->setEnabled(false);
+//    }else {
+//        cout << " Please stop manually! ";
+//    }
 }
 
-void DialogBatterystats::onStop()
-{
-    onProcess();
-}
-
-void DialogBatterystats::onTimeEnable(bool checked)
-{
-    cout << checked;
-    ui->spinBox_time->setEnabled(checked);
-}
-
-void DialogBatterystats::onProcess()
+/**
+ * @brief DialogBatterystats::onStats
+ */
+void DialogBatterystats::onStats()
 {
     cout;
-    if(isTimerEnable){
-//        QMessageBox::information(this,"timer","time out ");
-        timer->stop();
-        isTimerEnable = false;
+    mStatsFlag = true;
+    if(isAutoMode()){
+        onAutoStats();
+    }else{
+        onManulStats();
     }
+}
+
+/**
+ * @brief DialogBatterystats::onStop
+ *
+ */
+void DialogBatterystats::onStop()
+{
+    cout;
+    onDump();
+}
+
+/**
+ * @brief DialogBatterystats::onDump
+ */
+void DialogBatterystats::onDump()
+{
+    cout;
     QString cmd = BATTERYSTATS;
     if(ui->lineEdit_path->text().isEmpty()){
         cmd += QString("%1 %2%3")
@@ -97,24 +132,145 @@ void DialogBatterystats::onProcess()
     }
 
     cout << cmd;
-    emit sig_batterystat(cmd);
+    emit sig_batterystat("pwd");
+    mDumpFlag = true;
+}
 
+void DialogBatterystats::onDestroy()
+{
+    cout;
+}
+
+/**
+ * @brief DialogBatterystats::isNeedReset
+ * @return bool
+ */
+bool DialogBatterystats::isNeedReset()
+{
+    cout;
+    setResetFlag(ui->checkBox_reset->isEnabled());
+    if(mResetFlag){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+/**
+ * @brief DialogBatterystats::setResetFlag
+ * @param flag
+ */
+void DialogBatterystats::setResetFlag(bool flag)
+{
+    cout;
+    mResetFlag = flag;
+}
+
+/**
+ * @brief DialogBatterystats::selectMode
+ */
+void DialogBatterystats::selectMode()
+{
+    cout;
+}
+
+/**
+ * @brief DialogBatterystats::isAutoMode
+ * @return
+ */
+bool DialogBatterystats::isAutoMode()
+{
+    cout;
+    if(ui->radioButton_auto->isChecked()) return true;
+    return false;
+}
+
+/**
+ * @brief DialogBatterystats::isManulMode
+ * @return
+ */
+bool DialogBatterystats::isManulMode()
+{
+    cout;
+    if(ui->radioButton_manul->isChecked()) return true;
+    return false;
+}
+
+/**
+ * @brief DialogBatterystats::onAutoStats
+ */
+void DialogBatterystats::onAutoStats()
+{
+    cout;
+    mCounter = 0;
+    timer->setInterval(1000);
+    timer->start();
+}
+
+/**
+ * @brief DialogBatterystats::onManulStats
+ */
+void DialogBatterystats::onManulStats()
+{
+    cout;
+    onStats();
+}
+
+
+
+void DialogBatterystats::onCount()
+{
+    cout;
+    mCounter++;
+    int time = ui->spinBox_time->text().toInt();
+    cout << mCounter;
+    ui->progressBar_timer->setValue(mCounter);
+    if (mCounter>=time && mStatsFlag) {
+        mStatsFlag = false;
+        timer->stop();
+        onStop();
+//        ui->progressBar_timer->setFormat("dump data...");
+//        ui->pushButton_dumpdata->setEnabled(false);
+//        timer->stop();
+//        currentStatus = STATUS::stopStats;
+//        onProcess();
+    }
+}
+
+void DialogBatterystats::onProcess()
+{
+    cout;
 }
 
 void DialogBatterystats::slo_reciveMessage(QProcess::ProcessState state, QString tag)
 {
     cout << state << tag;
     if(state == QProcess::ProcessState::NotRunning){
-        ui->pushButton_dumpdata->setText("start");
-        currentStatus = STATUS::startStats;
+        if(mResetFlag){
+            cout << "reset completed!";
+            mResetFlag=false;
+            onStats();
+        }
+        if(mDumpFlag){
+            cout<<"dump completed!";
+            mDumpFlag = false;
+            onDestroy();
+        }
+        if (!ui->pushButton_dumpdata->isEnabled()){
+            ui->pushButton_dumpdata->setEnabled(true);
+            ui->pushButton_dumpdata->setText("start");
+        }
+
     }else{
-        ui->pushButton_dumpdata->setText("stop");
-        currentStatus = STATUS::stopStats;
+//        ui->pushButton_dumpdata->setText("stop");
+//        ui->pushButton_dumpdata->setEnabled(true);
+//        currentStatus = STATUS::stopStats;
     }
 }
 
 void DialogBatterystats::on_pushButton_open_clicked()
 {
+    cout;
     Document doc;
     QString path = doc.selectDirectory("");
     ui->lineEdit_path->setText(path);
@@ -123,10 +279,14 @@ void DialogBatterystats::on_pushButton_open_clicked()
 void DialogBatterystats::on_pushButton_dumpdata_clicked()
 {
     cout;
-
-    if(currentStatus == STATUS::startStats){
+    if(currentStatus == STATUS::stopStats){
         onStart();      
     }else {
         onStop();
     }
+}
+
+void DialogBatterystats::on_radioButton_auto_toggled(bool checked)
+{
+    ui->spinBox_time->setEnabled(checked);
 }

@@ -101,3 +101,6 @@ Qt project
 
 2022年4月28日
 * 完善Batterystats功能
+
+2022年4月29日
+* 重构batterystats架构
