@@ -22,6 +22,7 @@ CommonCommand模块界面包含3个部分
 * 命令输入栏
 * 功能按钮区
 * 输出栏
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/ca2b8d19802c475ab50d6aa9f1253b3c.png?x-oss-process=image)
 #### 命令输入栏
 手动输入执行命令，通常用于自定义带参命令的执行。
@@ -43,6 +44,7 @@ CommonCommand模块界面包含3个部分
 simpleperf = simple + perf
 simple:不是简单的意思，而是**采样**
 perf:performance--性能
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/5ca8eb7c6c474212a6b02ca80a5a4637.png)
 ### list
 list 命令列出设备上所有可用的事件。不同的设备可能支持不同的事件，因为它们具有不同的硬件和内核
@@ -51,6 +53,7 @@ list 命令列出设备上所有可用的事件。不同的设备可能支持不
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/7ec2ca1ee1bd43b69bef3bd2efc16cb0.gif#pic_center)
 ### stat
 获取一段时间内，要分析的进程中发生了多少事件。通过传入不同参数，我们可以选择要使用哪些事件、要监听哪些进程/线程，监听多长时间以及打印间隔,当前可支持客制化的参数如图所示，更详细的参数参见‘simpleperf stat -h’，当然你也可以直接在Command中的命令行执行自己客制化的参数
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/1a3c3de996a44fb48f84413480573596.png)
 
 ```shell
@@ -80,6 +83,7 @@ Total test time: 1.001893 seconds.
 
 ### record
 以采样方式生成profile data，当前可支持客制化的参数如图所示，更详细的参数参见‘simpleperf stat -h’，当然你也可以直接在Command中的命令行执行自己客制化的参数
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/93fd3d1e053e493e8346fa5fb93963da.png)
 
 > 默认执行命令：adb shell rm /data/local/tmp/perf.data;adb shell system/bin/simpleperf record -o /data/local/tmp/perf.data -e task-clock:u -f 1000 -g --duration 10 --log info --app com.tcl.camera;adb pull /data/local/tmp/perf.data
@@ -124,6 +128,7 @@ Overhead  Command     Pid    Tid    Shared Object                    Symbol
 ### FlameGraph
 将数据报告绘制程火焰图
 > FlameGraph/stackcollapse-perf.pl out.perf > out.folded;FlameGraph/flamegraph.pl out.folded > graph.svg
+
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/6c24103a5f214aa1ac9c88ad857e258d.gif#pic_center)
 
 ## XTS
