@@ -38,11 +38,11 @@ public:
     ~MainWindow();
     QString         m_userName;
 
+    DialogBatterystats *batterystats = new DialogBatterystats(this);
     CommonCommand   *ccd = new CommonCommand();
     Simpleperf      *simpleperf = new Simpleperf();
     Xts             *xts = new Xts(this);
 
-    DialogBatterystats *batterystats = new DialogBatterystats(this);;
     QCompleter      *cmd_completer;
     QCompleter      *test_completer;
     FileOperation   *fileOperation = new FileOperation(this);
@@ -96,6 +96,7 @@ protected:
 
 signals:
     void sig_sendToXts(QString);
+    void sig_sendToBatterystats(QString);
     void sig_sendToBatterystats(QProcess::ProcessState,QString);
 
 private slots:

@@ -21,7 +21,7 @@ CommandProcessThread::CommandProcessThread(QString threadName)
 
 CommandProcessThread::~CommandProcessThread()
 {
-    cout << "[~CommandProcessThread]";
+    cout;
 
     uninit();
 }
@@ -138,7 +138,7 @@ void CommandProcessThread::slo_processAllMsg()
 
 void CommandProcessThread::slo_processState(QProcess::ProcessState state)
 {
-//    cout << state;
+    cout << state << QThread::currentThreadId();
     emit sig_sendState(state);
 }
 

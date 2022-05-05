@@ -80,13 +80,15 @@ void CommonCommand::slo_reciveState(QProcess::ProcessState state)
 
 void CommonCommand::runCommand(const QString cmd)
 {
-    cout;
+    cout<<cmd<<ccd_cpt->processor->state();
     if(!cmd.isEmpty()&&
         ccd_cpt->processor->state()==QProcess::ProcessState::NotRunning){
         emit sig_sendToMainWindow(ccd_cpt->m_userName+cmd);
         emit processCommand(cmd);
     }else{
-        cout << "command is empty or process is running!";
+        cout << ccd_cpt->processor->state();
+        QString warning =  "Warning : command is empty or process is running!";
+        emit sig_sendToMainWindow(warning);
     }
 }
 

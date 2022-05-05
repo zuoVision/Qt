@@ -10,8 +10,9 @@ class DialogBatterystats;
 }
 
 enum STATUS{
-    startStats,
-    stopStats,
+    start,
+    stats,
+    stop,
 };
 
 class DialogBatterystats : public QDialog
@@ -47,11 +48,13 @@ private:
     bool                    mResetFlag=false;
     bool                    mStatsFlag=false;
     bool                    mDumpFlag=false;
+    bool                    mResult=false;
 
     QTimer                  *timer;
     int                     mCounter;
     QProcess::ProcessState  mState;
-    STATUS currentStatus;
+    STATUS                  mCurrentStatus;
+
 
 private:
     Ui::DialogBatterystats *ui;
@@ -61,8 +64,9 @@ signals:
 
 private slots:
     void onCount();
-    void onProcess();
+    void slo_reciveMessage(QString result);
     void slo_reciveMessage(QProcess::ProcessState state,QString tag);
+
     void on_pushButton_open_clicked();
     void on_pushButton_dumpdata_clicked();
     void on_radioButton_auto_toggled(bool checked);

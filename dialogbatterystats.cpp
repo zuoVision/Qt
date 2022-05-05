@@ -5,6 +5,7 @@
 
 #include <QDebug>
 #include <QMessageBox>
+#include <QThread>
 #define MY_TAG "DialogBatterystats"
 #define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
@@ -30,7 +31,9 @@ DialogBatterystats::~DialogBatterystats()
  */
 void DialogBatterystats::init()
 {
+    this->setFixedSize(QSize(400,300));
     ui->label_batteryhistorianurl->setText(BATTERYHISTORIANURL);
+    ui->label_batteryhistorianurl->setToolTip(QString("open with browser"));
     ui->label_batteryhistorianurl->setOpenExternalLinks(true);
     ui->progressBar_timer->hide();
 }
@@ -42,6 +45,7 @@ void DialogBatterystats::initConnect()
 {
     connect(timer,SIGNAL(timeout()),
             this,SLOT(onCount()));
+
 }
 
 /**
@@ -52,7 +56,8 @@ void DialogBatterystats::onCreate()
     cout;
     //timer
     timer = new QTimer();
-    currentStatus = STATUS::stopStats;
+    mState = QProcess::ProcessState::NotRunning;
+    mCurrentStatus = STATUS::stop;
 }
 
 /**
@@ -61,28 +66,23 @@ void DialogBatterystats::onCreate()
 void DialogBatterystats::onStart()
 {
     cout;
+    mCurrentStatus = STATUS::start;
     if(isNeedReset()){
-        emit sig_batterystat(BATTERYSTATS " --reset");
+        cout << mState;
+        if(mState == QProcess::ProcessState::NotRunning){
+
+//            ui->pushButton_dumpdata->setText("start");
+            emit sig_batterystat(BATTERYSTATS " --reset");
+            cout ;
+        }else{
+            cout;
+            return;
+            //TODO:解决应用启动processor处于runing状态，导致reset命令无法执行
+            //CommonCommand [ runCommand : 89 ] command is empty or process is running!
+        }
     }else{
-        selectMode();
+        onStats();
     }
-
-//    currentStatus = STATUS::startStats;
-//    ui->pushButton_dumpdata->setText("stop");
-
-//    //timer count
-//    if(ui->radioButton_auto->isChecked()){
-//        timer->start();
-//        timer->setInterval(1000);
-//        mCounter = 0;
-//        ui->progressBar_timer->show();
-//        ui->progressBar_timer->setMaximum(ui->spinBox_time->text().toInt());
-//        ui->progressBar_timer->setMinimum(0);
-//        ui->progressBar_timer->setFormat("stats...%p%");
-//        ui->pushButton_dumpdata->setEnabled(false);
-//    }else {
-//        cout << " Please stop manually! ";
-//    }
 }
 
 /**
@@ -91,7 +91,8 @@ void DialogBatterystats::onStart()
 void DialogBatterystats::onStats()
 {
     cout;
-    mStatsFlag = true;
+    mCurrentStatus = STATUS::stats;
+    ui->pushButton_dumpdata->setText("stop");
     if(isAutoMode()){
         onAutoStats();
     }else{
@@ -106,6 +107,9 @@ void DialogBatterystats::onStats()
 void DialogBatterystats::onStop()
 {
     cout;
+    if(timer->isActive()) timer->stop();
+    mCurrentStatus = STATUS::stop;
+    ui->pushButton_dumpdata->setEnabled(false);
     onDump();
 }
 
@@ -132,12 +136,26 @@ void DialogBatterystats::onDump()
     }
 
     cout << cmd;
-    emit sig_batterystat("pwd");
+    emit sig_batterystat(cmd);
+    ui->progressBar_timer->setFormat("dumping...");
     mDumpFlag = true;
 }
 
+/**
+ * @brief DialogBatterystats::onDestroy
+ */
 void DialogBatterystats::onDestroy()
 {
+    ui->progressBar_timer->setValue(0);
+    ui->progressBar_timer->setFormat("%p%");
+    ui->progressBar_timer->hide();
+    if (!ui->pushButton_dumpdata->isEnabled()){
+        ui->pushButton_dumpdata->setEnabled(true);
+        ui->pushButton_dumpdata->setText("start");
+    }
+    mState = QProcess::ProcessState::NotRunning;
+    mCurrentStatus = STATUS::stop;
+    delete timer;
     cout;
 }
 
@@ -149,6 +167,7 @@ bool DialogBatterystats::isNeedReset()
 {
     cout;
     setResetFlag(ui->checkBox_reset->isEnabled());
+    cout<<mResetFlag;
     if(mResetFlag){
         return true;
     }else{
@@ -203,8 +222,14 @@ void DialogBatterystats::onAutoStats()
 {
     cout;
     mCounter = 0;
+
     timer->setInterval(1000);
     timer->start();
+    ui->pushButton_dumpdata->setText("stop");
+    ui->progressBar_timer->show();
+    ui->progressBar_timer->setMaximum(ui->spinBox_time->text().toInt());
+    ui->progressBar_timer->setMinimum(0);
+    ui->progressBar_timer->setFormat("stats... %p%");
 }
 
 /**
@@ -213,10 +238,11 @@ void DialogBatterystats::onAutoStats()
 void DialogBatterystats::onManulStats()
 {
     cout;
-    onStats();
+    ui->pushButton_dumpdata->setText("stop");
+    ui->progressBar_timer->show();
+    ui->progressBar_timer->setFormat("stats...");
+
 }
-
-
 
 void DialogBatterystats::onCount()
 {
@@ -225,49 +251,60 @@ void DialogBatterystats::onCount()
     int time = ui->spinBox_time->text().toInt();
     cout << mCounter;
     ui->progressBar_timer->setValue(mCounter);
-    if (mCounter>=time && mStatsFlag) {
-        mStatsFlag = false;
-        timer->stop();
+    if (mCounter>=time && mCurrentStatus==STATUS::stats) {      
         onStop();
-//        ui->progressBar_timer->setFormat("dump data...");
-//        ui->pushButton_dumpdata->setEnabled(false);
-//        timer->stop();
-//        currentStatus = STATUS::stopStats;
-//        onProcess();
     }
 }
 
-void DialogBatterystats::onProcess()
+/**
+ * @brief DialogBatterystats::slo_reciveMessage
+ * @param result
+ */
+void DialogBatterystats::slo_reciveMessage(QString result)
 {
-    cout;
+    cout << result;
+
+    if(result.contains("Battery stats reset")) {
+        mResult = true;
+    }else if(result.startsWith("Warning")){
+        mResult = false;
+    }
 }
 
+/**
+ * @brief DialogBatterystats::slo_reciveMessage
+ * @param state
+ * @param tag
+ */
 void DialogBatterystats::slo_reciveMessage(QProcess::ProcessState state, QString tag)
 {
     cout << state << tag;
+    mState = state;
     if(state == QProcess::ProcessState::NotRunning){
+        cout << "ProcessState::NotRunning";
         if(mResetFlag){
             cout << "reset completed!";
             mResetFlag=false;
-            onStats();
+            if (mResult){
+                onStats();
+            }else{
+                onDestroy();
+            }
         }
         if(mDumpFlag){
             cout<<"dump completed!";
             mDumpFlag = false;
             onDestroy();
         }
-        if (!ui->pushButton_dumpdata->isEnabled()){
-            ui->pushButton_dumpdata->setEnabled(true);
-            ui->pushButton_dumpdata->setText("start");
-        }
 
     }else{
-//        ui->pushButton_dumpdata->setText("stop");
-//        ui->pushButton_dumpdata->setEnabled(true);
-//        currentStatus = STATUS::stopStats;
+        cout << "ProcessState::Running";
     }
 }
 
+/**
+ * @brief DialogBatterystats::on_pushButton_open_clicked
+ */
 void DialogBatterystats::on_pushButton_open_clicked()
 {
     cout;
@@ -276,17 +313,25 @@ void DialogBatterystats::on_pushButton_open_clicked()
     ui->lineEdit_path->setText(path);
 }
 
+/**
+ * @brief DialogBatterystats::on_pushButton_dumpdata_clicked
+ */
 void DialogBatterystats::on_pushButton_dumpdata_clicked()
 {
     cout;
-    if(currentStatus == STATUS::stopStats){
+    if(mCurrentStatus == STATUS::stop){
         onStart();      
-    }else {
+    }else if(mCurrentStatus == STATUS::stats) {
         onStop();
     }
 }
 
+/**
+ * @brief DialogBatterystats::on_radioButton_auto_toggled
+ * @param checked
+ */
 void DialogBatterystats::on_radioButton_auto_toggled(bool checked)
 {
     ui->spinBox_time->setEnabled(checked);
+    ui->progressBar_timer->hide();
 }
