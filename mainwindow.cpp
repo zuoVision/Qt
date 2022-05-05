@@ -152,6 +152,8 @@ void MainWindow::initConnect()
     //battery historian
     connect(batterystats,SIGNAL(sig_batterystat(QString)),
             this,SLOT(slo_batterystats(QString)));
+    connect(this,SIGNAL(sig_sendToBatterystats(QString)),
+            batterystats,SLOT(slo_reciveMessage(QString)));
     connect(this,SIGNAL(sig_sendToBatterystats(QProcess::ProcessState,QString)),
             batterystats,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
 
@@ -211,9 +213,11 @@ void MainWindow::slo_reciveMessage(QString msg)
 {
     if(msg.startsWith("Warning")){
         QMessageBox::warning(this,"warning",msg);
+        emit sig_sendToBatterystats(msg);
         return;
     }
     ui->textEdit->append(msg);
+    emit sig_sendToBatterystats(msg);
 }
 
 void MainWindow::slo_reciveMessage(QProcess::ProcessState state,QString tag)
@@ -237,12 +241,13 @@ void MainWindow::slo_reciveMessage(QProcess::ProcessState state,QString tag)
     }else{
         if (tag == "CommonCommand") {
             m_ccd_status->setPixmap(*led_grey);
+            if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
             emit sig_sendToBatterystats(state,tag);
         }
         if (tag == "Simpleperf") m_sim_status->setPixmap(*led_grey);
         if (tag == "Xts") m_xts_status->setPixmap(*led_grey);
 //            m_statusbarMsg = "    Process Not Running ";
-        if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
+
     }
 }
 
