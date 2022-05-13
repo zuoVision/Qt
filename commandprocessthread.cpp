@@ -2,7 +2,6 @@
 
 #include <QDebug>
 
-
 #define MY_TAG "CommandProcessThread"
 #define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 

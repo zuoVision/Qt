@@ -745,5 +745,7 @@ void MainWindow::on_pushButton_batterystats_clicked()
     batterystats->show();
 }
 
-
-
+void MainWindow::on_pushButton_login_clicked()
+{
+    ssh->login();
+}

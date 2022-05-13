@@ -23,6 +23,7 @@
 #include "commoncommand.h"
 #include "mytableview.h"
 #include "dialogbatterystats.h"
+#include "ssh.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; class DialogBatterystats; }
@@ -42,6 +43,7 @@ public:
     CommonCommand   *ccd = new CommonCommand();
     Simpleperf      *simpleperf = new Simpleperf();
     Xts             *xts = new Xts(this);
+    Ssh             *ssh = new Ssh(this);
 
     QCompleter      *cmd_completer;
     QCompleter      *test_completer;
@@ -150,5 +152,8 @@ private slots:
     void on_comboBox_ctscommand_currentTextChanged(const QString &arg1);
     void on_pushButton_result_clicked();
     void on_pushButton_log_clicked();
+
+    //ssh
+    void on_pushButton_login_clicked();
 };
 #endif // MAINWINDOW_H
