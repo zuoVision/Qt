@@ -108,3 +108,7 @@ Qt project
 
 2022年05月13日
 * TODO:cts测试报错后直接加载latest result,正常做法是什么也不加载
+
+2022年5月13日
+* 新增ssh模块
+* 新增processorImpl,实际上是commandprocessthread类的升级版，后续会取而代之！
