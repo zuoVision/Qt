@@ -104,7 +104,7 @@ android.hardware.camera2.cts.NativeStillCaptureTest#testStillCapture,
 android.hardware.camera2.cts.PerformanceTest#testCameraLaunch,<a href='http://online.mediatek.com/FAQ#/SW/FAQ14140'>[FAQ14140]
 android.hardware.camera2.cts.PerformanceTest#testHighQualityReprocessingLatency,
 android.hardware.camera2.cts.PerformanceTest#testHighQualityReprocessingThroughput,
-android.hardware.camera2.cts.PerformanceTest#testReprocessingCaptureStall,
+android.hardware.camera2.cts.PerformanceTest#testReprocessingCaptureStall,<a href='https://online.mediatek.com/FAQ#/SW/FAQ22252'>[FAQ22252]
 android.hardware.camera2.cts.PerformanceTest#testReprocessingLatency,
 android.hardware.camera2.cts.PerformanceTest#testReprocessingThroughput,
 android.hardware.camera2.cts.PerformanceTest#testSingleCapture,

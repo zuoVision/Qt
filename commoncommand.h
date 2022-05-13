@@ -3,7 +3,6 @@
 
 #include <QObject>
 
-#include "basemodule.h"
 #include "commandprocessthread.h"
 
 class CommonCommand : public QObject

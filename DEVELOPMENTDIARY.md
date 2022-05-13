@@ -1,12 +1,13 @@
 # Qt
 Qt project
 
-将本地代码提交至git 
+将本地代码提交至git
 - git push git@github.com:zuoVision/Qt.git master
 - git push -u master master
 
 将远程代码同步至本地
 - git pull git@github.com:zuoVision/Qt.git
+- git pull master
 
 2022年3月8日 22点57分
 - process 初始化 --> hostName 样式：zuozhe$
@@ -104,3 +105,6 @@ Qt project
 
 2022年4月29日
 * 重构batterystats架构
+
+2022年05月13日
+* TODO:cts测试报错后直接加载latest result,正常做法是什么也不加载

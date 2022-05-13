@@ -10,6 +10,7 @@
         <file>config/mtk.html</file>
         <file>config/simpleperf.md</file>
         <file>config/test_result_full.xml</file>
+        <file>config/project.xml</file>
     </qresource>
     <qresource prefix="/icon">
         <file>icon/superman.ico</file>

@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no' ?><?xml-stylesheet type="text/xsl" href="compatibility_result.xsl"?>
+
+<ProjectInfo>
+  <Android_S>
+    <MTK6833_S>
+      <Project name="buffaloboost">
+        <branch name="MP k419">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-buffalo-k419-v8.0-gcs.xml --reference=/home/android/mirror"/>
+        </branch>
+        <branch name="DINT">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-v1.0-dint-gcs.xml --reference=/home/android/mirror"/>
+        </branch>
+        <branch name="MP k414">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-buffalo-k414-mp-v9.0-gcs.xml --reference=/home/android/mirror"/>
+        </branch>
+        <build>
+          <version ver="daily" cmd="source build/envsetup.sh; choosesecimagekey Buffalo_TMO; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,TARGET_BUILD_MODEM=true buffaloboost new "/>
+          <version ver="appli" cmd="source build/envsetup.sh; choosesecimagekey Buffalo_TMO; choosesignapkkey Buffalo_TMO; ./tclMake -o=TCT_EFUSE=true,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=user,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=false buffaloboost new"/>
+          <version ver="mini" cmd="source build/envsetup.sh; choosesecimagekey Buffalo_TMO; ./tclMake -o=TCT_EFUSE=false,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=userdebug,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=true,MMITEST_PRODUCT_CODE=T767WB,MMITEST_SIM_NUM=1 buffaloboost new"/>
+        </build>
+      </Project>
+      <Project name="BuffaloS">
+        <branch name="alps-release-s0.bsp-default-import">
+          <repo cmd="repo init -u git@huizhou.gitweb.com:mtk/manifest -m alps-release-s0.bsp-default-import.xml  --reference=/automount/repo_mirror/mirror --depth=1"/>
+        </branch>
+        <branch name="mtk6833-s-v1.0-bsp">
+          <repo cmd="repo init -u git@huizhou.gitweb.com:mtk/manifest -m mtk6833-s-v1.0-bsp.xml --reference=/automount/repo_mirror/mirror --depth=1"/>
+        </branch>
+        <branch name="mtk6833-s-v1.0-dint">
+          <repo cmd="repo init -u git@huizhou.gitweb.com:mtk/manifest -m mtk6833-s-v1.0-dint.xml  --reference=/automount/repo_mirror/mirror --depth=1"/>
+        </branch>
+        <branch name="mtk6833-s-v1.0-Main-tmp">
+          <repo cmd="repo init -u git@huizhou.gitweb.com:mtk/manifest -m mtk6833-s-v1.0-Main-tmp.xml  --reference=/automount/repo_mirror/mirror --depth=1"/>
+        </branch>
+        <build>
+          <version ver="daily" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug buffalos_k419 new"/>
+          <version ver="appli" cmd=""/>
+          <version ver="mini" cmd=""/>
+          <version ver="target_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug buffalos_k419  target_only"/>
+          <version ver="merge_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug buffalos_k419 merge_only"/>
+        </build>
+      </Project>
+      <Project name="Challenger TMO">
+        <branch name="mt6833-s0-v1.0-dint-gcs">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-v1.0-dint-gcs.xml --reference=/home/android/mirror"/>
+        </branch>
+        <branch name="mt6833-s0-challengertmo-mp-v1.0-gcs">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-challengertmo-mp-v1.0-gcs.xml --reference=/home/android/mirror "/>
+        </branch>
+        <branch name="mt6762-s0-v1.0-driveronly">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6762-s0-v1.0-driveronly.xml --reference=/home/android/mirror"/>
+        </branch>
+        <branch name="mt6833-s0-challengertmo-mp-v1.0-gcs-6e5c-8-vram_dev">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-challengertmo-mp-v1.0-gcs-6e5c-8-vram_dev.xml --reference=/home/android/mirror"/>
+        </branch>
+        <branch name="mt6833-s0-challengertmo-mp-v1.0-memorytest-new">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-challengertmo-mp-v1.0-memorytest-new.xml --reference=/home/android/mirror"/>
+        </branch>
+        <branch name="mt6833-s0-challengertmo-mp-v1.0-gcs-6e7y-smr">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-challengertmo-mp-v1.0-gcs-6e7y-smr.xml --reference=/home/android/mirror"/>
+        </branch>
+        <build>
+          <version ver="daily" cmd="source build/envsetup.sh; choosesecimagekey Challenger_TMO; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,TARGET_BUILD_MODEM=true Challenger_Stylu new"/>
+          <version ver="appli" cmd="source build/envsetup.sh; choosesecimagekey Challenger_TMO; choosesignapkkey Challenger_TMO; ./tclMake -o=TCT_EFUSE=true,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=user,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=false Challenger_Stylu new"/>
+          <version ver="mini" cmd="source build/envsetup.sh; choosesecimagekey Challenger_TMO; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,TARGET_BUILD_MMITEST=true,MMITEST_PRODUCT_CODE=T779W,TARGET_BUILD_MODEM=true,MMITEST_SIM_NUM=1 Challenger_Stylu new"/>
+          <version ver="target_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu target_only"/>
+          <version ver="target_no_merge" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu target_no_merge"/>
+          <version ver="merge_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu merge_only"/>
+        </build>
+      </Project>
+    </MTK6833_S>
+  </Android_S>
+</ProjectInfo>
