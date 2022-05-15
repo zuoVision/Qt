@@ -7,6 +7,7 @@
 #include <QThread>
 #include <QTime>
 
+#include "utils/general/general.h"
 #include "commandprocessthread.h"
 
 class Simpleperf: public QObject
@@ -37,7 +38,7 @@ public:
 
 private:
     QProcess::ProcessState m_state = QProcess::ProcessState::NotRunning;
-    QString m_hostStyle;
+    COLOR  color;
 protected:
 
 signals:

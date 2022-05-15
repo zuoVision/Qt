@@ -1,4 +1,5 @@
 #include "ssh.h"
+#include "cmd.h"
 
 #include <QDebug>
 #include <qthread.h>
@@ -67,43 +68,103 @@ void Ssh::init_connect()
     connect(this,SIGNAL(exit()),
             mSshProcessor,SLOT(exit()));
 
-//    connect(mSshProcessor,SIGNAL(onSubmitOutput(QString)),
-//            this,SLOT(onReciveOutput(QString)));
-//    connect(mSshProcessor,SIGNAL(onSubmitError(QString)),
-//            this,SLOT(onReciveError(QString)));
-//    connect(mSshProcessor,SIGNAL(onSubmitInfo(QString)),
-//            this,SLOT(onReciveInfo(QString)));
-//    connect(mSshProcessor,SIGNAL(onSubmitStatus(ProcessState)),
-//            this,SLOT(onReciveStatus(ProcessState)));
+    connect(mSshProcessor,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(mSshProcessor,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(mSshProcessor,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(mSshProcessor,SIGNAL(onSubmitState(QProcess::ProcessState)),
+            this,SLOT(onReciveState(QProcess::ProcessState)));
+    qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
+    connect(mSshProcessor,SIGNAL(onSubmitExitStatus(QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(QProcess::ExitStatus)));
 }
 
 /**
  * @brief Ssh::login
  */
-void Ssh::login()
+void Ssh::login(QString addr)
+{
+    cout ;
+
+    if(mSshProcessor->getState() == ProcessState::NotRunning){
+        emit process(addr);
+    }else {
+        emit onSubmitInfo("急什么！");
+    }
+}
+
+/**
+ * @brief Ssh::logout
+ */
+void Ssh::logout()
 {
     cout;
-    emit process("ssh zuozhe@cs13.tcl-mobile.com");
+    if(mSshProcessor->getState() != ProcessState::NotRunning){
+        emit stop();
+    }
 }
 
 /**
- * @brief onReciveOutput
+ * @brief Ssh::run 执行ssh命令
  */
-void onReciveOutput(QString output){
+void Ssh::run(QString cmd)
+{
+    if(!cmd.isEmpty() && mSshProcessor->getState() == ProcessState::NotRunning){
+        emit process(cmd);
+    }
+}
+
+/**
+ * @brief Ssh::onReciveOutput
+ * @param output
+ */
+void Ssh::onReciveOutput(QString output)
+{
     cout << output;
+    emit onSubmitOutput(output);
 }
 
 /**
- * @brief onReciveError
+ * @brief Ssh::onReciveError
+ * @param error
  */
-void onReciveError(QString error){
+void Ssh::onReciveError(QString error)
+{
     cout << error;
-}
-void onReciveInfo(QString info){
-    cout << info;
+    emit onSubmitError(error);
 }
 
-//void onReciveStatus(ProcessState state){
-//    cout << state;
-//}
+/**
+ * @brief Ssh::onReciveInfo
+ * @param info
+ */
+void Ssh::onReciveInfo(QString info)
+{
+    cout << info;
+    emit onSubmitInfo(info);
+}
+
+/**
+ * @brief Ssh::onReciveStatus
+ * @param state
+ */
+void Ssh::onReciveState(QProcess::ProcessState state)
+{
+    cout << state;
+    emit onSubmitState(SSH,state);
+}
+
+/**
+ * @brief Ssh::onReciveExitStatus
+ * @param exitStatus
+ */
+void Ssh::onReciveExitStatus(QProcess::ExitStatus exitStatus)
+{
+    cout << exitStatus;
+    emit onSubmitExitStatus(3,exitStatus);
+}
+
+
 

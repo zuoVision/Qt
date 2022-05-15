@@ -1,21 +1,20 @@
-#ifndef SSH_H
-#define SSH_H
+#ifndef BaseModule_H
+#define BaseModule_H
 
 #include <QObject>
 
 #include "ProcessorImpl.h"
-#include "utils/general/general.h"
 
-class Ssh : public QObject
+
+class BaseModule : public QObject
 {
     Q_OBJECT
 public:
-    explicit Ssh(QObject *parent = nullptr);
-    ~Ssh();
+    explicit BaseModule(QObject *parent = nullptr);
+    ~BaseModule();
 
 public:
     typedef  QProcess::ProcessState ProcessState;
-    typedef QVector<PROJECT> ProjectInfo;
 
 private:
     void init();
@@ -23,14 +22,12 @@ private:
     void init_connect();
 
 public:
-    void login(QString addr);
+    void login();
     void logout();
-    void run(QString cmd);
-
 
 public:
-    QThread*        mSshThread;
-    ProcessorImpl*  mSshProcessor;
+    QThread*        mBaseModuleThread;
+    ProcessorImpl*  mBaseModuleProcessor;
 
 
 signals:
@@ -57,4 +54,4 @@ private slots:
 
 };
 
-#endif // SSH_H
+#endif // BaseModule_H

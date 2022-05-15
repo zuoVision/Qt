@@ -42,8 +42,9 @@
 
 #define FINDCTSSUITE            "find ~/ -iname cts-tradefed "
 
-
-
+//ssh
+#define PROJECTFILE             ":/config/config/project.xml"
+#define NINJA                   "./prebuild/linux/bin/ninja -f out/combination"
 
 
 
