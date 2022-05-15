@@ -21,6 +21,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    BaseModule.cpp \
     ProcessorImpl.cpp \
     commandprocessthread.cpp \
     commoncommand.cpp \
@@ -33,9 +34,11 @@ SOURCES += \
     mytableview.cpp \
     simpleperf.cpp \
     ssh.cpp \
+    utils/parseXml/parseXml.cpp \
     xts.cpp
 
 HEADERS += \
+    BaseModule.h \
     ProcessorImpl.h \
     cmd.h \
     commandprocessthread.h \
@@ -48,6 +51,8 @@ HEADERS += \
     mytableview.h \
     simpleperf.h \
     ssh.h \
+    utils/general/general.h \
+    utils/parseXml/parseXml.h \
     xts.h
 
 FORMS += \

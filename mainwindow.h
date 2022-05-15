@@ -15,6 +15,9 @@
 #include <QCompleter>
 #include <QTableWidget>
 
+#include <utils/parseXml/parseXml.h>
+
+#include "utils/general/general.h"
 #include "document.h"
 #include "listenerthread.h"
 #include "simpleperf.h"
@@ -25,25 +28,29 @@
 #include "dialogbatterystats.h"
 #include "ssh.h"
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; class DialogBatterystats; }
 QT_END_NAMESPACE
 
-class MainWindow :
-        public QMainWindow
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+    typedef QProcess::ProcessState ProcessState;
+    typedef QVector<PROJECT> ProjectInfo;
+
     QString         m_userName;
 
     DialogBatterystats *batterystats = new DialogBatterystats(this);
     CommonCommand   *ccd = new CommonCommand();
     Simpleperf      *simpleperf = new Simpleperf();
     Xts             *xts = new Xts(this);
-    Ssh             *ssh = new Ssh(this);
+    Ssh             *ssh = new Ssh();
 
     QCompleter      *cmd_completer;
     QCompleter      *test_completer;
@@ -59,11 +66,13 @@ public:
     QLabel          *m_ccd_status;
     QLabel          *m_sim_status;
     QLabel          *m_xts_status;
+    QLabel          *m_ssh_status;
     QPixmap         *led_red;
     QPixmap         *led_green;
     QPixmap         *led_yellow;
     QPixmap         *led_grey;
     QPixmap         *led_blue;
+    COLOR           color;
 
 private:
     Ui::MainWindow *ui;
@@ -81,7 +90,12 @@ protected:
     std::map<QString,QString>   m_statParams;
     std::map<QString,QString>   m_recordParams;
 
-
+    //ssh
+    ProjectInfo                 mProjectInfo;
+    BRANCH                      mBranch;
+    REPO                        mRepo;
+    BUILD                       mBuild;
+    ParseXml                    mParseXml;
 
 protected:
     void initUi();
@@ -91,6 +105,7 @@ protected:
 //    void resizeEvent(QResizeEvent *event);
     void onContrlSearchBar();
     void loadCtsResulotion();
+    void loadProjectInfo();
     void insertDataToTable();
     void readfile();
     bool getStatParams();
@@ -112,6 +127,11 @@ private slots:
     void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
     void onTextFilter();
 
+    void onReciveOutput(QString output);
+    void onReciveError(QString error);
+    void onReciveInfo(QString info);
+    void onReciveState(int tag,QProcess::ProcessState state);
+    void onReciveExitStatus(int tag,QProcess::ExitStatus exitStatus);
 
     //command
     void on_pushButton_run_clicked();
@@ -155,5 +175,11 @@ private slots:
 
     //ssh
     void on_pushButton_login_clicked();
+    void on_pushButton_logout_clicked();
+    void on_comboBox_project_currentTextChanged(const QString &arg1);
+    void on_pushButton_download_clicked();
+    void on_comboBox_localproject_currentTextChanged(const QString &arg1);
+    void on_comboBox_buildversion_currentTextChanged(const QString &arg1);
+    void on_pushButton_build_clicked();
 };
 #endif // MAINWINDOW_H

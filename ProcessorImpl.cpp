@@ -15,7 +15,10 @@
  * @brief ProcessorImpl::ProcessorImpl
  * @param parent
  */
-ProcessorImpl::ProcessorImpl(QObject *parent) : QObject(parent)
+ProcessorImpl::ProcessorImpl(QObject *parent) :
+    QObject(parent),
+    mUserName("NANANA"),
+    mState(ProcessState::NotRunning)
 {
     cout;
     init();
@@ -27,6 +30,7 @@ ProcessorImpl::ProcessorImpl(QObject *parent) : QObject(parent)
 ProcessorImpl::~ProcessorImpl()
 {
     cout;
+    uninit();
 }
 
 /**
@@ -35,9 +39,10 @@ ProcessorImpl::~ProcessorImpl()
 void ProcessorImpl::init()
 {
     cout;
-    mProp.id = 0x0000;
-    mProp.name = "test";
-    mProp.status = ProcessState::NotRunning;
+//    mProp.id = 0x0000;
+//    mProp.name = "test";
+//    mProp.status = ProcessState::NotRunning;
+
 }
 
 /**
@@ -46,21 +51,28 @@ void ProcessorImpl::init()
 void ProcessorImpl::uninit()
 {
     cout;
+    if(mProcessor){
+        cout << "delete mProcessor";
+        delete mProcessor;
+    }
 }
 
 /**
  * @brief ProcessorImpl::initConnect
  * @param processor
  */
-void ProcessorImpl::initConnect(QProcess *processor)
+void ProcessorImpl::initConnect()
 {
-    connect(processor,SIGNAL(readyReadStandardOutput()),
+    cout;
+    connect(mProcessor,SIGNAL(finished(int,QProcess::ExitStatus)),
+            this,SLOT(onFinishedListener(int,QProcess::ExitStatus)));
+    connect(mProcessor,SIGNAL(readyReadStandardOutput()),
             this,SLOT(onOutputListener()));
-    connect(processor,SIGNAL(readyReadStandardError()),
+    connect(mProcessor,SIGNAL(readyReadStandardError()),
             this,SLOT(onErrorListener()));
     qRegisterMetaType<QProcess::ProcessState>("QProcess::ProcessState");
-    connect(processor,SIGNAL(stateChanged(QProcess::ProcessState)),
-            this,SLOT(onStatusListener(QProcess::ProcessState)));
+    connect(mProcessor,SIGNAL(stateChanged(QProcess::ProcessState)),
+            this,SLOT(onStateListener(QProcess::ProcessState)));
 }
 
 /**
@@ -71,8 +83,7 @@ void ProcessorImpl::create()
     cout << QThread::currentThreadId();
     mProcessor = new QProcess();
     start();
-    initConnect(mProcessor);
-
+    initConnect();
 }
 
 /**
@@ -82,12 +93,11 @@ void ProcessorImpl::start()
 {
     cout;
     QStringList cmd = QStringList() << "-c" << "whoami;hostname";
-    cout << cmd;
     mProcessor->start(BASH,cmd);
     mProcessor->waitForFinished();
     QString userName = mProcessor->readAllStandardOutput();
-    cout << userName;
-//    getUserName(mProcessor->readAllStandardOutput());
+    setUserName(userName);
+    emit onSubmitInfo("start");
 }
 
 /**
@@ -97,9 +107,9 @@ void ProcessorImpl::start()
 void ProcessorImpl::process(QString cmd)
 {
     cout << " + ";
-
-    cout << "processing...\n" << cmd;
-
+    emit onSubmitInfo("正在处理...");
+    mProcessor->start(BASH,CMD << cmd);
+    mProcessor->waitForReadyRead();
 
     cout << " - ";
 }
@@ -111,6 +121,7 @@ void ProcessorImpl::stop()
 {
     cout;
     mProcessor->close();
+    emit onSubmitInfo("stop");
 }
 
 /**
@@ -121,7 +132,9 @@ void ProcessorImpl::kill()
     cout;
     if(mProcessor->state() != ProcessState::NotRunning){
         mProcessor->kill();
+        emit onSubmitInfo("kill");
     }
+
 }
 
 /**
@@ -131,20 +144,48 @@ void ProcessorImpl::exit()
 {
     cout << mProcessor->exitStatus();
     mProcessor->terminate();
-    delete mProcessor;
+    emit onSubmitInfo("exit");
 }
 
 /**
  * @brief ProcessorImpl::getUserName
  * @param processor
  */
-void ProcessorImpl::getUserName(QString userName)
+void ProcessorImpl::setUserName(QString userName)
 {
     cout << userName;
     QStringList name = userName.split("\n");
     if(!name.isEmpty()) name.pop_back();
     mUserName = name.first().append("@").append(name.last()).append(":~$ ");
     cout << mUserName;
+    emit onSubmitInfo(mUserName);
+}
+
+/**
+ * @brief ProcessorImpl::getUserName
+ * @return
+ */
+QString ProcessorImpl::getUserName()
+{
+    return mUserName;
+}
+
+/**
+ * @brief ProcessorImpl::setState
+ * @param state
+ */
+void ProcessorImpl::setState(QProcess::ProcessState state)
+{
+    mState = state;
+}
+
+/**
+ * @brief ProcessorImpl::getState
+ * @return
+ */
+ProcessorImpl::ProcessState ProcessorImpl::getState()
+{
+    return mState;
 }
 
 /**
@@ -152,7 +193,11 @@ void ProcessorImpl::getUserName(QString userName)
  */
 void ProcessorImpl::onOutputListener()
 {
-    cout << mProcessor->readAllStandardOutput();
+    mOutput = mProcessor->readAllStandardOutput();
+//    cout << mOutput;
+    //remove endwith "\n"
+    mOutput.replace(QRegExp("\n$"), "");
+    emit onSubmitOutput(mOutput);
 }
 
 /**
@@ -160,14 +205,29 @@ void ProcessorImpl::onOutputListener()
  */
 void ProcessorImpl::onErrorListener()
 {
-    cout << mProcessor->readAllStandardError();
+    mError = mProcessor->readAllStandardError();
+//    cout << mError;
+    //remove endwith "\n"
+    mError.replace(QRegExp("\n$"), "");
+    emit onSubmitError(mError);
 }
 
 /**
  * @brief ProcessorImpl::onStatusListener
  * @param state
  */
-void ProcessorImpl::onStatusListener(QProcess::ProcessState state)
+void ProcessorImpl::onStateListener(QProcess::ProcessState state)
 {
     cout << state;
+    setState(state);
+    emit onSubmitState(state);
+}
+
+/**
+ * @brief ProcessorImpl::onFinishedListener
+ */
+void ProcessorImpl::onFinishedListener(int exitCode, QProcess::ExitStatus exitStatus)
+{
+   cout << exitCode << exitStatus;
+   emit onSubmitExitStatus(exitStatus);
 }

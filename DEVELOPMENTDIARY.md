@@ -112,3 +112,6 @@ Qt project
 2022年5月13日
 * 新增ssh模块
 * 新增processorImpl,实际上是commandprocessthread类的升级版，后续会取而代之！
+
+2022年5月15日
+* 完善ssh功能

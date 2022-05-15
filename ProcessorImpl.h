@@ -23,7 +23,7 @@ public:
 private:
     void init();
     void uninit();
-    void initConnect(QProcess* processor);
+    void initConnect();
 
 public:
     Property                mProp;
@@ -35,14 +35,19 @@ public:
 
 
 private:
-    void getUserName(QString userName);
+    void            setUserName(QString userName);
+    void            setState(QProcess::ProcessState state);
 
+public:
+    QString         getUserName();
+    ProcessState    getState();
 
 signals:
     void onSubmitOutput(QString);
     void onSubmitError(QString);
     void onSubmitInfo(QString);
-    void onSubmitStatus(ProcessState);
+    void onSubmitState(QProcess::ProcessState);
+    void onSubmitExitStatus(QProcess::ExitStatus);
 
 private slots:
     void create();
@@ -52,9 +57,11 @@ private slots:
     void kill();
     void exit();
 
+
     void onOutputListener();
     void onErrorListener();
-    void onStatusListener(QProcess::ProcessState state);
+    void onStateListener(QProcess::ProcessState state);
+    void onFinishedListener(int exitCode, QProcess::ExitStatus exitStatus);
 
 };
 

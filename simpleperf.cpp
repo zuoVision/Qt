@@ -39,7 +39,7 @@ Simpleperf::~Simpleperf()
 
 void Simpleperf::init()
 {
-    m_hostStyle = QString("<font color=\'#006400\'>%1 </font>");
+
 }
 
 void Simpleperf::init_connect()
@@ -179,7 +179,7 @@ void Simpleperf::runQuickGeneration()
 void Simpleperf::process(QString cmd)
 {
     cout;
-    emit sig_sendToMainWindow(m_hostStyle.arg(sim_cpt->m_userName)+cmd);
+    emit sig_sendToMainWindow(color.GREEN.arg(sim_cpt->m_userName)+cmd);
     emit processCommand(cmd);
 }
 

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "cmd.h"
+
 #include <QDesktopServices>
 #include <QLabel>
 #include <QListView>
@@ -52,9 +53,11 @@ void MainWindow::initUi()
     m_ccd_status = new QLabel("command",this);
     m_sim_status = new QLabel("simpleperf",this);
     m_xts_status = new QLabel("xts",this);
+    m_ssh_status = new QLabel("ssh",this);
     m_ccd_status->setFixedSize(20,20);
     m_sim_status->setFixedSize(20,20);
     m_xts_status->setFixedSize(20,20);
+    m_ssh_status->setFixedSize(20,20);
     led_red = new QPixmap(":/icon/icon/red.ico");
     led_green = new QPixmap(":/icon/icon/green.ico");
     led_yellow = new QPixmap(":/icon/icon/yellow.ico");
@@ -66,12 +69,15 @@ void MainWindow::initUi()
     m_ccd_status->setScaledContents(true);
     m_sim_status->setScaledContents(true);
     m_xts_status->setScaledContents(true);
+    m_ssh_status->setScaledContents(true);
     m_ccd_status->setPixmap(*led_grey);
     m_sim_status->setPixmap(*led_grey);
     m_xts_status->setPixmap(*led_grey);
+    m_ssh_status->setPixmap(*led_grey);
     ui->statusbar->addWidget(m_ccd_status);
     ui->statusbar->addWidget(m_sim_status);
     ui->statusbar->addWidget(m_xts_status);
+    ui->statusbar->addWidget(m_ssh_status);
 
     ui->textEdit->setReadOnly(true);
     ui->label_simpleperfdoc->setText(SIMPLEPERFDOC);
@@ -109,6 +115,7 @@ void MainWindow::initEnvironment()
 
     //
     loadCtsResulotion();
+    loadProjectInfo();
 }
 
 void MainWindow::initConnect()
@@ -140,6 +147,18 @@ void MainWindow::initConnect()
             this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
     connect(xts,SIGNAL(sig_showCtsResult()),
             this,SLOT(slo_showCtsResult()));
+
+    //SSH
+    connect(ssh,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(ssh,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(ssh,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(ssh,SIGNAL(onSubmitState(int,QProcess::ProcessState)),
+            this,SLOT(onReciveState(int,QProcess::ProcessState)));
+    connect(ssh,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
 
     //cmd回车-> run button click
     connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
@@ -216,7 +235,7 @@ void MainWindow::slo_reciveMessage(QString msg)
         emit sig_sendToBatterystats(msg);
         return;
     }
-    ui->textEdit->append(msg);
+    ui->textEdit->append(color.BLACK.arg(msg));
     emit sig_sendToBatterystats(msg);
 }
 
@@ -388,6 +407,89 @@ void MainWindow::onTextFilter()
     isHightlighted = m_doc.searchHightlight(keyWord,document);
 }
 
+/**
+ * @brief MainWindow::onReciveOutput
+ * @param output
+ */
+void MainWindow::onReciveOutput(QString output)
+{
+    cout << output;
+     ui->textEdit->append(color.BLUE.arg(output));
+}
+
+/**
+ * @brief MainWindow::onReciveError
+ * @param error
+ */
+void MainWindow::onReciveError(QString error)
+{
+   cout << error;
+   ui->textEdit->append(color.RED.arg(error));
+}
+
+/**
+ * @brief MainWindow::onReciveInfo
+ * @param info
+ */
+void MainWindow::onReciveInfo(QString info)
+{
+   cout << info;
+   ui->textEdit->append(color.BLACK.arg(info));
+}
+
+/**
+ * @brief MainWindow::onReciveState
+ * @param state
+ */
+void MainWindow::onReciveState(int tag,QProcess::ProcessState state)
+{
+    cout << state;
+    switch (tag) {
+         case COMMAND:
+             cout << COMMAND;
+             break;
+         case SIMPLEPERF:
+             cout << SIMPLEPERF;
+             break;
+         case XTS:
+             cout << XTS;
+             break;
+         case SSH:
+             cout << SSH;
+             if(state == ProcessState::Starting)    m_ssh_status->setPixmap(*led_blue);
+             if(state == ProcessState::Running)     m_ssh_status->setPixmap(*led_green);
+             if(state == ProcessState::NotRunning)  m_ssh_status->setPixmap(*led_grey);
+             break;
+         default:
+             break;
+    }
+}
+
+/**
+ * @brief MainWindow::onReciveExitStatus
+ * @param exitStatus
+ */
+void MainWindow::onReciveExitStatus(int tag,QProcess::ExitStatus exitStatus)
+{
+   cout << tag << exitStatus;
+   switch (tag) {
+        case COMMAND:
+            cout << COMMAND;
+            break;
+        case SIMPLEPERF:
+            cout << SIMPLEPERF;
+            break;
+        case XTS:
+            cout << XTS;
+            break;
+        case SSH:
+            cout << SSH;
+            break;
+        default:
+            break;
+   }
+}
+
 void MainWindow::on_pushButton_loadctssuite_clicked()
 {
     m_ctsSuite = m_doc.selectDirectory("");
@@ -502,6 +604,25 @@ void MainWindow::loadCtsResulotion()
         ui->textEdit->append("cts resulotion load fail ...");
     }
     file.close();
+}
+
+/**
+ * @brief MainWindow::loadProjectInfo
+ */
+void MainWindow::loadProjectInfo()
+{
+    cout << PROJECTFILE;
+
+    mProjectInfo = mParseXml.parseProjectXml(PROJECTFILE);
+    if (mProjectInfo.isEmpty()) {
+        cout << "项目为空！";
+    }else{
+        ui->comboBox_project->clear();
+        for(QVector<PROJECT>::iterator it = mProjectInfo.begin();
+            it!=mProjectInfo.end();it++){
+            ui->comboBox_project->addItem(it->projectName);
+        }
+    }
 }
 
 bool MainWindow::getStatParams()
@@ -631,31 +752,6 @@ bool MainWindow::getRecordParams()
     return flag;
 }
 
-#if 0
-void MainWindow::readfile()
-{
-    cout;
-    QFile file("/home/zuozhe/share/2022/One Click/one_click_generation/cts_test_list.txt");
-    QTextStream in(&file);
-    if(!file.exists()){
-        QMessageBox::warning(NULL,"warning",QString("file:%1 does not exist!")
-                             .arg(file.fileName()));
-    }
-    if(file.open(QIODevice::ReadOnly)){
-
-        while(!in.atEnd()){
-            cout << in.readLine();
-            if(in.readLine().contains("[1]"))
-            {
-                cout << in.readLine().data();
-            }
-        }
-    }
-}
-#endif
-
-
-
 void MainWindow::on_pushButton_screencapture_clicked()
 {
     QString img = QString("/storage/img_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".png");
@@ -747,5 +843,89 @@ void MainWindow::on_pushButton_batterystats_clicked()
 
 void MainWindow::on_pushButton_login_clicked()
 {
-    ssh->login();
+    ssh->login(ui->lineEdit_ssh->text());
 }
+
+void MainWindow::on_pushButton_logout_clicked()
+{
+    ssh->logout();
+}
+
+void MainWindow::on_comboBox_project_currentTextChanged(const QString &arg1)
+{
+//    cout << arg1;
+    QStringList branchList;
+    branchList = mParseXml.searchBranch(arg1,&mProjectInfo);
+    if(!branchList.isEmpty()){
+        ui->comboBox_branch->clear();
+        ui->comboBox_branch->addItems(branchList);
+    }
+}
+
+void MainWindow::on_pushButton_download_clicked()
+{
+//    cout << ui->comboBox_project->currentText() << ui->comboBox_branch->currentText();
+    if(ui->comboBox_project->currentText().isEmpty() ||
+       ui->comboBox_branch->currentText().isEmpty()){
+        QMessageBox::warning(this,"warning","please select project & branch!");
+        return;
+    }
+    QString repoCmd;
+    repoCmd = mParseXml.searchRepo(ui->comboBox_project->currentText(),
+                                  ui->comboBox_branch->currentText(),
+                                  &mProjectInfo);
+    if(!repoCmd.isEmpty()){
+        ui->textEdit->append(color.BLUE.arg(repoCmd));
+        ssh->run(repoCmd);
+    }
+}
+
+/**
+ * @brief MainWindow::on_comboBox_localproject_currentTextChanged
+ * @param arg1
+ */
+void MainWindow::on_comboBox_localproject_currentTextChanged(const QString &arg1)
+{
+    cout << arg1;
+    QStringList buildVer;
+    buildVer = mParseXml.searchBuildVer(arg1,&mProjectInfo);
+    if(!buildVer.isEmpty()){
+        ui->comboBox_buildversion->clear();
+        ui->comboBox_buildversion->addItems(buildVer);
+    }
+}
+
+/**
+ * @brief MainWindow::on_comboBox_buildversion_currentTextChanged
+ * @param arg1
+ */
+void MainWindow::on_comboBox_buildversion_currentTextChanged(const QString &arg1)
+{
+    if(arg1 == "ninja"){
+        ui->lineEdit_so->setEnabled(true);
+    }else{
+        ui->lineEdit_so->setEnabled(false);
+    }
+}
+
+/**
+ * @brief MainWindow::on_pushButton_build_clicked
+ */
+void MainWindow::on_pushButton_build_clicked()
+{
+    cout;
+    QString buildCmd;
+    if(ui->comboBox_buildversion->currentText() == "ninja"){
+        buildCmd = NINJA + ui->lineEdit_so->text();
+    }else{
+        buildCmd = mParseXml.searchBuildCmd(ui->comboBox_localproject->currentText(),
+                                                ui->comboBox_buildversion->currentText(),
+                                                &mProjectInfo);
+    }
+    if(!buildCmd.isEmpty()){
+        ui->textEdit->append(color.BLUE.arg(buildCmd));
+        ssh->run(buildCmd);
+    }
+}
+
+

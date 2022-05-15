@@ -191,8 +191,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>688</width>
-             <height>359</height>
+             <width>724</width>
+             <height>347</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -2122,6 +2122,19 @@
                </property>
               </widget>
              </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_logout">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>logout</string>
+               </property>
+              </widget>
+             </item>
             </layout>
            </item>
            <item row="1" column="0">
@@ -2233,7 +2246,23 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_localproject"/>
+                 <widget class="QComboBox" name="comboBox_localproject">
+                  <item>
+                   <property name="text">
+                    <string>buffaloboost</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>BuffaloS</string>
+                   </property>
+                  </item>
+                  <item>
+                   <property name="text">
+                    <string>Challenger TMO</string>
+                   </property>
+                  </item>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -2427,7 +2456,7 @@
      <x>0</x>
      <y>0</y>
      <width>744</width>
-     <height>28</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
