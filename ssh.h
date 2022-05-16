@@ -14,8 +14,8 @@ public:
     ~Ssh();
 
 public:
-    typedef  QProcess::ProcessState ProcessState;
-    typedef QVector<PROJECT> ProjectInfo;
+    typedef QProcess::ProcessState  ProcessState;
+    typedef QVector<PROJECT>        ProjectInfo;
 
 private:
     void init();
@@ -32,6 +32,8 @@ public:
     QThread*        mSshThread;
     ProcessorImpl*  mSshProcessor;
 
+private:
+    COLOR           color;
 
 signals:
     void create();

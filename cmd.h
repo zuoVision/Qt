@@ -44,8 +44,8 @@
 
 //ssh
 #define PROJECTFILE             ":/config/config/project.xml"
-#define NINJA                   "./prebuild/linux/bin/ninja -f out/combination"
-
+#define NINJA                   "./prebuilts/build-tools/linux-x86/bin/ninja -f "
+#define SSHROOTDIR                  "directory.txt"
 
 
 

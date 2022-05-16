@@ -14,6 +14,7 @@ public:
     void saveDataBase(QString filePath,QStringList *stringList);
     bool readXml(QFile *file);
     bool readCsv(QFile *file);
+    QStringList readTxt(QFile *file);
 
 public:
     QString                 m_modulename;

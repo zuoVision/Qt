@@ -90,8 +90,9 @@ void Ssh::login(QString addr)
 
     if(mSshProcessor->getState() == ProcessState::NotRunning){
         emit process(addr);
+        emit onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName));
     }else {
-        emit onSubmitInfo("急什么！");
+        emit onSubmitInfo("please wait！");
     }
 }
 
@@ -103,7 +104,9 @@ void Ssh::logout()
     cout;
     if(mSshProcessor->getState() != ProcessState::NotRunning){
         emit stop();
+
     }
+
 }
 
 /**
@@ -113,6 +116,9 @@ void Ssh::run(QString cmd)
 {
     if(!cmd.isEmpty() && mSshProcessor->getState() == ProcessState::NotRunning){
         emit process(cmd);
+        onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
+    }else{
+        onSubmitInfo("please wait!");
     }
 }
 

@@ -414,7 +414,7 @@ void MainWindow::onTextFilter()
 void MainWindow::onReciveOutput(QString output)
 {
     cout << output;
-     ui->textEdit->append(color.BLUE.arg(output));
+    ui->textEdit->append(color.BLUE.arg(output));
 }
 
 /**
@@ -843,12 +843,19 @@ void MainWindow::on_pushButton_batterystats_clicked()
 
 void MainWindow::on_pushButton_login_clicked()
 {
-    ssh->login(ui->lineEdit_ssh->text());
+    QString CMD = QString("ssh %1 'ls -d */' > %2");
+    ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR));
+
+    QFile file(SSHROOTDIR);
+    ui->comboBox_localproject->addItems(fileOperation->readTxt(&file));
 }
 
 void MainWindow::on_pushButton_logout_clicked()
 {
     ssh->logout();
+    ui->comboBox_localproject->clear();
+    ui->comboBox_buildversion->clear();
+    ui->textEdit->append(color.BLACK.arg(QString("Connection to %1 closed.").arg(ui->lineEdit_ssh->text())));
 }
 
 void MainWindow::on_comboBox_project_currentTextChanged(const QString &arg1)
@@ -870,13 +877,15 @@ void MainWindow::on_pushButton_download_clicked()
         QMessageBox::warning(this,"warning","please select project & branch!");
         return;
     }
+    QString downloadCmd = QString("ssh %1 'mkdir %2 && cd %2 && %3'");
     QString repoCmd;
     repoCmd = mParseXml.searchRepo(ui->comboBox_project->currentText(),
                                   ui->comboBox_branch->currentText(),
                                   &mProjectInfo);
     if(!repoCmd.isEmpty()){
-        ui->textEdit->append(color.BLUE.arg(repoCmd));
-        ssh->run(repoCmd);
+        ssh->run(downloadCmd.arg(ui->lineEdit_ssh->text())
+                            .arg(ui->comboBox_project->currentText())
+                            .arg(repoCmd));
     }
 }
 
@@ -887,10 +896,10 @@ void MainWindow::on_pushButton_download_clicked()
 void MainWindow::on_comboBox_localproject_currentTextChanged(const QString &arg1)
 {
     cout << arg1;
+    ui->comboBox_buildversion->clear();
     QStringList buildVer;
     buildVer = mParseXml.searchBuildVer(arg1,&mProjectInfo);
-    if(!buildVer.isEmpty()){
-        ui->comboBox_buildversion->clear();
+    if(!buildVer.isEmpty()){        
         ui->comboBox_buildversion->addItems(buildVer);
     }
 }
@@ -914,17 +923,20 @@ void MainWindow::on_comboBox_buildversion_currentTextChanged(const QString &arg1
 void MainWindow::on_pushButton_build_clicked()
 {
     cout;
+    QString CMD = QString("ssh %1 'cd %2 && %3 -j %4'");
     QString buildCmd;
     if(ui->comboBox_buildversion->currentText() == "ninja"){
-        buildCmd = NINJA + ui->lineEdit_so->text();
+        buildCmd = NINJA "out/"+mNinjaFile+"/"+ui->lineEdit_so->text();
     }else{
         buildCmd = mParseXml.searchBuildCmd(ui->comboBox_localproject->currentText(),
                                                 ui->comboBox_buildversion->currentText(),
                                                 &mProjectInfo);
     }
     if(!buildCmd.isEmpty()){
-        ui->textEdit->append(color.BLUE.arg(buildCmd));
-        ssh->run(buildCmd);
+        ssh->run(CMD.arg(ui->lineEdit_ssh->text())
+                    .arg(ui->comboBox_localproject->currentText())
+                    .arg(buildCmd)
+                    .arg(ui->spinBox_j->text()));
     }
 }
 

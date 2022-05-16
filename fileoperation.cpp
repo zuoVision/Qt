@@ -139,3 +139,37 @@ bool FileOperation::readCsv(QFile *file)
 //    cout << *m_resulotion;
     return true;
 }
+
+/**
+ * @brief FileOperation::readTxt
+ * @param file
+ * @return
+ */
+QStringList FileOperation::readTxt(QFile *file)
+{
+//    cout;
+    QStringList res;
+    if(!file->exists()){
+        cout << "file not found!";
+        return res;
+    }
+    if(!file->open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        cout << "file open failed!";
+        return res;
+    }
+    //read txt
+    QTextStream in(file);
+    QString line;
+    while (!in.atEnd()) {
+        line = in.readLine();
+        if(line.isNull()){
+            file->close();
+        }
+        if(!line.isEmpty()){
+            res << line.replace("/","");
+        }
+    }
+//    cout  << res;
+    return res;
+}

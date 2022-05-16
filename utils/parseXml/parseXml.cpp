@@ -16,7 +16,7 @@
  */
 ParseXml::ParseXml(QObject *parent): QObject(parent)
 {
-    qDebug();
+    cout;
 }
 
 /**
@@ -24,7 +24,7 @@ ParseXml::ParseXml(QObject *parent): QObject(parent)
  */
 ParseXml::~ParseXml()
 {
-    qDebug();
+    cout;
 }
 
 /**
@@ -33,16 +33,16 @@ ParseXml::~ParseXml()
  */
 ProjectInfo ParseXml::parseProjectXml(QString filePath)
 {
-    qDebug() << filePath;
+    cout << filePath;
 
     ProjectInfo projectInfo;
 
     QFile file(filePath);
     if(!file.exists()){
-        qDebug() << "file not exist:" << filePath;
+        cout << "file not exist:" << filePath;
         return projectInfo;
     }else if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
-        qDebug() << "file open failed :"<< filePath;
+        cout << "file open failed :"<< filePath;
     }else{
         readXml(&file,&projectInfo);
     }
@@ -70,13 +70,13 @@ void ParseXml::readXml(QFile* file,ProjectInfo* projectInfo)
             PROJECT project;
             projectName = xmlReader.attributes().value("name").toString();
             project.projectName = projectName;
-//            qDebug() << "[project name]" << projectName;
+//            cout << "[project name]" << projectName;
             while(!(nodeName == "Project" && xmlReader.isEndElement())){
                 xmlReader.readNextStartElement();
                 nodeName = xmlReader.name().toString();
                 if(nodeName == "branch" && xmlReader.isStartElement()){
                     branchName = xmlReader.attributes().value("name").toString();
-//                    qDebug() << "[branch name]" << branchName;
+//                    cout << "[branch name]" << branchName;
                     while (!(nodeName == "branch" && xmlReader.isEndElement())) {
                         xmlReader.readNextStartElement();
                         nodeName = xmlReader.name().toString();
@@ -86,7 +86,7 @@ void ParseXml::readXml(QFile* file,ProjectInfo* projectInfo)
                             branch.branchName = branchName;
                             branch.repo.repoCmd = repoCmd;
                             project.branch.push_back(branch);
-//                            qDebug() << "[repo cmd]" << repoCmd;
+//                            cout << "[repo cmd]" << repoCmd;
                         }
                     }
                 }
@@ -100,10 +100,6 @@ void ParseXml::readXml(QFile* file,ProjectInfo* projectInfo)
                             buildCmd     = xmlReader.attributes().value("cmd").toString();
                             build.insert(buildVersion,buildCmd);
                             project.build.push_back(build);
-                            qDebug() << "[build version1]" << buildVersion;
-                            qDebug() << "[build version2]" << build.first();
-                            qDebug() << "[build cmd1]" << buildCmd;
-                            qDebug() << "[build cmd2]" << build.last();
                         }
                     }
                 }

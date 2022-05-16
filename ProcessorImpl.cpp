@@ -97,7 +97,7 @@ void ProcessorImpl::start()
     mProcessor->waitForFinished();
     QString userName = mProcessor->readAllStandardOutput();
     setUserName(userName);
-    emit onSubmitInfo("start");
+//    emit onSubmitInfo("start");
 }
 
 /**
@@ -107,7 +107,7 @@ void ProcessorImpl::start()
 void ProcessorImpl::process(QString cmd)
 {
     cout << " + ";
-    emit onSubmitInfo("正在处理...");
+//    emit onSubmitInfo("正在处理...");
     mProcessor->start(BASH,CMD << cmd);
     mProcessor->waitForReadyRead();
 
@@ -158,7 +158,7 @@ void ProcessorImpl::setUserName(QString userName)
     if(!name.isEmpty()) name.pop_back();
     mUserName = name.first().append("@").append(name.last()).append(":~$ ");
     cout << mUserName;
-    emit onSubmitInfo(mUserName);
+//    emit onSubmitInfo(mUserName);
 }
 
 /**

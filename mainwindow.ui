@@ -191,8 +191,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>724</width>
-             <height>347</height>
+             <width>688</width>
+             <height>359</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -2246,23 +2246,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_localproject">
-                  <item>
-                   <property name="text">
-                    <string>buffaloboost</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>BuffaloS</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Challenger TMO</string>
-                   </property>
-                  </item>
-                 </widget>
+                 <widget class="QComboBox" name="comboBox_localproject"/>
                 </item>
                </layout>
               </item>
@@ -2288,43 +2272,7 @@
                  </widget>
                 </item>
                 <item>
-                 <widget class="QComboBox" name="comboBox_buildversion">
-                  <item>
-                   <property name="text">
-                    <string>daily</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>appli</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>mini</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>target_only</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>target_on_merge</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>merge_only</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>ninja</string>
-                   </property>
-                  </item>
-                 </widget>
+                 <widget class="QComboBox" name="comboBox_buildversion"/>
                 </item>
                </layout>
               </item>
@@ -2456,7 +2404,7 @@
      <x>0</x>
      <y>0</y>
      <width>744</width>
-     <height>23</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

@@ -96,6 +96,7 @@ protected:
     REPO                        mRepo;
     BUILD                       mBuild;
     ParseXml                    mParseXml;
+    QString                     mNinjaFile;
 
 protected:
     void initUi();
