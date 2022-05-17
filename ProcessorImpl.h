@@ -22,7 +22,6 @@ public:
 public:
     typedef QProcess::ProcessState ProcessState;
     typedef std::function<void ()> CallbackFun;
-    typedef void (*callbcakFunc)(CallbackState state);
 
 private:
     void init();
@@ -36,7 +35,7 @@ public:
     ProcessState            mState;
     QString                 mOutput;
     QString                 mError;
-    callbcakFunc            mCbf=nullptr;
+    ptrFunc                 mCbf=nullptr;
 
 private:
     void            setUserName(QString userName);
@@ -61,7 +60,7 @@ private slots:
     void create();
     void start();
 //    void process(QString cmd);
-    void process(QString cmd,callbcakFunc cbf=nullptr);
+    void process(QString cmd,ptrFunc cbf=nullptr);
     void stop();
     void kill();
     void exit();

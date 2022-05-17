@@ -61,9 +61,9 @@ void Ssh::init_connect()
             mSshProcessor,SLOT(start()));
     connect(this,SIGNAL(process(QString)),
             mSshProcessor,SLOT(process(QString)));
-    qRegisterMetaType<callbcakFunc>("callbcakFunc");
-    connect(this,SIGNAL(process(QString,callbcakFunc)),
-            mSshProcessor,SLOT(process(QString,callbcakFunc)));
+    qRegisterMetaType<ptrFunc>("ptrFunc");
+    connect(this,SIGNAL(process(QString,ptrFunc)),
+            mSshProcessor,SLOT(process(QString,ptrFunc)));
     connect(this,SIGNAL(stop()),
             mSshProcessor,SLOT(stop()));
     connect(this,SIGNAL(kill()),
@@ -84,7 +84,7 @@ void Ssh::init_connect()
             this,SLOT(onReciveExitStatus(QProcess::ExitStatus)));
 }
 
-void Ssh::login(QString addr,callbcakFunc cb)
+void Ssh::login(QString addr,ptrFunc cb)
 {
     cout ;
 

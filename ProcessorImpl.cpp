@@ -112,7 +112,7 @@ void ProcessorImpl::start()
 //    cout << " - ";
 //}
 
-void ProcessorImpl::process(QString cmd,callbcakFunc cbf)
+void ProcessorImpl::process(QString cmd,ptrFunc cbf)
 {
     cout << " + ";
     mCbf = cbf;

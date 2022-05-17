@@ -43,7 +43,6 @@ public:
 
     typedef QProcess::ProcessState ProcessState;
     typedef QVector<PROJECT> ProjectInfo;
-    typedef void (*callbackFunc)(CallbackState state);
 
     QString         m_userName;
 
@@ -76,7 +75,7 @@ public:
     COLOR           color;
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow  *ui;
 
 protected:
     QString                     m_msg;
@@ -115,6 +114,7 @@ protected:
 
 private:
     static void callback(CallbackState state);
+    void test();
 
 signals:
     void sig_sendToXts(QString);

@@ -5,7 +5,6 @@
 #include <QVector>
 
 
-
 enum Tag{
     COMMAND,
     SIMPLEPERF,
@@ -46,6 +45,6 @@ struct PROJECT{
     QVector<BUILD>      build;
 };
 
-
+typedef void (*ptrFunc)(CallbackState);
 
 #endif // GENERAL_H

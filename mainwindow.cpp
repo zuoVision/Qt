@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);    
+    ui->setupUi(this);
     initUi();
     initEnvironment();
     initConnect();
@@ -120,6 +120,7 @@ void MainWindow::initEnvironment()
 
 void MainWindow::initConnect()
 {
+//    cout;
     //help
     connect(ui->actionDocument,SIGNAL(triggered()),
             this,SLOT(slo_openDocument()));
@@ -772,7 +773,11 @@ void MainWindow::callback(CallbackState state)
         cout << CallbackState::Success;
         break;
     }
+}
 
+void MainWindow::test()
+{
+    cout;
 }
 
 void MainWindow::on_pushButton_screencapture_clicked()
@@ -867,6 +872,7 @@ void MainWindow::on_pushButton_batterystats_clicked()
 void MainWindow::on_pushButton_login_clicked()
 {
     QString CMD = QString("ssh %1 'ls -d */' > %2");
+
     ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR),callback);
 
     QFile file(SSHROOTDIR);
