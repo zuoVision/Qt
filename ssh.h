@@ -16,6 +16,8 @@ public:
 public:
     typedef QProcess::ProcessState  ProcessState;
     typedef QVector<PROJECT>        ProjectInfo;
+    typedef void (*callbcakFunc)(CallbackState state);
+
 
 private:
     void init();
@@ -23,7 +25,7 @@ private:
     void init_connect();
 
 public:
-    void login(QString addr);
+    void login(QString addr,callbcakFunc);
     void logout();
     void run(QString cmd);
 
@@ -38,7 +40,8 @@ private:
 signals:
     void create();
     void start();
-    void process(QString cmd);
+    void process(QString);
+    void process(QString,callbcakFunc);
     void stop();
     void kill();
     void exit();

@@ -20,7 +20,7 @@ ProcessorImpl::ProcessorImpl(QObject *parent) :
     mUserName("NANANA"),
     mState(ProcessState::NotRunning)
 {
-    cout;
+    cout << QThread::currentThreadId();
     init();
 }
 
@@ -104,14 +104,22 @@ void ProcessorImpl::start()
  * @brief ProcessorImpl::process
  * @param cmd
  */
-void ProcessorImpl::process(QString cmd)
+//void ProcessorImpl::process(QString cmd)
+//{
+//    cout << " + ";
+//    mProcessor->start(BASH,CMD << cmd);
+//    mProcessor->waitForReadyRead();
+//    cout << " - ";
+//}
+
+void ProcessorImpl::process(QString cmd,callbcakFunc cbf)
 {
     cout << " + ";
-//    emit onSubmitInfo("正在处理...");
+    mCbf = cbf;
     mProcessor->start(BASH,CMD << cmd);
     mProcessor->waitForReadyRead();
-
     cout << " - ";
+
 }
 
 /**
@@ -188,6 +196,15 @@ ProcessorImpl::ProcessState ProcessorImpl::getState()
     return mState;
 }
 
+void ProcessorImpl::onHandleCallback()
+{
+    cout;
+    if(mCbf != nullptr) {
+        mCbf(CallbackState::Error);
+        mCbf=nullptr;
+    }
+}
+
 /**
  * @brief ProcessorImpl::onOutputListener
  */
@@ -206,10 +223,11 @@ void ProcessorImpl::onOutputListener()
 void ProcessorImpl::onErrorListener()
 {
     mError = mProcessor->readAllStandardError();
-//    cout << mError;
+    cout << mError;
     //remove endwith "\n"
     mError.replace(QRegExp("\n$"), "");
     emit onSubmitError(mError);
+    onHandleCallback();
 }
 
 /**

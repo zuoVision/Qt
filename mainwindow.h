@@ -43,6 +43,7 @@ public:
 
     typedef QProcess::ProcessState ProcessState;
     typedef QVector<PROJECT> ProjectInfo;
+    typedef void (*callbackFunc)(CallbackState state);
 
     QString         m_userName;
 
@@ -111,6 +112,9 @@ protected:
     void readfile();
     bool getStatParams();
     bool getRecordParams();
+
+private:
+    static void callback(CallbackState state);
 
 signals:
     void sig_sendToXts(QString);
@@ -182,5 +186,6 @@ private slots:
     void on_comboBox_localproject_currentTextChanged(const QString &arg1);
     void on_comboBox_buildversion_currentTextChanged(const QString &arg1);
     void on_pushButton_build_clicked();
+    void on_pushButton_browse_clicked();
 };
 #endif // MAINWINDOW_H

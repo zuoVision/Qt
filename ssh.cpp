@@ -61,6 +61,9 @@ void Ssh::init_connect()
             mSshProcessor,SLOT(start()));
     connect(this,SIGNAL(process(QString)),
             mSshProcessor,SLOT(process(QString)));
+    qRegisterMetaType<callbcakFunc>("callbcakFunc");
+    connect(this,SIGNAL(process(QString,callbcakFunc)),
+            mSshProcessor,SLOT(process(QString,callbcakFunc)));
     connect(this,SIGNAL(stop()),
             mSshProcessor,SLOT(stop()));
     connect(this,SIGNAL(kill()),
@@ -81,19 +84,17 @@ void Ssh::init_connect()
             this,SLOT(onReciveExitStatus(QProcess::ExitStatus)));
 }
 
-/**
- * @brief Ssh::login
- */
-void Ssh::login(QString addr)
+void Ssh::login(QString addr,callbcakFunc cb)
 {
     cout ;
 
     if(mSshProcessor->getState() == ProcessState::NotRunning){
-        emit process(addr);
+        emit process(addr,cb);
         emit onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName));
     }else {
         emit onSubmitInfo("please wait！");
     }
+
 }
 
 /**
@@ -104,9 +105,7 @@ void Ssh::logout()
     cout;
     if(mSshProcessor->getState() != ProcessState::NotRunning){
         emit stop();
-
     }
-
 }
 
 /**

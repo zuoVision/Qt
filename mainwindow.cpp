@@ -752,6 +752,29 @@ bool MainWindow::getRecordParams()
     return flag;
 }
 
+/**
+ * @brief MainWindow::callback
+ * @param state
+ */
+void MainWindow::callback(CallbackState state)
+{
+    switch (state) {
+    case CallbackState::Success:
+        cout << CallbackState::Success;
+        break;
+    case CallbackState::Error:
+        cout << CallbackState::Error;
+        break;
+    case CallbackState::Unknow:
+        cout << CallbackState::Unknow;
+        break;
+    default:
+        cout << CallbackState::Success;
+        break;
+    }
+
+}
+
 void MainWindow::on_pushButton_screencapture_clicked()
 {
     QString img = QString("/storage/img_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".png");
@@ -844,10 +867,16 @@ void MainWindow::on_pushButton_batterystats_clicked()
 void MainWindow::on_pushButton_login_clicked()
 {
     QString CMD = QString("ssh %1 'ls -d */' > %2");
-    ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR));
+    ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR),callback);
 
     QFile file(SSHROOTDIR);
     ui->comboBox_localproject->addItems(fileOperation->readTxt(&file));
+    ui->lineEdit_ssh->setEnabled(false);
+    ui->pushButton_login->setEnabled(false);
+    ui->pushButton_logout->setEnabled(true);
+    ui->pushButton_browse->setEnabled(true);
+    ui->pushButton_download->setEnabled(true);
+    ui->pushButton_build->setEnabled(true);
 }
 
 void MainWindow::on_pushButton_logout_clicked()
@@ -856,6 +885,12 @@ void MainWindow::on_pushButton_logout_clicked()
     ui->comboBox_localproject->clear();
     ui->comboBox_buildversion->clear();
     ui->textEdit->append(color.BLACK.arg(QString("Connection to %1 closed.").arg(ui->lineEdit_ssh->text())));
+    ui->lineEdit_ssh->setEnabled(true);
+    ui->pushButton_login->setEnabled(true);
+    ui->pushButton_logout->setEnabled(false);
+    ui->pushButton_browse->setEnabled(false);
+    ui->pushButton_download->setEnabled(false);
+    ui->pushButton_build->setEnabled(false);
 }
 
 void MainWindow::on_comboBox_project_currentTextChanged(const QString &arg1)
@@ -877,7 +912,7 @@ void MainWindow::on_pushButton_download_clicked()
         QMessageBox::warning(this,"warning","please select project & branch!");
         return;
     }
-    QString downloadCmd = QString("ssh %1 'mkdir %2 && cd %2 && %3'");
+    QString downloadCmd = QString("ssh %1 'mkdir %2 && cd %2 && %3 && %4 -j %5'");
     QString repoCmd;
     repoCmd = mParseXml.searchRepo(ui->comboBox_project->currentText(),
                                   ui->comboBox_branch->currentText(),
@@ -885,7 +920,9 @@ void MainWindow::on_pushButton_download_clicked()
     if(!repoCmd.isEmpty()){
         ssh->run(downloadCmd.arg(ui->lineEdit_ssh->text())
                             .arg(ui->comboBox_project->currentText())
-                            .arg(repoCmd));
+                            .arg(repoCmd)
+                            .arg(REPOSYNC)
+                            .arg(ui->spinBox_j->text()));
     }
 }
 
@@ -895,7 +932,7 @@ void MainWindow::on_pushButton_download_clicked()
  */
 void MainWindow::on_comboBox_localproject_currentTextChanged(const QString &arg1)
 {
-    cout << arg1;
+//    cout << arg1;
     ui->comboBox_buildversion->clear();
     QStringList buildVer;
     buildVer = mParseXml.searchBuildVer(arg1,&mProjectInfo);
@@ -940,4 +977,11 @@ void MainWindow::on_pushButton_build_clicked()
     }
 }
 
-
+/**
+ * @brief MainWindow::on_pushButton_browse_clicked
+ */
+void MainWindow::on_pushButton_browse_clicked()
+{
+    QString CMD = QString("ssh -X %1 nautilus");
+    ssh->run(CMD.arg(ui->lineEdit_ssh->text()));
+}

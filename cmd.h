@@ -44,8 +44,9 @@
 
 //ssh
 #define PROJECTFILE             ":/config/config/project.xml"
+#define REPOSYNC                "repo sync -c --no-tag"
 #define NINJA                   "./prebuilts/build-tools/linux-x86/bin/ninja -f "
-#define SSHROOTDIR                  "directory.txt"
+#define SSHROOTDIR              "directory.txt"
 
 
 

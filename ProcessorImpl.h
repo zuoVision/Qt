@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QProcess>
 
+#include "utils/general/general.h"
+
 struct Property{
     int                     id;
     QString                 name;
@@ -18,7 +20,9 @@ public:
     ~ProcessorImpl();
 
 public:
-    typedef  QProcess::ProcessState ProcessState;
+    typedef QProcess::ProcessState ProcessState;
+    typedef std::function<void ()> CallbackFun;
+    typedef void (*callbcakFunc)(CallbackState state);
 
 private:
     void init();
@@ -32,7 +36,7 @@ public:
     ProcessState            mState;
     QString                 mOutput;
     QString                 mError;
-
+    callbcakFunc            mCbf=nullptr;
 
 private:
     void            setUserName(QString userName);
@@ -41,6 +45,10 @@ private:
 public:
     QString         getUserName();
     ProcessState    getState();
+
+private:
+    void            onHandleCallback();
+
 
 signals:
     void onSubmitOutput(QString);
@@ -52,7 +60,8 @@ signals:
 private slots:
     void create();
     void start();
-    void process(QString cmd);
+//    void process(QString cmd);
+    void process(QString cmd,callbcakFunc cbf=nullptr);
     void stop();
     void kill();
     void exit();
