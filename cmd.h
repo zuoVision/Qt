@@ -1,6 +1,11 @@
 #ifndef CMD_H
 #define CMD_H
 
+//test
+#define TEST1                   "ping baidu.com"
+#define TEST2                   "pwd"
+
+
 //ADB
 #define ADBDEVICES              "adb devices"
 #define ADBROOT                 "adb root"

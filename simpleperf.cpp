@@ -1,6 +1,7 @@
 #include "simpleperf.h"
 #include "cmd.h"
 
+
 #include <QCoreApplication>
 #include <QDebug>
 #include <QDesktopServices>
@@ -18,12 +19,7 @@ QObject(parent)
 {
     cout << QThread::currentThreadId();
     init();
-    sim_Thread = new QThread(this);
-    sim_cpt = new CommandProcessThread();
-    init_connect();
-    sim_cpt->moveToThread(sim_Thread);
-    sim_Thread->start();
-    emit start();
+
 
 
 }
@@ -31,82 +27,103 @@ QObject(parent)
 Simpleperf::~Simpleperf()
 {
     cout << " +";
-    sim_Thread->exit(0);
-    delete sim_cpt;
-    delete sim_Thread;
+    mSimThread->exit(0);
+    delete mSimProcessor;
+    delete mSimThread;
     cout << " -";
 }
 
+/**
+ * @brief Simpleperf::init
+ */
 void Simpleperf::init()
 {
-
+    cout;
+    mSimThread = new QThread(this);
+    mSimProcessor = new ProcessorImpl();
+    init_connect();
+    mSimProcessor->moveToThread(mSimThread);
+    mSimThread->start();
+    emit create();
 }
 
+/**
+ * @brief Simpleperf::unInit
+ */
+void Simpleperf::unInit()
+{
+   cout;
+   delete mSimProcessor;
+   delete mSimThread;
+}
+
+/**
+ * @brief Simpleperf::init_connect
+ */
 void Simpleperf::init_connect()
 {
+    cout;
+    connect(this,SIGNAL(create()),
+            mSimProcessor,SLOT(create()));
     connect(this,SIGNAL(start()),
-            sim_cpt,SLOT(createProcessor()));
-    connect(this,SIGNAL(processCommand(QString)),
-            sim_cpt,SLOT(process(QString)));
+            mSimProcessor,SLOT(start()));
+    connect(this,SIGNAL(process(QString)),
+            mSimProcessor,SLOT(process(QString)));
+    qRegisterMetaType<ptrFunc>("ptrFunc");
+    connect(this,SIGNAL(process(QString,ptrFunc)),
+            mSimProcessor,SLOT(process(QString,ptrFunc)));
     connect(this,SIGNAL(stop()),
-            sim_cpt,SLOT(stopProcessor()));
-    connect(sim_cpt,SIGNAL(sig_sendOutput(QString)),
-            this,SLOT(slo_reciveOutput(QString)));
-    connect(sim_cpt,SIGNAL(sig_sendError(QString)),
-            this,SLOT(slo_reciveError(QString)));
-    connect(sim_cpt,SIGNAL(sig_sendInfo(QString)),
-            this,SLOT(slo_reciveInfo(QString)));
-    connect(sim_cpt,SIGNAL(sig_sendState(QProcess::ProcessState)),
-            this,SLOT(slo_reciveState(QProcess::ProcessState)));
+            mSimProcessor,SLOT(stop()));
+    connect(this,SIGNAL(kill()),
+            mSimProcessor,SLOT(kill()));
+    connect(this,SIGNAL(exit()),
+            mSimProcessor,SLOT(exit()));
+
+    connect(mSimProcessor,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(mSimProcessor,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(mSimProcessor,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(mSimProcessor,SIGNAL(onSubmitState(QProcess::ProcessState)),
+            this,SLOT(onReciveState(QProcess::ProcessState)));
+    qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
+    connect(mSimProcessor,SIGNAL(onSubmitExitStatus(QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(QProcess::ExitStatus)));
+
+
 }
 
-void Simpleperf::slo_reciveOutput(QString output)
-{
-//    cout;
-    emit sig_sendToMainWindow(output);
-}
-
-void Simpleperf::slo_reciveError(QString error)
-{
-//    cout << "slo_reciveError" << error;
-    emit sig_sendToMainWindow(error);
-}
-
-void Simpleperf::slo_reciveInfo(QString info)
-{
-//    cout << "slo_reciveInfo" << info;
-    emit sig_sendToMainWindow(info);
-}
-
-void Simpleperf::slo_reciveState(QProcess::ProcessState state)
-{
-//    cout << "slo_reciveState" << state;
-    emit sig_sendToMainWindow(state,MY_TAG);
-    if (state==QProcess::ProcessState::NotRunning)
-        emit sig_sendToMainWindow("Done");
-    m_state = state;
-}
-
+/**
+ * @brief Simpleperf::runList
+ */
 void Simpleperf::runList()
 {
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
-        return emit sig_sendToMainWindow("please wait!");
-    process(PERFIX LIST);
+        return emit onSubmitInfo("please wait!");
+    run(PERFIX LIST);
 }
 
+/**
+ * @brief Simpleperf::runStat
+ */
 void Simpleperf::runStat()
 {
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
-        return emit sig_sendToMainWindow("please wait!");
-    process(QString(PERFIX STAT));
+        return emit onSubmitInfo("please wait!");
+    run(QString(PERFIX STAT));
 }
 
+/**
+ * @brief Simpleperf::runStat
+ * @param statParams
+ */
 void Simpleperf::runStat(std::map<QString, QString> *statParams)
 {
     if (m_state != QProcess::ProcessState::NotRunning)
-        return emit sig_sendToMainWindow("please wait!");
+        return emit onSubmitInfo("please wait!");
     QString cmd = PERFIX "stat";
     std::map<QString, QString>::iterator it;
     for (it=statParams->begin();it!=statParams->end();it++)
@@ -114,77 +131,155 @@ void Simpleperf::runStat(std::map<QString, QString> *statParams)
         if(!it->second.isEmpty()) cmd += it->second;
     }
 //    cout << cmd;
-    process(cmd);
+    run(cmd);
 }
 
+/**
+ * @brief Simpleperf::runRecord
+ */
 void Simpleperf::runRecord()
 {
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
-        return emit sig_sendToMainWindow("please wait!");
-    emit sig_sendToMainWindow(sim_cpt->m_userName+RECORD);
+        return emit onSubmitInfo("please wait!");
+    emit onSubmitInfo(mSimProcessor->mUserName+RECORD);
 
     QString cmd1 = "adb shell rm /data/local/tmp/perf.data";
     QString cmd2 = PERFIX RECORD;
     QString cmd3 = "adb pull /data/local/tmp/perf.data";
-    process(cmd1+";"+cmd2+";"+cmd3);
+    run(cmd1+";"+cmd2+";"+cmd3);
 
 }
 
+/**
+ * @brief Simpleperf::runRecord
+ * @param recordParams
+ */
 void Simpleperf::runRecord(std::map<QString, QString> *recordParams)
 {
     if (m_state != QProcess::ProcessState::NotRunning)
-        return emit sig_sendToMainWindow("please wait!");
+        return emit onSubmitInfo("please wait!");
     QString cmd = PERFIX " record ";
     std::map<QString, QString>::iterator it;
     for (it=recordParams->begin();it!=recordParams->end();it++){
         if(!it->second.isEmpty()) cmd += it->second;
     }
 //    cout << cmd;
-    process(cmd);
+    run(cmd);
 }
 
+/**
+ * @brief Simpleperf::runReport
+ */
 void Simpleperf::runReport()
 {
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
-        return emit sig_sendToMainWindow("please wait!");
-    process(REPORT);
+        return emit onSubmitInfo("please wait!");
+    run(REPORT);
 }
 
 
+/**
+ * @brief Simpleperf::runFlamegraph
+ */
 void Simpleperf::runFlamegraph()
 {
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
-        return emit sig_sendToMainWindow("please wait!");
+        return emit onSubmitInfo("please wait!");
     QString cmd1 = "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
     QString cmd2 = "FlameGraph/flamegraph.pl out.folded > graph.svg";
-    process(cmd1+";"+cmd2);
+    run(cmd1+";"+cmd2);
     if(QDesktopServices::openUrl(QUrl("graph.svg"))){
-        emit sig_sendToMainWindow("FlameGraph Opened");
+        emit onSubmitInfo("FlameGraph Opened");
 //        emit sig_sendToMainWindow("<font color=\"#00cc00\">FlameGraph Opened  </font>");
     }else {
-        emit sig_sendToMainWindow("FlameGraph open Failed !");
+        emit onSubmitInfo("FlameGraph open Failed !");
 //        emit sig_sendToMainWindow("<font color=\"#ee0000\">Open FlameGraph Failed !</font> ");
     }
 }
 
+/**
+ * @brief Simpleperf::runQuickGeneration
+ */
 void Simpleperf::runQuickGeneration()
 {
     cout;
 //    process();
 }
 
-void Simpleperf::process(QString cmd)
+/**
+ * @brief Simpleperf::run 执行Simpleperf命令
+ */
+void Simpleperf::run(QString cmd)
+{
+    if(!cmd.isEmpty() && mSimProcessor->getState() == ProcessState::NotRunning){
+        emit process(cmd);
+        onSubmitInfo(color.GREEN.arg(mSimProcessor->mUserName)+cmd);
+    }else{
+        onSubmitInfo("please wait!");
+    }
+}
+
+
+/**
+ * @brief Simpleperf::terminal
+ */
+void Simpleperf::terminal()
 {
     cout;
-    emit sig_sendToMainWindow(color.GREEN.arg(sim_cpt->m_userName)+cmd);
-    emit processCommand(cmd);
+    if(mSimProcessor->getState() != ProcessState::NotRunning){
+        emit stop();
+    }
 }
 
-void Simpleperf::stopProcessor()
+/**
+ * @brief Simpleperf::onReciveOutput
+ * @param output
+ */
+void Simpleperf::onReciveOutput(QString output)
 {
-    emit stop();
+    cout << output;
+    emit onSubmitOutput(output);
 }
 
+/**
+ * @brief Simpleperf::onReciveError
+ * @param error
+ */
+void Simpleperf::onReciveError(QString error)
+{
+    cout << error;
+    emit onSubmitError(error);
+}
+
+/**
+ * @brief Simpleperf::onReciveInfo
+ * @param info
+ */
+void Simpleperf::onReciveInfo(QString info)
+{
+    cout << info;
+    emit onSubmitInfo(info);
+}
+
+/**
+ * @brief Simpleperf::onReciveStatus
+ * @param state
+ */
+void Simpleperf::onReciveState(QProcess::ProcessState state)
+{
+    cout << state;
+    emit onSubmitState(SIMPLEPERF,state);
+}
+
+/**
+ * @brief Simpleperf::onReciveExitStatus
+ * @param exitStatus
+ */
+void Simpleperf::onReciveExitStatus(QProcess::ExitStatus exitStatus)
+{
+    cout << exitStatus;
+    emit onSubmitExitStatus(3,exitStatus);
+}

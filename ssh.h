@@ -14,7 +14,7 @@ public:
     ~Ssh();
 
 public:
-    typedef QProcess::ProcessState  ProcessState;
+
     typedef QVector<PROJECT>        ProjectInfo;
 
 

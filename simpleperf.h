@@ -9,6 +9,7 @@
 
 #include "utils/general/general.h"
 #include "commandprocessthread.h"
+#include "ProcessorImpl.h"
 
 class Simpleperf: public QObject
 {
@@ -18,10 +19,11 @@ public:
     ~Simpleperf();
 
 public:
-    QThread                 *sim_Thread;
-    CommandProcessThread    *sim_cpt;
+    QThread                 *mSimThread;
+    ProcessorImpl           *mSimProcessor;
 
     void init();
+    void unInit();
     void init_connect();
     void processKeyPressEvent(QKeyEvent *event);
 
@@ -33,26 +35,42 @@ public:
     void runReport();
     void runFlamegraph();
     void runQuickGeneration();
-    void process(QString cmd);
-    void stopProcessor();
+
+public:
+    void run(QString cmd);
+    void terminal();
 
 private:
-    QProcess::ProcessState m_state = QProcess::ProcessState::NotRunning;
+    ProcessState m_state = ProcessState::NotRunning;
     COLOR  color;
+
 protected:
 
-signals:
-    void start();
-    void processCommand(QString cmd);
-    void stop();
-    void sig_sendToMainWindow(QString);
-    void sig_sendToMainWindow(QProcess::ProcessState,QString);
 
+signals:
+    void create();
+    void start();
+    void process(QString);
+    void process(QString,ptrFunc);
+    void stop();
+    void kill();
+    void exit();
+
+/*new*/
+signals:
+    void onSubmitOutput(QString);
+    void onSubmitError(QString);
+    void onSubmitInfo(QString);
+    void onSubmitState(int,QProcess::ProcessState);
+    void onSubmitExitStatus(int,QProcess::ExitStatus);
+
+/*new*/
 private slots:
-    void slo_reciveOutput(QString output);
-    void slo_reciveError(QString error);
-    void slo_reciveInfo(QString info);
-    void slo_reciveState(QProcess::ProcessState state);
+    void onReciveOutput(QString output);
+    void onReciveError(QString error);
+    void onReciveInfo(QString info);
+    void onReciveState(QProcess::ProcessState state);
+    void onReciveExitStatus(QProcess::ExitStatus exitStatus);
 
 };
 

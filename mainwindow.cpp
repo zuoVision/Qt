@@ -132,12 +132,22 @@ void MainWindow::initConnect()
             this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
 
     //simpleperf
-    connect(&m_doc,SIGNAL(closed()),
-            this,SLOT(slotReciveDocument()));
-    connect(simpleperf,SIGNAL(sig_sendToMainWindow(QString)),
-            this,SLOT(slo_reciveMessage(QString)));
-    connect(simpleperf,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
-            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
+//    connect(&m_doc,SIGNAL(closed()),
+//            this,SLOT(slotReciveDocument()));
+//    connect(simpleperf,SIGNAL(sig_sendToMainWindow(QString)),
+//            this,SLOT(slo_reciveMessage(QString)));
+//    connect(simpleperf,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
+//            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
+    connect(simpleperf,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(simpleperf,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(simpleperf,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(simpleperf,SIGNAL(onSubmitState(int,QProcess::ProcessState)),
+            this,SLOT(onReciveState(int,QProcess::ProcessState)));
+    connect(simpleperf,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
 
     //XTS
     connect(this,SIGNAL(sig_sendToXts(QString)),
@@ -189,7 +199,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         if(ui->tabWidget->currentIndex()==0)
             ccd->stopProcessor();
         if(ui->tabWidget->currentIndex()==1)
-            simpleperf->stopProcessor();
+            simpleperf->stop();
         if(ui->tabWidget->currentIndex()==2)
             xts->stopProcessor();
     }
@@ -340,6 +350,7 @@ void MainWindow::on_pushButton_stat_clicked()
         simpleperf->runStat(&m_statParams);
     }else{
         simpleperf->runStat();
+
     }
 }
 
@@ -448,12 +459,21 @@ void MainWindow::onReciveState(int tag,QProcess::ProcessState state)
     switch (tag) {
          case COMMAND:
              cout << COMMAND;
+             if(state == ProcessState::Starting)    m_ccd_status->setPixmap(*led_blue);
+             if(state == ProcessState::Running)     m_ccd_status->setPixmap(*led_green);
+             if(state == ProcessState::NotRunning)  m_ccd_status->setPixmap(*led_grey);
              break;
          case SIMPLEPERF:
              cout << SIMPLEPERF;
+             if(state == ProcessState::Starting)    m_sim_status->setPixmap(*led_blue);
+             if(state == ProcessState::Running)     m_sim_status->setPixmap(*led_green);
+             if(state == ProcessState::NotRunning)  m_sim_status->setPixmap(*led_grey);
              break;
          case XTS:
              cout << XTS;
+             if(state == ProcessState::Starting)    m_xts_status->setPixmap(*led_blue);
+             if(state == ProcessState::Running)     m_xts_status->setPixmap(*led_green);
+             if(state == ProcessState::NotRunning)  m_xts_status->setPixmap(*led_grey);
              break;
          case SSH:
              cout << SSH;
@@ -697,7 +717,7 @@ bool MainWindow::getRecordParams()
         {"cpu",""},
         {"frequent",""},
         {"duration"," --duration 10"},
-        {"filename"," -o perf.data"},
+        {"filename"," -o /data/local/tmp/perf.data "},
     };
     bool flag=false;
     if(!ui->lineEdit_recapp->text().isEmpty()){

@@ -32,7 +32,7 @@ color: rgb(115, 210, 22);</string>
       <number>10</number>
      </property>
      <property name="text">
-      <string>Bettery Stats</string>
+      <string>Battery Stats</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
