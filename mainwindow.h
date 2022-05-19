@@ -44,7 +44,7 @@ public:
     typedef QProcess::ProcessState ProcessState;
     typedef QVector<PROJECT> ProjectInfo;
 
-    QString         m_userName;
+//    QString         m_userName;
 
     DialogBatterystats *batterystats = new DialogBatterystats(this);
     CommonCommand   *ccd = new CommonCommand();
@@ -126,7 +126,7 @@ private slots:
     void slo_batterystats(QString cmd);
     void slo_reciveMessage(QString msg);
     void slo_reciveMessage(QProcess::ProcessState state,QString tag);
-    void slo_showCtsResult();
+
     void slo_openDocument();
     void moveCursorToEnd();
     void on_comboBox_completeregular_currentIndexChanged(const int &arg1);
@@ -137,6 +137,8 @@ private slots:
     void onReciveInfo(QString info);
     void onReciveState(int tag,QProcess::ProcessState state);
     void onReciveExitStatus(int tag,QProcess::ExitStatus exitStatus);
+
+    void onShowCtsResult();
 
     //command
     void on_pushButton_run_clicked();

@@ -34,8 +34,8 @@ MainWindow::MainWindow(QWidget *parent)
     initEnvironment();
     initConnect();
     cout << QThread::currentThreadId();
-    m_userName = ccd->ccd_cpt->m_userName;
-    cout << m_userName;
+//    m_userName = ccd->ccd_cpt->m_userName;
+//    cout << m_userName;
 }
 
 MainWindow::~MainWindow()
@@ -126,18 +126,20 @@ void MainWindow::initConnect()
             this,SLOT(slo_openDocument()));
 
     //commonCommand
-    connect(ccd,SIGNAL(sig_sendToMainWindow(QString)),
-            this,SLOT(slo_reciveMessage(QString)));
-    connect(ccd,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
-            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
+    connect(ccd,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(ccd,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(ccd,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(ccd,SIGNAL(onSubmitState(int,QProcess::ProcessState)),
+            this,SLOT(onReciveState(int,QProcess::ProcessState)));
+    connect(ccd,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
 
     //simpleperf
-//    connect(&m_doc,SIGNAL(closed()),
-//            this,SLOT(slotReciveDocument()));
-//    connect(simpleperf,SIGNAL(sig_sendToMainWindow(QString)),
-//            this,SLOT(slo_reciveMessage(QString)));
-//    connect(simpleperf,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
-//            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
+    connect(&m_doc,SIGNAL(closed()),
+            this,SLOT(slotReciveDocument()));
     connect(simpleperf,SIGNAL(onSubmitOutput(QString)),
             this,SLOT(onReciveOutput(QString)));
     connect(simpleperf,SIGNAL(onSubmitError(QString)),
@@ -150,14 +152,24 @@ void MainWindow::initConnect()
             this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
 
     //XTS
-    connect(this,SIGNAL(sig_sendToXts(QString)),
-            xts,SLOT(slo_reciveMainWindow(QString)));
-    connect(xts,SIGNAL(sig_sendToMainWindow(QString)),
-            this,SLOT(slo_reciveMessage(QString)));
-    connect(xts,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
-            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
-    connect(xts,SIGNAL(sig_showCtsResult()),
-            this,SLOT(slo_showCtsResult()));
+//    connect(this,SIGNAL(sig_sendToXts(QString)),
+//            xts,SLOT(slo_reciveMainWindow(QString)));
+//    connect(xts,SIGNAL(sig_sendToMainWindow(QString)),
+//            this,SLOT(slo_reciveMessage(QString)));
+//    connect(xts,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
+//            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
+    connect(xts,SIGNAL(onShowCtsResult()),
+            this,SLOT(onShowCtsResult()));
+    connect(xts,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(xts,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(xts,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(xts,SIGNAL(onSubmitState(int,QProcess::ProcessState)),
+            this,SLOT(onReciveState(int,QProcess::ProcessState)));
+    connect(xts,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
 
     //SSH
     connect(ssh,SIGNAL(onSubmitOutput(QString)),
@@ -197,11 +209,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
         cout <<"CTRL + D" << ui->tabWidget->currentIndex();
         if(ui->tabWidget->currentIndex()==0)
-            ccd->stopProcessor();
+            ccd->terminal();
         if(ui->tabWidget->currentIndex()==1)
-            simpleperf->stop();
+            simpleperf->terminal();
         if(ui->tabWidget->currentIndex()==2)
-            xts->stopProcessor();
+            xts->terminal();
     }
     if(event->modifiers() == Qt::ControlModifier &&
        event->key() == Qt::Key_F){
@@ -236,7 +248,7 @@ void MainWindow::slotReciveDocument()
 void MainWindow::slo_batterystats(QString cmd)
 {
     cout << cmd;
-    ccd->runCommand(cmd);
+    ccd->run(cmd);
 }
 
 void MainWindow::slo_reciveMessage(QString msg)
@@ -311,30 +323,30 @@ void MainWindow::on_pushButton_run_clicked()
         ui->lineEdit_cmd->clear();
         return;
     }
-    ccd->runCommand(ui->lineEdit_cmd->text());
+    ccd->run(ui->lineEdit_cmd->text());
     ui->lineEdit_cmd->clear();
 }
 
 void MainWindow::on_pushButton_devices_clicked()
 {
     cout;
-    ccd->runCommand(ADBDEVICES);
+    ccd->run(ADBDEVICES);
 }
 
 void MainWindow::on_pushButton_root_clicked()
 {
-    ccd->runCommand(ADBROOT);
+    ccd->run(ADBROOT);
 }
 
 void MainWindow::on_pushButton_remount_clicked()
 {
-    ccd->runCommand(ADBREMOUNT);
+    ccd->run(ADBREMOUNT);
 }
 
 void MainWindow::on_pushButton_oemunlock_clicked()
 {
     QMessageBox::information(this,"Info","Make sure 'OEM unlocking' turn on!");
-    ccd->runCommand(ADBOEMUNLOCK);
+    ccd->run(ADBOEMUNLOCK);
 }
 
 void MainWindow::on_pushButton_list_clicked()
@@ -542,7 +554,7 @@ void MainWindow::on_pushButton_runcts_clicked()
         QMessageBox::warning(this,"Warning","please select cts suite!");
         return;
     }
-    xts->runCts(m_ctsSuite,m_ctsCommand,m_ctsModule,m_ctsTest);
+    xts->run(m_ctsSuite,m_ctsCommand,m_ctsModule,m_ctsTest);
 }
 
 void MainWindow::on_pushButton_result_clicked()
@@ -582,7 +594,7 @@ void MainWindow::on_pushButton_log_clicked()
     }
 }
 
-void MainWindow::slo_showCtsResult()
+void MainWindow::onShowCtsResult()
 {
 #if 0
     QDesktopServices::openUrl(QUrl(ui->comboBox_ctssuite->currentText()+"../../../results/latest/test_result.html"));
@@ -807,76 +819,76 @@ void MainWindow::on_pushButton_screencapture_clicked()
     QString path = "capture";
     QDir dir(path);
     if(!dir.exists()) dir.mkpath(path);
-    ccd->runCommand(SCREENCAPTURE+img+QString(";adb pull %1 %2").arg(img).arg(path));
+    ccd->run(SCREENCAPTURE+img+QString(";adb pull %1 %2").arg(img).arg(path));
 }
 
 void MainWindow::on_pushButton_screenrecord_clicked()
 {
     cout ;
 //    QString record = QString("/storage/record_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".mp4");
-//    ccd->runCommand(SCREENRECORD+record+QString(";adb pull %1 .").arg(record));
+//    ccd->run(SCREENRECORD+record+QString(";adb pull %1 .").arg(record));
 }
 
 
 
 void MainWindow::on_pushButton_fastboot_clicked()
 {
-    ccd->runCommand(FASTBOOT);
+    ccd->run(FASTBOOT);
 }
 
 void MainWindow::on_pushButton_clearlogcat_clicked()
 {
-    ccd->runCommand(CLEARLOGCAT);
+    ccd->run(CLEARLOGCAT);
 }
 
 void MainWindow::on_pushButton_adbrestart_clicked()
 {
-    ccd->runCommand(ADBRESTART);
+    ccd->run(ADBRESTART);
 }
 
 void MainWindow::on_pushButton_sentest_clicked()
 {
-    ccd->runCommand(SENTEST);
+    ccd->run(SENTEST);
 }
 
 void MainWindow::on_pushButton_killcamera_clicked()
 {
-    ccd->runCommand(KILLCAMERASERVER);
+    ccd->run(KILLCAMERASERVER);
 }
 
 void MainWindow::on_pushButton_dumpcamera_clicked()
 {
-    ccd->runCommand(DUMPCAMERA);
+    ccd->run(DUMPCAMERA);
 }
 
 void MainWindow::on_pushButton_property_clicked()
 {
-    ccd->runCommand(PROPERTY);
+    ccd->run(PROPERTY);
 }
 
 void MainWindow::on_pushButton_drawid_clicked()
 {
-    ccd->runCommand(DRAWID);
+    ccd->run(DRAWID);
 }
 
 void MainWindow::on_pushButton_opencamera_clicked()
 {
-    ccd->runCommand(OPENCAMERA);
+    ccd->run(OPENCAMERA);
 }
 
 void MainWindow::on_pushButton_takepicture_clicked()
 {
-    ccd->runCommand(TAKEPICTURE);
+    ccd->run(TAKEPICTURE);
 }
 
 void MainWindow::on_pushButton_screensize_clicked()
 {
-    ccd->runCommand(SCREENSIZE);
+    ccd->run(SCREENSIZE);
 }
 
 void MainWindow::on_pushButton_cpuinfo_clicked()
 {
-    ccd->runCommand(CPUINFO);
+    ccd->run(CPUINFO);
 }
 
 void MainWindow::on_pushButton_clear_clicked()

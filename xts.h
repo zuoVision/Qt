@@ -6,6 +6,7 @@
 
 #include "listenerthread.h"
 #include "commandprocessthread.h"
+#include "ProcessorImpl.h"
 
 
 class Xts : public QObject
@@ -16,14 +17,15 @@ public:
     ~Xts();
 
 public:
+    void init();
+    void unInit();
     void init_connect();
-    void runCts(const QString arg1,const QString arg2,QString arg3,QString arg4);
-    void stopProcessor();
+
 
 
 public:
-    QThread                 *xts_Thread;
-    CommandProcessThread    *xts_cpt;
+    QThread                 *mXtsThread;
+    ProcessorImpl           *mXtsProcessor;
     bool                    m_ctsComplete=false;
     bool                    m_flag=false;
     QString                 m_ctsSuite;
@@ -33,26 +35,55 @@ public:
     QString                 m_passed;
     QString                 m_failed;
 
+public:
+    void run(const QString arg1,const QString arg2,QString arg3,QString arg4);
+    void terminal();
+
 private:
     void analyzeResult(QString output);
 
-signals:
-    void start();
-    void processCommand(QString);
-    void processCommand(QString,QString *);
-    void stop();
-    void exit();
-    void sig_sendToMainWindow(QString);
-    void sig_sendToMainWindow(QProcess::ProcessState,QString);
-    void sig_findCtsSuite();
-    void sig_showCtsResult();
+//signals:
+//    void start();
+//    void processCommand(QString);
+//    void processCommand(QString,QString *);
+//    void stop();
+//    void exit();
+//    void sig_sendToMainWindow(QString);
+//    void sig_sendToMainWindow(QProcess::ProcessState,QString);
+//    void sig_findCtsSuite();
+//    void sig_showCtsResult();
 
-public slots:
-    void slo_reciveOutput(QString output);
-    void slo_reciveError(QString error);
-    void slo_reciveInfo(QString info);
-    void slo_reciveState(QProcess::ProcessState state);
-    void slo_reciveMainWindow(QString msg);
+//public slots:
+//    void slo_reciveOutput(QString output);
+//    void slo_reciveError(QString error);
+//    void slo_reciveInfo(QString info);
+//    void slo_reciveState(QProcess::ProcessState state);
+//    void slo_reciveMainWindow(QString msg);
+
+signals:
+    void create();
+    void start();
+    void process(QString);
+    void process(QString,ptrFunc);
+    void stop();
+    void kill();
+    void exit();
+
+signals:
+    void onSubmitOutput(QString);
+    void onSubmitError(QString);
+    void onSubmitInfo(QString);
+    void onSubmitState(int,QProcess::ProcessState);
+    void onSubmitExitStatus(int,QProcess::ExitStatus);
+    void onShowCtsResult();
+
+private slots:
+    void onReciveOutput(QString output);
+    void onReciveError(QString error);
+    void onReciveInfo(QString info);
+    void onReciveState(QProcess::ProcessState state);
+    void onReciveExitStatus(QProcess::ExitStatus exitStatus);
+
 };
 
 #endif // XTS_H

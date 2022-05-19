@@ -13,63 +13,229 @@
 Xts::Xts(QObject *parent) : QObject(parent)
 {
     cout << QThread::currentThreadId();
-    xts_Thread = new QThread(this);
-    xts_cpt = new CommandProcessThread();
-    init_connect();
-    xts_cpt->moveToThread(xts_Thread);
-    xts_Thread->start();
-    emit start();
+    init();
 }
 
 Xts::~Xts()
 {
     cout <<"~Xts() +";
-    emit exit();
-    delete xts_cpt;
-    xts_Thread->exit(0);
-    //TODO:QThread: Destroyed while thread is still running
-    delete xts_Thread;
+
     cout<<"~Xts() -";
+}
+
+void Xts::init()
+{
+    mXtsThread = new QThread(this);
+    mXtsProcessor = new ProcessorImpl();
+    init_connect();
+    mXtsProcessor->moveToThread(mXtsThread);
+    mXtsThread->start();
+    emit create();
+}
+
+void Xts::unInit()
+{
+    cout;
+    delete mXtsProcessor;
+    //TODO:QThread: Destroyed while thread is still running
+    delete mXtsThread;
 }
 
 void Xts::init_connect()
 {
+//    connect(this,SIGNAL(start()),
+//            mXtsProcessor,SLOT(createProcessor()));
+//    connect(this,SIGNAL(processCommand(QString)),
+//            mXtsProcessor,SLOT(process(QString)));
+//    connect(this,SIGNAL(processCommand(QString,QString *)),
+//            mXtsProcessor,SLOT(process(QString,QString *)));
+//    connect(this,SIGNAL(stop()),
+//            mXtsProcessor,SLOT(stopProcessor()));
+//    connect(this,SIGNAL(exit()),
+//            mXtsProcessor,SLOT(exitProcessor()));
+//    connect(mXtsProcessor,SIGNAL(sig_sendOutput(QString)),
+//            this,SLOT(slo_reciveOutput(QString)));
+//    connect(mXtsProcessor,SIGNAL(sig_sendError(QString)),
+//            this,SLOT(slo_reciveError(QString)));
+//    connect(mXtsProcessor,SIGNAL(sig_sendInfo(QString)),
+//            this,SLOT(slo_reciveInfo(QString)));
+//    connect(mXtsProcessor,SIGNAL(sig_sendState(QProcess::ProcessState)),
+//            this,SLOT(slo_reciveState(QProcess::ProcessState)));
+
+    connect(this,SIGNAL(create()),
+            mXtsProcessor,SLOT(create()));
     connect(this,SIGNAL(start()),
-            xts_cpt,SLOT(createProcessor()));
-    connect(this,SIGNAL(processCommand(QString)),
-            xts_cpt,SLOT(process(QString)));
-    connect(this,SIGNAL(processCommand(QString,QString *)),
-            xts_cpt,SLOT(process(QString,QString *)));
+            mXtsProcessor,SLOT(start()));
+    connect(this,SIGNAL(process(QString)),
+            mXtsProcessor,SLOT(process(QString)));
+    qRegisterMetaType<ptrFunc>("ptrFunc");
+    connect(this,SIGNAL(process(QString,ptrFunc)),
+            mXtsProcessor,SLOT(process(QString,ptrFunc)));
     connect(this,SIGNAL(stop()),
-            xts_cpt,SLOT(stopProcessor()));
+            mXtsProcessor,SLOT(stop()));
+    connect(this,SIGNAL(kill()),
+            mXtsProcessor,SLOT(kill()));
     connect(this,SIGNAL(exit()),
-            xts_cpt,SLOT(exitProcessor()));
-    connect(xts_cpt,SIGNAL(sig_sendOutput(QString)),
-            this,SLOT(slo_reciveOutput(QString)));
-    connect(xts_cpt,SIGNAL(sig_sendError(QString)),
-            this,SLOT(slo_reciveError(QString)));
-    connect(xts_cpt,SIGNAL(sig_sendInfo(QString)),
-            this,SLOT(slo_reciveInfo(QString)));
-    connect(xts_cpt,SIGNAL(sig_sendState(QProcess::ProcessState)),
-            this,SLOT(slo_reciveState(QProcess::ProcessState)));
+            mXtsProcessor,SLOT(exit()));
+
+    connect(mXtsProcessor,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(mXtsProcessor,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(mXtsProcessor,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(mXtsProcessor,SIGNAL(onSubmitState(QProcess::ProcessState)),
+            this,SLOT(onReciveState(QProcess::ProcessState)));
+    qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
+    connect(mXtsProcessor,SIGNAL(onSubmitExitStatus(QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(QProcess::ExitStatus)));
 
 }
 
-void Xts::slo_reciveOutput(QString output)
+
+//void Xts::slo_reciveOutput(QString output)
+//{
+//    cout << output;
+//    if(output.contains("CommandScheduler: All done")) //"SuiteResultReporter: "
+//        stopProcessor();
+//        m_ctsComplete = true;
+//    if (m_flag && output.contains("cts-tradefed")) {
+//        QStringList res = output.split("\n").filter("cts-tradefed");
+//        if(res.isEmpty()){
+//            emit sig_sendToMainWindow("Warning : No suite detected, please reselect cts suite!");
+//            m_flag = false;
+//            return;
+//        }
+//        if(res.size()>1){
+//            emit sig_sendToMainWindow("Warning : Multiple suite detected, please reselect cts suite!");
+//            m_flag = false;
+//            m_ctsSuite.clear();
+//            return;
+//        }
+//        m_ctsSuite = res.first();
+//        return;
+//    }
+//    emit sig_sendToMainWindow(output);
+//}
+
+//void Xts::slo_reciveError(QString error)
+//{
+////    cout << error;
+//    emit sig_sendToMainWindow(error);
+//}
+
+//void Xts::slo_reciveInfo(QString info)
+//{
+////    cout << info;
+//    emit sig_sendToMainWindow(info);
+//}
+
+//void Xts::slo_reciveState(QProcess::ProcessState state)
+//{
+//    cout << state;
+//    emit sig_sendToMainWindow(state,MY_TAG);
+//    if (state==QProcess::ProcessState::NotRunning)
+//    {
+//        if(!m_flag)
+//            emit sig_sendToMainWindow("Done");
+//        if(m_ctsComplete){
+//            if (m_ctsCommand.contains("run")) emit sig_showCtsResult();
+//            m_ctsComplete=false;
+//        }
+//    }
+//}
+
+//void Xts::slo_reciveMainWindow(QString msg)
+//{
+//    m_ctsSuite.clear();
+//    processCommand(QString("find %1 -name cts-tradefed").arg(msg));
+//    m_flag = true;
+//}
+
+//void Xts::runCts(const QString arg1, const QString arg2, QString arg3, QString arg4)
+//{
+//    //arg1 deprecated
+//    cout << arg1 <<arg2 <<arg3 <<arg4;
+//    if (mXtsProcessor->processor->state() != QProcess::ProcessState::NotRunning)
+//        return emit sig_sendToMainWindow("please wait!");
+//    m_ctsCommand = arg2;
+//    if(!arg3.isEmpty()) {
+//        arg3 = QString(" -m %1").arg(arg3);
+//    }
+//    if(!arg4.isEmpty()){
+//        arg4 = QString(" -t %1").arg(arg4);
+//        cout << arg4;
+//    }
+//    QString cmd = m_ctsSuite +" "+arg2+arg3+arg4;
+//    cout << cmd;
+//    emit sig_sendToMainWindow(mXtsProcessor->m_userName+cmd);
+//    emit processCommand(cmd);
+//}
+
+//void Xts::stopProcessor()
+//{
+//    emit stop();
+//}
+
+
+/**
+ * @brief Xts::run
+ * @param arg1 : cts suite
+ * @param arg2 : cts command
+ * @param arg3 : cts module
+ * @param arg4 : cts test
+ */
+void Xts::run(const QString arg1, const QString arg2, QString arg3, QString arg4)
+{
+        //arg1 deprecated
+        cout << arg1 <<arg2 <<arg3 <<arg4;
+        if (mXtsProcessor->getState() != ProcessState::NotRunning)
+            return emit onSubmitInfo("please wait!");
+        m_ctsCommand = arg2;
+        if(!arg3.isEmpty()) {
+            arg3 = QString(" -m %1").arg(arg3);
+        }
+        if(!arg4.isEmpty()){
+            arg4 = QString(" -t %1").arg(arg4);
+            cout << arg4;
+        }
+        QString cmd = m_ctsSuite +" "+arg2+arg3+arg4;
+        cout << cmd;
+        emit onSubmitInfo(mXtsProcessor->mUserName+cmd);
+        emit process(cmd);
+}
+
+/**
+ * @brief Xts::terminal
+ */
+void Xts::terminal()
+{
+    cout;
+    if(mXtsProcessor->getState() != ProcessState::NotRunning){
+        emit stop();
+    }
+}
+
+/**
+ * @brief Xts::onReciveOutput
+ * @param output
+ */
+void Xts::onReciveOutput(QString output)
 {
     cout << output;
-    if(output.contains("CommandScheduler: All done")) //"SuiteResultReporter: "
-        stopProcessor();
+    if(output.contains("CommandScheduler: All done")){ //"SuiteResultReporter: "
+        emit stop();
         m_ctsComplete = true;
+    }
     if (m_flag && output.contains("cts-tradefed")) {
         QStringList res = output.split("\n").filter("cts-tradefed");
         if(res.isEmpty()){
-            emit sig_sendToMainWindow("Warning : No suite detected, please reselect cts suite!");
+            emit onSubmitOutput("Warning : No suite detected, please reselect cts suite!");
             m_flag = false;
             return;
         }
         if(res.size()>1){
-            emit sig_sendToMainWindow("Warning : Multiple suite detected, please reselect cts suite!");
+            emit onSubmitOutput("Warning : Multiple suite detected, please reselect cts suite!");
             m_flag = false;
             m_ctsSuite.clear();
             return;
@@ -77,65 +243,56 @@ void Xts::slo_reciveOutput(QString output)
         m_ctsSuite = res.first();
         return;
     }
-    emit sig_sendToMainWindow(output);
+    emit onSubmitOutput(output);
 }
 
-void Xts::slo_reciveError(QString error)
+/**
+ * @brief Xts::onReciveError
+ * @param error
+ */
+void Xts::onReciveError(QString error)
 {
-//    cout << error;
-    emit sig_sendToMainWindow(error);
+    cout << error;
+    emit onSubmitError(error);
 }
 
-void Xts::slo_reciveInfo(QString info)
+/**
+ * @brief Xts::onReciveInfo
+ * @param info
+ */
+void Xts::onReciveInfo(QString info)
 {
-//    cout << info;
-    emit sig_sendToMainWindow(info);
+    cout << info;
+    emit onSubmitInfo(info);
 }
 
-void Xts::slo_reciveState(QProcess::ProcessState state)
+/**
+ * @brief Xts::onReciveStatus
+ * @param state
+ */
+void Xts::onReciveState(QProcess::ProcessState state)
 {
     cout << state;
-    emit sig_sendToMainWindow(state,MY_TAG);
-    if (state==QProcess::ProcessState::NotRunning)
+    emit onSubmitState(XTS,state);
+    if (state==ProcessState::NotRunning)
     {
         if(!m_flag)
-            emit sig_sendToMainWindow("Done");
+            emit onSubmitInfo("Done");
         if(m_ctsComplete){
-            if (m_ctsCommand.contains("run")) emit sig_showCtsResult();
+            if (m_ctsCommand.contains("run")) emit onShowCtsResult();
             m_ctsComplete=false;
         }
     }
 }
 
-void Xts::slo_reciveMainWindow(QString msg)
+/**
+ * @brief Xts::onReciveExitStatus
+ * @param exitStatus
+ */
+void Xts::onReciveExitStatus(QProcess::ExitStatus exitStatus)
 {
-    m_ctsSuite.clear();
-    processCommand(QString("find %1 -name cts-tradefed").arg(msg));
-    m_flag = true;
+    cout << exitStatus;
+    emit onSubmitExitStatus(XTS,exitStatus);
 }
 
-void Xts::runCts(const QString arg1, const QString arg2, QString arg3, QString arg4)
-{
-    //arg1 deprecated
-    cout << arg1 <<arg2 <<arg3 <<arg4;
-    if (xts_cpt->processor->state() != QProcess::ProcessState::NotRunning)
-        return emit sig_sendToMainWindow("please wait!");
-    m_ctsCommand = arg2;
-    if(!arg3.isEmpty()) {
-        arg3 = QString(" -m %1").arg(arg3);
-    }
-    if(!arg4.isEmpty()){
-        arg4 = QString(" -t %1").arg(arg4);
-        cout << arg4;
-    }
-    QString cmd = m_ctsSuite +" "+arg2+arg3+arg4;
-    cout << cmd;
-    emit sig_sendToMainWindow(xts_cpt->m_userName+cmd);
-    emit processCommand(cmd);
-}
-
-void Xts::stopProcessor()
-{
-    emit stop();
-}
 

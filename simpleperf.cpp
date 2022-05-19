@@ -218,7 +218,7 @@ void Simpleperf::run(QString cmd)
         emit process(cmd);
         onSubmitInfo(color.GREEN.arg(mSimProcessor->mUserName)+cmd);
     }else{
-        onSubmitInfo("please wait!");
+        onSubmitInfo("Warning : command is empty or process is running!");
     }
 }
 
@@ -281,5 +281,5 @@ void Simpleperf::onReciveState(QProcess::ProcessState state)
 void Simpleperf::onReciveExitStatus(QProcess::ExitStatus exitStatus)
 {
     cout << exitStatus;
-    emit onSubmitExitStatus(3,exitStatus);
+    emit onSubmitExitStatus(SIMPLEPERF,exitStatus);
 }

@@ -27,6 +27,7 @@ public:
     void login(QString addr,ptrFunc);
     void logout();
     void run(QString cmd);
+    void terminal();
 
 
 public:

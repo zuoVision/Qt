@@ -123,4 +123,4 @@ Qt project
 * 增加回调函数callback,实时监测命令执行结果
 
 2022年5月19日
-* 修改simpleperf架构
+* 修改command\simpleperf\xts架构

@@ -23,6 +23,7 @@ Ssh::Ssh(QObject *parent) : QObject(parent)
 Ssh::~Ssh()
 {
     cout;
+    unInit();
 }
 
 /**
@@ -117,8 +118,16 @@ void Ssh::run(QString cmd)
         emit process(cmd);
         onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
     }else{
-        onSubmitInfo("please wait!");
+        onSubmitInfo("Warning : command is empty or process is running!");
     }
+}
+
+/**
+ * @brief Ssh::terminal
+ */
+void Ssh::terminal()
+{
+    cout;
 }
 
 /**
@@ -168,7 +177,7 @@ void Ssh::onReciveState(QProcess::ProcessState state)
 void Ssh::onReciveExitStatus(QProcess::ExitStatus exitStatus)
 {
     cout << exitStatus;
-    emit onSubmitExitStatus(3,exitStatus);
+    emit onSubmitExitStatus(SSH,exitStatus);
 }
 
 
