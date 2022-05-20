@@ -93,7 +93,7 @@ void Ssh::login(QString addr,ptrFunc cb)
         emit process(addr,cb);
         emit onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName));
     }else {
-        emit onSubmitInfo("please wait！");
+        emit onSubmitInfo("please wait!");
     }
 
 }

@@ -119,6 +119,6 @@ void Document::on_pushButton_save_clicked()
         QTextStream out(&myfile);
         out << ui->plainTextEdit_doc->toPlainText();
     }
-    QMessageBox::information(this,"提示","文本已保存");
+    QMessageBox::information(this,"提示","文本已保存.");
     myfile.close();
 }

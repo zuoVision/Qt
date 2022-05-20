@@ -23,7 +23,7 @@
 #define CTSRESULOTION   ":/config/config/cts_resulotion.csv"
 #define TESTRESULT      ":/config/config/test_result.xml"
 
-#define SIMPLEPERFDOC   "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档"
+#define SIMPLEPERFDOC   "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档."
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -648,7 +648,7 @@ void MainWindow::loadProjectInfo()
 
     mProjectInfo = mParseXml.parseProjectXml(PROJECTFILE);
     if (mProjectInfo.isEmpty()) {
-        cout << "项目为空！";
+        cout << "项目为空!";
     }else{
         ui->comboBox_project->clear();
         for(QVector<PROJECT>::iterator it = mProjectInfo.begin();
