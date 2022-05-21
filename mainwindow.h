@@ -91,6 +91,7 @@ protected:
     std::map<QString,QString>   m_recordParams;
 
     //ssh
+    static int sshState;
     ProjectInfo                 mProjectInfo;
     BRANCH                      mBranch;
     REPO                        mRepo;

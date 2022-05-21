@@ -52,7 +52,7 @@ void ProcessorImpl::uninit()
 {
     cout;
     if(mProcessor){
-        cout << "delete mProcessor";
+//        cout << "delete mProcessor";
         delete mProcessor;
     }
 }

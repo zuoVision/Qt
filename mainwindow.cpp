@@ -18,12 +18,8 @@
 #define MY_TAG          "MainWindow"
 #define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
 
-#define DATABASE        "config/native_cmd_list.txt"
-#define CTSTESTLIST     ":/config/config/cts_test_list.txt"
-#define CTSRESULOTION   ":/config/config/cts_resulotion.csv"
-#define TESTRESULT      ":/config/config/test_result.xml"
 
-#define SIMPLEPERFDOC   "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档."
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -214,6 +210,8 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             simpleperf->terminal();
         if(ui->tabWidget->currentIndex()==2)
             xts->terminal();
+        if(ui->tabWidget->currentIndex()==3)
+            ssh->terminal();
     }
     if(event->modifiers() == Qt::ControlModifier &&
        event->key() == Qt::Key_F){
@@ -805,6 +803,7 @@ void MainWindow::callback(CallbackState state)
         cout << CallbackState::Success;
         break;
     }
+    test();
 }
 
 void MainWindow::test()

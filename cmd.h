@@ -5,6 +5,8 @@
 #define TEST1                   "ping baidu.com"
 #define TEST2                   "pwd"
 
+//COMMAND
+#define DATABASE                "config/native_cmd_list.txt"
 
 //ADB
 #define ADBDEVICES              "adb devices"
@@ -39,12 +41,16 @@
 #define STAT                    "stat -e cache-references,cache-misses -a --duration 10 "
 #define RECORD                  "record -o /data/local/tmp/perf.data -e task-clock:u -f 1000 -g --duration 10 --log info --app com.tcl.camera"
 #define REPORT                  "python scripts/report_sample.py > out.perf"
+#define SIMPLEPERFDOC           "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档."
 
 //xts
+#define CTSTESTLIST             ":/config/config/cts_test_list.txt"
+#define CTSRESULOTION           ":/config/config/cts_resulotion.csv"
+#define TESTRESULT              ":/config/config/test_result.xml"
+
 #define CTSSUITE                "~/XTS/Android_R/android-cts/tools/cts-tradefed "
 #define CTSCOMMAND              "run cts-dev "
 #define CTSMODULE               "-m CtsCameraTestCases "
-
 #define FINDCTSSUITE            "find ~/ -iname cts-tradefed "
 
 //ssh

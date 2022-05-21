@@ -124,3 +124,6 @@ Qt project
 
 2022年5月19日
 * 修改command\simpleperf\xts架构
+
+2022年5月21日
+* Done:QThread: Destroyed while thread is still running

@@ -19,7 +19,7 @@ Xts::Xts(QObject *parent) : QObject(parent)
 Xts::~Xts()
 {
     cout <<"~Xts() +";
-
+    unInit();
     cout<<"~Xts() -";
 }
 
@@ -33,11 +33,18 @@ void Xts::init()
     emit create();
 }
 
+/**
+ * @brief Xts::unInit
+ * //TODO:QThread: Destroyed while thread is still running
+ *          mXtsThread->exit(0);
+ *          delete mXtsProcessor;
+ *          delete mXtsThread;
+ */
 void Xts::unInit()
 {
     cout;
+    mXtsThread->exit(0);
     delete mXtsProcessor;
-    //TODO:QThread: Destroyed while thread is still running
     delete mXtsThread;
 }
 

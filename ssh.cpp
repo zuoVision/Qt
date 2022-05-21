@@ -46,6 +46,7 @@ void Ssh::init()
 void Ssh::unInit()
 {
     cout;
+    mSshThread->exit(0);
     delete mSshProcessor;
     delete mSshThread;
 }

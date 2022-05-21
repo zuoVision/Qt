@@ -21,8 +21,7 @@ CommonCommand::CommonCommand(QObject *parent) : QObject(parent)
 CommonCommand::~CommonCommand()
 {
     cout ;
-    delete mCcdProcessor;
-    delete mCcdThread;
+    unInit();
 }
 
 /**
@@ -45,6 +44,7 @@ void CommonCommand::init()
 void CommonCommand::unInit()
 {
    cout;
+   mCcdThread->exit(0);
    delete mCcdProcessor;
    delete mCcdThread;
 }

@@ -19,17 +19,12 @@ QObject(parent)
 {
     cout << QThread::currentThreadId();
     init();
-
-
-
 }
 
 Simpleperf::~Simpleperf()
 {
     cout << " +";
-    mSimThread->exit(0);
-    delete mSimProcessor;
-    delete mSimThread;
+    unInit();
     cout << " -";
 }
 
@@ -53,6 +48,7 @@ void Simpleperf::init()
 void Simpleperf::unInit()
 {
    cout;
+   mSimThread->exit(0);
    delete mSimProcessor;
    delete mSimThread;
 }
