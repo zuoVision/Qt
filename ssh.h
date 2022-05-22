@@ -24,7 +24,7 @@ private:
     void init_connect();
 
 public:
-    void login(QString addr,ptrFunc);
+    void login(QString addr,METADATA* metadata);
     void logout();
     void run(QString cmd);
     void terminal();
@@ -41,7 +41,7 @@ signals:
     void create();
     void start();
     void process(QString);
-    void process(QString,ptrFunc);
+    void process(QString,METADATA*);
     void stop();
     void kill();
     void exit();
@@ -52,6 +52,7 @@ signals:
     void onSubmitInfo(QString);
     void onSubmitState(int,QProcess::ProcessState);
     void onSubmitExitStatus(int,QProcess::ExitStatus);
+    void onSubmitMetadata(METADATA*);
 
 private slots:
     void onReciveOutput(QString output);
@@ -59,7 +60,7 @@ private slots:
     void onReciveInfo(QString info);
     void onReciveState(QProcess::ProcessState state);
     void onReciveExitStatus(QProcess::ExitStatus exitStatus);
-
+    void onReciveMetadata(METADATA* metadata);
 };
 
 #endif // SSH_H

@@ -63,9 +63,9 @@ void Ssh::init_connect()
             mSshProcessor,SLOT(start()));
     connect(this,SIGNAL(process(QString)),
             mSshProcessor,SLOT(process(QString)));
-    qRegisterMetaType<ptrFunc>("ptrFunc");
-    connect(this,SIGNAL(process(QString,ptrFunc)),
-            mSshProcessor,SLOT(process(QString,ptrFunc)));
+//    qRegisterMetaType<METADATA*>("METADATA*");
+    connect(this,SIGNAL(process(QString,METADATA*)),
+            mSshProcessor,SLOT(process(QString,METADATA*)));
     connect(this,SIGNAL(stop()),
             mSshProcessor,SLOT(stop()));
     connect(this,SIGNAL(kill()),
@@ -84,19 +84,21 @@ void Ssh::init_connect()
     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
     connect(mSshProcessor,SIGNAL(onSubmitExitStatus(QProcess::ExitStatus)),
             this,SLOT(onReciveExitStatus(QProcess::ExitStatus)));
+    qRegisterMetaType<METADATA>("METADATA");
+    connect(mSshProcessor,SIGNAL(onSubmitMetadata(METADATA*)),
+            this,SLOT(onReciveMetadata(METADATA*)));
 }
 
-void Ssh::login(QString addr,ptrFunc cb)
+void Ssh::login(QString addr,METADATA* metadata)
 {
-    cout ;
+    cout<<metadata;
 
     if(mSshProcessor->getState() == ProcessState::NotRunning){
-        emit process(addr,cb);
+        emit process(addr,metadata);
         emit onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName));
     }else {
         emit onSubmitInfo("please wait!");
     }
-
 }
 
 /**
@@ -105,9 +107,7 @@ void Ssh::login(QString addr,ptrFunc cb)
 void Ssh::logout()
 {
     cout;
-    if(mSshProcessor->getState() != ProcessState::NotRunning){
-        emit stop();
-    }
+    emit exit();
 }
 
 /**
@@ -129,6 +129,9 @@ void Ssh::run(QString cmd)
 void Ssh::terminal()
 {
     cout;
+    if(mSshProcessor->getState() != ProcessState::NotRunning){
+        emit stop();
+    }
 }
 
 /**
@@ -179,6 +182,16 @@ void Ssh::onReciveExitStatus(QProcess::ExitStatus exitStatus)
 {
     cout << exitStatus;
     emit onSubmitExitStatus(SSH,exitStatus);
+}
+
+/**
+ * @brief Ssh::onReciveMetadata
+ * @param metadata
+ */
+void Ssh::onReciveMetadata(METADATA *metadata)
+{
+    cout;
+    emit onSubmitMetadata(metadata);
 }
 
 

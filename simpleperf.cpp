@@ -65,9 +65,9 @@ void Simpleperf::init_connect()
             mSimProcessor,SLOT(start()));
     connect(this,SIGNAL(process(QString)),
             mSimProcessor,SLOT(process(QString)));
-    qRegisterMetaType<ptrFunc>("ptrFunc");
-    connect(this,SIGNAL(process(QString,ptrFunc)),
-            mSimProcessor,SLOT(process(QString,ptrFunc)));
+//    qRegisterMetaType<ptrFunc>("ptrFunc");
+//    connect(this,SIGNAL(process(QString,ptrFunc)),
+//            mSimProcessor,SLOT(process(QString,ptrFunc)));
     connect(this,SIGNAL(stop()),
             mSimProcessor,SLOT(stop()));
     connect(this,SIGNAL(kill()),

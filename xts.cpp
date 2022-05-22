@@ -75,9 +75,9 @@ void Xts::init_connect()
             mXtsProcessor,SLOT(start()));
     connect(this,SIGNAL(process(QString)),
             mXtsProcessor,SLOT(process(QString)));
-    qRegisterMetaType<ptrFunc>("ptrFunc");
-    connect(this,SIGNAL(process(QString,ptrFunc)),
-            mXtsProcessor,SLOT(process(QString,ptrFunc)));
+//    qRegisterMetaType<ptrFunc>("ptrFunc");
+//    connect(this,SIGNAL(process(QString,ptrFunc)),
+//            mXtsProcessor,SLOT(process(QString,ptrFunc)));
     connect(this,SIGNAL(stop()),
             mXtsProcessor,SLOT(stop()));
     connect(this,SIGNAL(kill()),

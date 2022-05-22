@@ -178,6 +178,8 @@ void MainWindow::initConnect()
             this,SLOT(onReciveState(int,QProcess::ProcessState)));
     connect(ssh,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
             this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
+    connect(ssh,SIGNAL(onSubmitMetadata(METADATA*)),
+            this,SLOT(onReciveMetadata(METADATA*)));
 
     //cmd回车-> run button click
     connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
@@ -521,6 +523,24 @@ void MainWindow::onReciveExitStatus(int tag,QProcess::ExitStatus exitStatus)
    }
 }
 
+/**
+ * @brief MainWindow::onReciveMetadata
+ * @param metadata
+ */
+void MainWindow::onReciveMetadata(METADATA *metadata)
+{
+   cout << metadata->tag
+        << metadata->output
+        << metadata->error
+        << metadata->state
+        << metadata->exitStatus;
+   if(metadata->tag==SSH_LOGIN){
+       if(metadata->error.isEmpty()){
+           loginSuccess();
+       }
+   }
+}
+
 void MainWindow::on_pushButton_loadctssuite_clicked()
 {
     m_ctsSuite = m_doc.selectDirectory("");
@@ -784,31 +804,27 @@ bool MainWindow::getRecordParams()
 }
 
 /**
- * @brief MainWindow::callback
- * @param state
+ * @brief MainWindow::loginSuccess
  */
-void MainWindow::callback(CallbackState state)
+void MainWindow::loginSuccess()
 {
-    switch (state) {
-    case CallbackState::Success:
-        cout << CallbackState::Success;
-        break;
-    case CallbackState::Error:
-        cout << CallbackState::Error;
-        break;
-    case CallbackState::Unknow:
-        cout << CallbackState::Unknow;
-        break;
-    default:
-        cout << CallbackState::Success;
-        break;
-    }
-    test();
+    cout ;
+    QFile file(SSHROOTDIR);
+    ui->comboBox_localproject->addItems(fileOperation->readTxt(&file));
+    ui->lineEdit_ssh->setEnabled(false);
+    ui->pushButton_login->setEnabled(false);
+    ui->pushButton_logout->setEnabled(true);
+    ui->pushButton_browse->setEnabled(true);
+    ui->pushButton_download->setEnabled(true);
+    ui->pushButton_build->setEnabled(true);
 }
 
-void MainWindow::test()
+/**
+ * @brief MainWindow::logoutSuccess
+ */
+void MainWindow::logoutSuccess()
 {
-    cout;
+    cout ;
 }
 
 void MainWindow::on_pushButton_screencapture_clicked()
@@ -903,21 +919,18 @@ void MainWindow::on_pushButton_batterystats_clicked()
 void MainWindow::on_pushButton_login_clicked()
 {
     QString CMD = QString("ssh %1 'ls -d */' > %2");
+    mMetadata = new METADATA;
+    mMetadata->tag=SSH_LOGIN;
+    ssh->login(ui->lineEdit_ssh->text(),mMetadata);
 
-    ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR),callback);
-
-    QFile file(SSHROOTDIR);
-    ui->comboBox_localproject->addItems(fileOperation->readTxt(&file));
-    ui->lineEdit_ssh->setEnabled(false);
-    ui->pushButton_login->setEnabled(false);
-    ui->pushButton_logout->setEnabled(true);
-    ui->pushButton_browse->setEnabled(true);
-    ui->pushButton_download->setEnabled(true);
-    ui->pushButton_build->setEnabled(true);
+//    ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR),callback);
+//    loginSuccess(this);
 }
 
 void MainWindow::on_pushButton_logout_clicked()
 {
+    mMetadata = new METADATA;
+    mMetadata->tag=SSH_LOGOUT;
     ssh->logout();
     ui->comboBox_localproject->clear();
     ui->comboBox_buildversion->clear();

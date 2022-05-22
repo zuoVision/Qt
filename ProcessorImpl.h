@@ -35,7 +35,7 @@ public:
     ProcessState            mState;
     QString                 mOutput;
     QString                 mError;
-    ptrFunc                 mCbf=nullptr;
+    METADATA*               mMetadata=nullptr;
 
 private:
     void            setUserName(QString userName);
@@ -46,7 +46,6 @@ public:
     ProcessState    getState();
 
 private:
-    void            onHandleCallback();
 
 
 signals:
@@ -55,12 +54,13 @@ signals:
     void onSubmitInfo(QString);
     void onSubmitState(QProcess::ProcessState);
     void onSubmitExitStatus(QProcess::ExitStatus);
+    void onSubmitMetadata(METADATA*);
 
 private slots:
     void create();
     void start();
-//    void process(QString cmd);
-    void process(QString cmd,ptrFunc cbf=nullptr);
+    void process(QString cmd);
+    void process(QString cmd,METADATA* metadata);
     void stop();
     void kill();
     void exit();

@@ -191,8 +191,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>688</width>
-             <height>359</height>
+             <width>724</width>
+             <height>347</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout">
@@ -2124,6 +2124,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="pushButton_logout">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -2137,6 +2140,9 @@
              </item>
              <item>
               <widget class="QPushButton" name="pushButton_browse">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -2423,7 +2429,7 @@
      <x>0</x>
      <y>0</y>
      <width>744</width>
-     <height>28</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -2529,5 +2535,22 @@
   </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>lineEdit_ssh</sender>
+   <signal>returnPressed()</signal>
+   <receiver>pushButton_login</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>321</x>
+     <y>144</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>524</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

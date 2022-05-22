@@ -75,9 +75,9 @@ void CommonCommand::init_connect()
             mCcdProcessor,SLOT(start()));
     connect(this,SIGNAL(process(QString)),
             mCcdProcessor,SLOT(process(QString)));
-    qRegisterMetaType<ptrFunc>("ptrFunc");
-    connect(this,SIGNAL(process(QString,ptrFunc)),
-            mCcdProcessor,SLOT(process(QString,ptrFunc)));
+//    qRegisterMetaType<ptrFunc>("ptrFunc");
+//    connect(this,SIGNAL(process(QString,ptrFunc)),
+//            mCcdProcessor,SLOT(process(QString,ptrFunc)));
     connect(this,SIGNAL(stop()),
             mCcdProcessor,SLOT(stop()));
     connect(this,SIGNAL(kill()),

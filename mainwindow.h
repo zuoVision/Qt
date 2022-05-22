@@ -91,13 +91,13 @@ protected:
     std::map<QString,QString>   m_recordParams;
 
     //ssh
-    static int sshState;
     ProjectInfo                 mProjectInfo;
     BRANCH                      mBranch;
     REPO                        mRepo;
     BUILD                       mBuild;
     ParseXml                    mParseXml;
     QString                     mNinjaFile;
+    METADATA*                   mMetadata;
 
 protected:
     void initUi();
@@ -114,8 +114,8 @@ protected:
     bool getRecordParams();
 
 private:
-    static void callback(CallbackState state);
-    void test();
+    void loginSuccess();
+    void logoutSuccess();
 
 signals:
     void sig_sendToXts(QString);
@@ -138,6 +138,7 @@ private slots:
     void onReciveInfo(QString info);
     void onReciveState(int tag,QProcess::ProcessState state);
     void onReciveExitStatus(int tag,QProcess::ExitStatus exitStatus);
+    void onReciveMetadata(METADATA* metadata);
 
     void onShowCtsResult();
 

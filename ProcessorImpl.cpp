@@ -104,22 +104,27 @@ void ProcessorImpl::start()
  * @brief ProcessorImpl::process
  * @param cmd
  */
-//void ProcessorImpl::process(QString cmd)
-//{
-//    cout << " + ";
-//    mProcessor->start(BASH,CMD << cmd);
-//    mProcessor->waitForReadyRead();
-//    cout << " - ";
-//}
-
-void ProcessorImpl::process(QString cmd,ptrFunc cbf)
+void ProcessorImpl::process(QString cmd)
 {
     cout << " + ";
-    mCbf = cbf;
     mProcessor->start(BASH,CMD << cmd);
     mProcessor->waitForReadyRead();
     cout << " - ";
+}
 
+/**
+ * @brief ProcessorImpl::process
+ * @param cmd
+ * @param metadata
+ */
+void ProcessorImpl::process(QString cmd,METADATA *metadata)
+{
+    cout << " + ";
+    mMetadata = metadata;
+    cout << mMetadata;
+    mProcessor->start(BASH,CMD << cmd);
+    mProcessor->waitForReadyRead();
+    cout << " - ";
 }
 
 /**
@@ -196,15 +201,6 @@ ProcessorImpl::ProcessState ProcessorImpl::getState()
     return mState;
 }
 
-void ProcessorImpl::onHandleCallback()
-{
-    cout;
-    if(mCbf != nullptr) {
-        mCbf(CallbackState::Error);
-        mCbf=nullptr;
-    }
-}
-
 /**
  * @brief ProcessorImpl::onOutputListener
  */
@@ -227,7 +223,6 @@ void ProcessorImpl::onErrorListener()
     //remove endwith "\n"
     mError.replace(QRegExp("\n$"), "");
     emit onSubmitError(mError);
-    onHandleCallback();
 }
 
 /**
@@ -248,4 +243,15 @@ void ProcessorImpl::onFinishedListener(int exitCode, QProcess::ExitStatus exitSt
 {
    cout << exitCode << exitStatus;
    emit onSubmitExitStatus(exitStatus);
+   if(mMetadata){
+       mMetadata->output = mOutput;
+       mMetadata->error = mError;
+       mMetadata->state = mState;
+       mMetadata->exitStatus = exitStatus;
+       emit onSubmitMetadata(mMetadata);
+       mMetadata=nullptr;
+   }
+   if(!mOutput.isEmpty()) mOutput.clear();
+   if(!mError.isEmpty()) mError.clear();
+   if(mState != ProcessState::NotRunning) mState=ProcessState::NotRunning;
 }

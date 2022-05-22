@@ -51,7 +51,6 @@ signals:
     void create();
     void start();
     void process(QString);
-    void process(QString,ptrFunc);
     void stop();
     void kill();
     void exit();
