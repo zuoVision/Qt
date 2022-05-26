@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "cmd.h"
 
@@ -50,6 +50,7 @@ void MainWindow::initUi()
     m_sim_status = new QLabel("simpleperf",this);
     m_xts_status = new QLabel("xts",this);
     m_ssh_status = new QLabel("ssh",this);
+    m_hint_status = new QLabel();
     m_ccd_status->setFixedSize(20,20);
     m_sim_status->setFixedSize(20,20);
     m_xts_status->setFixedSize(20,20);
@@ -66,6 +67,7 @@ void MainWindow::initUi()
     m_sim_status->setScaledContents(true);
     m_xts_status->setScaledContents(true);
     m_ssh_status->setScaledContents(true);
+    m_hint_status->setScaledContents(true);
     m_ccd_status->setPixmap(*led_grey);
     m_sim_status->setPixmap(*led_grey);
     m_xts_status->setPixmap(*led_grey);
@@ -74,6 +76,7 @@ void MainWindow::initUi()
     ui->statusbar->addWidget(m_sim_status);
     ui->statusbar->addWidget(m_xts_status);
     ui->statusbar->addWidget(m_ssh_status);
+
 
     ui->textEdit->setReadOnly(true);
     ui->label_simpleperfdoc->setText(SIMPLEPERFDOC);
@@ -109,6 +112,14 @@ void MainWindow::initEnvironment()
     test_completer->setModel(new QStringListModel(m_ctsTestList,this));
     ui->lineEdit_ctstest->setCompleter(test_completer);
 
+    //ssh lib自动补全
+    lib_completer = new QCompleter();
+    lib_completer->setMaxVisibleItems(10);
+    lib_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    lib_completer->setFilterMode(Qt::MatchContains);
+    fileOperation->loadDataBase(LIBLIST,&m_sshLibList);
+    lib_completer->setModel(new QStringListModel(m_sshLibList,this));
+    ui->lineEdit_lib->setCompleter(lib_completer);
     //
     loadCtsResulotion();
     loadProjectInfo();
@@ -166,6 +177,8 @@ void MainWindow::initConnect()
             this,SLOT(onReciveState(int,QProcess::ProcessState)));
     connect(xts,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
             this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
+    connect(xts,SIGNAL(onSubmitMetadata(METADATA*)),
+            this,SLOT(onReciveMetadata(METADATA*)));
 
     //SSH
     connect(ssh,SIGNAL(onSubmitOutput(QString)),
@@ -251,47 +264,47 @@ void MainWindow::slo_batterystats(QString cmd)
     ccd->run(cmd);
 }
 
-void MainWindow::slo_reciveMessage(QString msg)
-{
-    if(msg.startsWith("Warning")){
-        QMessageBox::warning(this,"warning",msg);
-        emit sig_sendToBatterystats(msg);
-        return;
-    }
-    ui->textEdit->append(color.BLACK.arg(msg));
-    emit sig_sendToBatterystats(msg);
-}
+//void MainWindow::slo_reciveMessage(QString msg)
+//{
+//    if(msg.startsWith("Warning")){
+//        QMessageBox::warning(this,"warning",msg);
+//        emit sig_sendToBatterystats(msg);
+//        return;
+//    }
+//    ui->textEdit->append(color.BLACK.arg(msg));
+//    emit sig_sendToBatterystats(msg);
+//}
 
-void MainWindow::slo_reciveMessage(QProcess::ProcessState state,QString tag)
-{
-    if (state == QProcess::Running){
-        if (tag == "CommonCommand"){
-            m_ccd_status->setPixmap(*led_green);
-            emit sig_sendToBatterystats(state,tag);
-        }
-        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_green);
-        if (tag == "Xts") m_xts_status->setPixmap(*led_green);
-//            m_statusbarMsg = "    Process Running (you can input 'exit' to force quit!) ";
-    }else if(state == QProcess::Starting){
-        if (tag == "CommonCommand") {
-            m_ccd_status->setPixmap(*led_blue);
-            emit sig_sendToBatterystats(state,tag);
-        }
-        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_blue);
-        if (tag == "Xts") m_xts_status->setPixmap(*led_blue);
-//            m_statusbarMsg = "    Process Starting ";
-    }else{
-        if (tag == "CommonCommand") {
-            m_ccd_status->setPixmap(*led_grey);
-            if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
-            emit sig_sendToBatterystats(state,tag);
-        }
-        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_grey);
-        if (tag == "Xts") m_xts_status->setPixmap(*led_grey);
-//            m_statusbarMsg = "    Process Not Running ";
+//void MainWindow::slo_reciveMessage(QProcess::ProcessState state,QString tag)
+//{
+//    if (state == QProcess::Running){
+//        if (tag == "CommonCommand"){
+//            m_ccd_status->setPixmap(*led_green);
+//            emit sig_sendToBatterystats(state,tag);
+//        }
+//        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_green);
+//        if (tag == "Xts") m_xts_status->setPixmap(*led_green);
+////            m_statusbarMsg = "    Process Running (you can input 'exit' to force quit!) ";
+//    }else if(state == QProcess::Starting){
+//        if (tag == "CommonCommand") {
+//            m_ccd_status->setPixmap(*led_blue);
+//            emit sig_sendToBatterystats(state,tag);
+//        }
+//        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_blue);
+//        if (tag == "Xts") m_xts_status->setPixmap(*led_blue);
+////            m_statusbarMsg = "    Process Starting ";
+//    }else{
+//        if (tag == "CommonCommand") {
+//            m_ccd_status->setPixmap(*led_grey);
+//            if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
+//            emit sig_sendToBatterystats(state,tag);
+//        }
+//        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_grey);
+//        if (tag == "Xts") m_xts_status->setPixmap(*led_grey);
+////            m_statusbarMsg = "    Process Not Running ";
 
-    }
-}
+//    }
+//}
 
 void MainWindow::slo_openDocument()
 {
@@ -369,6 +382,9 @@ void MainWindow::on_pushButton_stat_clicked()
 void MainWindow::on_pushButton_record_clicked()
 {
 //    cout;
+    QString path = SIMPLEPERFDATAPATH;
+    QDir dir(path);
+    if(!dir.exists()) dir.mkpath(path);
     if(getRecordParams()){
         simpleperf->runRecord(&m_recordParams);
     }else{
@@ -438,7 +454,8 @@ void MainWindow::onTextFilter()
 void MainWindow::onReciveOutput(QString output)
 {
     cout << output;
-    ui->textEdit->append(color.BLUE.arg(output));
+    ui->textEdit->setTextColor(QColor(0, 0, 255));
+    ui->textEdit->append(output);
 }
 
 /**
@@ -447,8 +464,9 @@ void MainWindow::onReciveOutput(QString output)
  */
 void MainWindow::onReciveError(QString error)
 {
-   cout << error;
-   ui->textEdit->append(color.RED.arg(error));
+    cout << error;
+    ui->textEdit->setTextColor(QColor(255, 0, 0));
+    ui->textEdit->append(error);
 }
 
 /**
@@ -458,7 +476,8 @@ void MainWindow::onReciveError(QString error)
 void MainWindow::onReciveInfo(QString info)
 {
    cout << info;
-   ui->textEdit->append(color.BLACK.arg(info));
+   ui->textEdit->setTextColor(QColor(0, 0, 0));
+   ui->textEdit->append(info);
 }
 
 /**
@@ -495,6 +514,12 @@ void MainWindow::onReciveState(int tag,QProcess::ProcessState state)
              break;
          default:
              break;
+    }
+    if(state!=ProcessState::NotRunning){
+        m_hint_status->setText(HINT);
+        ui->statusbar->addWidget(m_hint_status);
+    }else{
+        m_hint_status->clear();
     }
 }
 
@@ -538,6 +563,12 @@ void MainWindow::onReciveMetadata(METADATA *metadata)
        if(metadata->error.isEmpty()){
            loginSuccess();
        }
+   }else if(metadata->tag==SSH_FNINJA){
+       if(metadata->output.contains(".ninja")){
+           mNinjaFile = metadata->output;
+           cout<<metadata->output;
+           ui->comboBox_buildversion->addItem(mNinjaFile.split("/").last().replace("\n"," "));
+       }
    }
 }
 
@@ -545,7 +576,11 @@ void MainWindow::on_pushButton_loadctssuite_clicked()
 {
     m_ctsSuite = m_doc.selectDirectory("");
     ui->lineEdit_ctssuite->setText(m_ctsSuite);
-    emit sig_sendToXts(m_ctsSuite);
+    METADATA *md = new METADATA;
+    md->tag=XTS_FINDCTS;
+    cout << md;
+    xts->run(FINDCTSSUITE.arg(m_ctsSuite),md);
+//    emit sig_sendToXts(m_ctsSuite);
 }
 
 void MainWindow::on_comboBox_ctscommand_currentTextChanged(const QString &arg1)
@@ -747,7 +782,7 @@ bool MainWindow::getRecordParams()
         {"cpu",""},
         {"frequent",""},
         {"duration"," --duration 10"},
-        {"filename"," -o /data/local/tmp/perf.data "},
+        {"filename"," -o data/local/tmp/perf.data "},
     };
     bool flag=false;
     if(!ui->lineEdit_recapp->text().isEmpty()){
@@ -829,7 +864,7 @@ void MainWindow::logoutSuccess()
 
 void MainWindow::on_pushButton_screencapture_clicked()
 {
-    QString img = QString("/storage/img_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".png");
+    QString img = QString("storage/img_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".png");
     cout << img;
     QString path = "capture";
     QDir dir(path);
@@ -918,13 +953,14 @@ void MainWindow::on_pushButton_batterystats_clicked()
 
 void MainWindow::on_pushButton_login_clicked()
 {
+
+    //list root dir : ls -d */
+
     QString CMD = QString("ssh %1 'ls -d */' > %2");
     mMetadata = new METADATA;
     mMetadata->tag=SSH_LOGIN;
-    ssh->login(ui->lineEdit_ssh->text(),mMetadata);
 
-//    ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR),callback);
-//    loginSuccess(this);
+    ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR),mMetadata);
 }
 
 void MainWindow::on_pushButton_logout_clicked()
@@ -969,7 +1005,7 @@ void MainWindow::on_pushButton_download_clicked()
                                   &mProjectInfo);
     if(!repoCmd.isEmpty()){
         ssh->run(downloadCmd.arg(ui->lineEdit_ssh->text())
-                            .arg(ui->comboBox_project->currentText())
+                            .arg(ui->comboBox_project->currentText().replace(" ","\\ "))
                             .arg(repoCmd)
                             .arg(REPOSYNC)
                             .arg(ui->spinBox_j->text()));
@@ -989,6 +1025,11 @@ void MainWindow::on_comboBox_localproject_currentTextChanged(const QString &arg1
     if(!buildVer.isEmpty()){        
         ui->comboBox_buildversion->addItems(buildVer);
     }
+
+    QString cmd = "ssh %1 'timeout 5 find ~/%2/out -name combined-*.ninja'";
+    METADATA *md = new METADATA();
+    md->tag=SSH_FNINJA;
+    ssh->run(cmd.arg(ui->lineEdit_ssh->text()).arg(arg1),md);
 }
 
 /**
@@ -997,10 +1038,10 @@ void MainWindow::on_comboBox_localproject_currentTextChanged(const QString &arg1
  */
 void MainWindow::on_comboBox_buildversion_currentTextChanged(const QString &arg1)
 {
-    if(arg1 == "ninja"){
-        ui->lineEdit_so->setEnabled(true);
+    if(arg1.contains("ninja")){
+        ui->lineEdit_lib->setEnabled(true);
     }else{
-        ui->lineEdit_so->setEnabled(false);
+        ui->lineEdit_lib->setEnabled(false);
     }
 }
 
@@ -1010,10 +1051,10 @@ void MainWindow::on_comboBox_buildversion_currentTextChanged(const QString &arg1
 void MainWindow::on_pushButton_build_clicked()
 {
     cout;
-    QString CMD = QString("ssh %1 'cd %2 && %3 -j %4'");
+    QString CMD = QString("ssh %1 'cd %2 && %3'");
     QString buildCmd;
-    if(ui->comboBox_buildversion->currentText() == "ninja"){
-        buildCmd = NINJA "out/"+mNinjaFile+"/"+ui->lineEdit_so->text();
+    if(ui->comboBox_buildversion->currentText().contains("ninja")){
+        buildCmd = QString(NINJA)+"out/"+ui->comboBox_buildversion->currentText()+ui->lineEdit_lib->text().replace(QRegExp(".so$"), " ");
     }else{
         buildCmd = mParseXml.searchBuildCmd(ui->comboBox_localproject->currentText(),
                                                 ui->comboBox_buildversion->currentText(),
@@ -1022,8 +1063,7 @@ void MainWindow::on_pushButton_build_clicked()
     if(!buildCmd.isEmpty()){
         ssh->run(CMD.arg(ui->lineEdit_ssh->text())
                     .arg(ui->comboBox_localproject->currentText())
-                    .arg(buildCmd)
-                    .arg(ui->spinBox_j->text()));
+                    .arg(buildCmd));
     }
 }
 
@@ -1033,5 +1073,7 @@ void MainWindow::on_pushButton_build_clicked()
 void MainWindow::on_pushButton_browse_clicked()
 {
     QString CMD = QString("ssh -X %1 nautilus");
-    ssh->run(CMD.arg(ui->lineEdit_ssh->text()));
+    Ssh *nautilus =  new Ssh();
+    nautilus->run(CMD.arg(ui->lineEdit_ssh->text()));
+//    ssh->run(CMD.arg(ui->lineEdit_ssh->text()));
 }

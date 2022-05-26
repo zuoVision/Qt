@@ -1,4 +1,4 @@
-#ifndef XTS_H
+﻿#ifndef XTS_H
 #define XTS_H
 
 #include <QBuffer>
@@ -35,8 +35,11 @@ public:
     QString                 m_passed;
     QString                 m_failed;
 
+    COLOR                   color;
+
 public:
     void run(const QString arg1,const QString arg2,QString arg3,QString arg4);
+    void run(const QString cmd,METADATA* matadata);
     void terminal();
 
 private:
@@ -64,6 +67,7 @@ signals:
     void create();
     void start();
     void process(QString);
+    void process(QString,METADATA*);
     void stop();
     void kill();
     void exit();
@@ -74,6 +78,7 @@ signals:
     void onSubmitInfo(QString);
     void onSubmitState(int,QProcess::ProcessState);
     void onSubmitExitStatus(int,QProcess::ExitStatus);
+    void onSubmitMetadata(METADATA *metadata);
     void onShowCtsResult();
 
 private slots:
@@ -82,6 +87,7 @@ private slots:
     void onReciveInfo(QString info);
     void onReciveState(QProcess::ProcessState state);
     void onReciveExitStatus(QProcess::ExitStatus exitStatus);
+    void onReciveMetadata(METADATA *metadata);
 
 };
 

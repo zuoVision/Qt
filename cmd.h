@@ -1,4 +1,4 @@
-#ifndef CMD_H
+﻿#ifndef CMD_H
 #define CMD_H
 
 //test
@@ -7,6 +7,8 @@
 
 //COMMAND
 #define DATABASE                "config/native_cmd_list.txt"
+#define HINT                    "        Hint : press 'Ctrl + D' to stop!"
+
 
 //ADB
 #define ADBDEVICES              "adb devices"
@@ -36,24 +38,26 @@
 #define BATTERYHISTORIANURL     "<a href=\"https://bathist.ef.lc/\">BATTERY HISTORIAN"
 
 //simpleperf
+#define SIMPLEPERFDATAPATH      "simpleperf_data"
 #define PERFIX                  "adb shell system/bin/simpleperf "
 #define LIST                    "list"
 #define STAT                    "stat -e cache-references,cache-misses -a --duration 10 "
-#define RECORD                  "record -o /data/local/tmp/perf.data -e task-clock:u -f 1000 -g --duration 10 --log info --app com.tcl.camera"
-#define REPORT                  "python scripts/report_sample.py > out.perf"
-#define SIMPLEPERFDOC           "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">simpleperf参考文档."
+#define RECORD                  "record -o data/local/tmp/perf.data -e task-clock:u -f 1000 -g --duration 10 --log info --app com.tcl.camera"
+#define REPORT                  "python scripts/report_sample.py simpleperf_data/perf.data > simpleperf_data/out.perf"
+#define FLAMEGRAPH              QString("FlameGraph/stackcollapse-perf.pl %1/out.perf > %1/out.folded;FlameGraph/flamegraph.pl %1/out.folded > %1/graph.svg").arg(SIMPLEPERFDATAPATH)
+#define SIMPLEPERFDOC           "<a href=\"https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md\">Simpleperf Doc"
 
 //xts
 #define CTSTESTLIST             ":/config/config/cts_test_list.txt"
 #define CTSRESULOTION           ":/config/config/cts_resulotion.csv"
 #define TESTRESULT              ":/config/config/test_result.xml"
-
-#define CTSSUITE                "~/XTS/Android_R/android-cts/tools/cts-tradefed "
+//#define CTSSUITE                "~/XTS/Android_R/android-cts/tools/cts-tradefed "
 #define CTSCOMMAND              "run cts-dev "
 #define CTSMODULE               "-m CtsCameraTestCases "
-#define FINDCTSSUITE            "find ~/ -iname cts-tradefed "
+#define FINDCTSSUITE            QString("timeout 5 find %1 -name cts-tradefed")
 
 //ssh
+#define LIBLIST                 ":/config/config/lib_list.txt"
 #define PROJECTFILE             ":/config/config/project.xml"
 #define REPOSYNC                "repo sync -c --no-tag"
 #define NINJA                   "./prebuilts/build-tools/linux-x86/bin/ninja -f "

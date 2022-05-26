@@ -1,4 +1,4 @@
-#ifndef SSH_H
+﻿#ifndef SSH_H
 #define SSH_H
 
 #include <QObject>
@@ -27,6 +27,7 @@ public:
     void login(QString addr,METADATA* metadata);
     void logout();
     void run(QString cmd);
+    void run(QString cmd,METADATA* metadata);
     void terminal();
 
 

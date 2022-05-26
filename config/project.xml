@@ -1,7 +1,24 @@
 <?xml version='1.0' encoding='UTF-8' standalone='no' ?><?xml-stylesheet type="text/xsl" href="compatibility_result.xsl"?>
+<!-- 
+  ### 必看 ###
+  ### 1.不能出现符号：&，否则无法解析xml，可用';'代替'&&'
+  ### 2.repo命令中不需要：'repo sync -c -no-tag -j4'
+-->
 
 <ProjectInfo>
   <Android_S>
+    <QCOM_S>
+      <Project name="Austin_S">
+        <branch name="austin_s_qcom">
+          <repo cmd="repo init -u git@ningbo.gitweb.com:qualcomm/manifest -b ningbo -m austin_s_qcom.xml"/>
+        </branch>
+        <build>
+          <version ver="AP" cmd="source build/envsetup.sh ; lunch begal-userdebug ; ./build.sh dist -j32"/>
+          <version ver="appli" cmd="source build/envsetup.sh; choosesecimagekey Buffalo_TMO; choosesignapkkey Buffalo_TMO; ./tclMake -o=TCT_EFUSE=true,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=user,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=false buffaloboost new"/>
+          <version ver="mini" cmd="source build/envsetup.sh; choosesecimagekey Buffalo_TMO; ./tclMake -o=TCT_EFUSE=false,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=userdebug,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=true,MMITEST_PRODUCT_CODE=T767WB,MMITEST_SIM_NUM=1 buffaloboost new"/>
+        </build>
+      </Project>
+    </QCOM_S>
     <MTK6833_S>
       <Project name="buffaloboost">
         <branch name="MP k419">
@@ -40,7 +57,40 @@
           <version ver="merge_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug buffalos_k419 merge_only"/>
         </build>
       </Project>
-      <Project name="Challenger TMO">
+      <Project name="Buffalo_TMO_OS_UP">
+        <branch name="MP">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-buffalo-k419-v8.0-gcs.xml --reference=/home/android/mirror"/>
+        </branch>
+        <branch name="DINT">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-v1.0-dint-gcs.xml --reference=/home/android/mirror "/>
+        </branch>
+        <build>
+          <version ver="daily" cmd="source build/envsetup.sh; choosesecimagekey Buffalo_TMO;./tclMake -o=TARGET_BUILD_VARIANT=userdebug,ANTI_ROLLBACK=2,TARGET_BUILD_MODEM=true buffalotmo new"/>
+          <version ver="appli" cmd="source build/envsetup.sh; choosesecimagekey Buffalo_TMO ; choosesignapkkey Buffalo_TMO;./tclMake -o=TCT_EFUSE=true,ANTI_ROLLBACK=2,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=user,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=false buffalotmo new"/>
+          <version ver="mini" cmd="source build/envsetup.sh; choosesecimagekey Buffalo_TMO ; choosesignapkkey Buffalo_TMO;./tclMake -o=TCT_EFUSE=true,ANTI_ROLLBACK=2,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=user,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=false buffalotmo new"/>
+          <version ver="target_only" cmd="source build/envsetup.sh ; choosesecimagekey Buffalo_TMO ; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,ANTI_ROLLBACK=0 buffalotmo target_only"/>
+          <version ver="target_on_merge" cmd="source build/envsetup.sh ; choosesecimagekey Buffalo_TMO ; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,ANTI_ROLLBACK=0 buffalotmo target_no_merge"/>
+          <version ver="merge_only" cmd="source build/envsetup.sh ; choosesecimagekey Buffalo_TMO ; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,ANTI_ROLLBACK=0buffalotmo merge_only"/>
+        </build>
+      </Project>
+      <Project name="ChallengerBoost">
+        <branch name="DINT">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-v1.0-dint-gcs.xml --reference=/home/android/mirror "/>
+        </branch>
+        <branch name="CTS">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-v1.0-dint-gcs-8g3b-cts.xml --reference=/home/android/mirror "/>
+        </branch>
+        <build>
+          <version ver="daily(k414)" cmd="source build/envsetup.sh; choosesecimagekey Challenger_TMO ; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,TARGET_BUILD_MODEM=true,TCT_PRODUCT_BOOST=true Challenger_Stylu new"/>
+          <version ver="daily(k419)" cmd="source build/envsetup.sh ;choosesecimagekey Challenger_TMO ; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,TARGET_BUILD_MODEM=false,TCT_PRODUCT_BOOST=true challengerboost_k419 new"/>
+          <version ver="appli" cmd=" source build/envsetup.sh;  choosesecimagekey Challenger_TMO ; choosesignapkkey Challenger_TMO; ./tclMake -o=TCT_EFUSE=false,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=user,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=false,TCT_PRODUCT_BOOST=true Challenger_Stylu new"/>
+          <version ver="mini" cmd="source build/envsetup.sh;choosesecimagekey Challenger_TMO;./tclMake -o=TARGET_BUILD_VARIANT=userdebug,TARGET_BUILD_MMITEST=true,MMITEST_PRODUCT_CODE=T779WB,TARGET_BUILD_MODEM=true,MMITEST_SIM_NUM=1,TCT_PRODUCT_BOOST=true Challenger_Stylu new"/>
+          <version ver="target_only" cmd=" ./tclMake -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu target_only"/>
+          <version ver="target_no_merge" cmd=" ./tclMake -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu target_no_merge"/>
+          <version ver="merge_only" cmd="./tclMake -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu merge_only"/>
+        </build>
+      </Project>
+      <Project name="Challenger_TMO">
         <branch name="mt6833-s0-v1.0-dint-gcs">
           <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-v1.0-dint-gcs.xml --reference=/home/android/mirror"/>
         </branch>
@@ -64,8 +114,58 @@
           <version ver="appli" cmd="source build/envsetup.sh; choosesecimagekey Challenger_TMO; choosesignapkkey Challenger_TMO; ./tclMake -o=TCT_EFUSE=true,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=user,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=false Challenger_Stylu new"/>
           <version ver="mini" cmd="source build/envsetup.sh; choosesecimagekey Challenger_TMO; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,TARGET_BUILD_MMITEST=true,MMITEST_PRODUCT_CODE=T779W,TARGET_BUILD_MODEM=true,MMITEST_SIM_NUM=1 Challenger_Stylu new"/>
           <version ver="target_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu target_only"/>
-          <version ver="target_no_merge" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu target_no_merge"/>
+          <version ver="target_no_merge" cmd="./tclMake -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu target_no_merge"/>
           <version ver="merge_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu merge_only"/>
+        </build>
+      </Project>
+      <Project name="Levin">
+        <branch name="alps-release-s0.bsp-default-import">
+          <repo cmd="repo init -u git@huizhou.gitweb.com:mtk/manifest -m alps-release-s0.bsp-default-import.xml  --reference=/automount/repo_mirror/mirror --depth=1"/>
+        </branch>
+        <branch name="mtk6833-s-v1.0-k419-bsp">
+          <repo cmd="repo init -u git@huizhou.gitweb.com:mtk/manifest -m mtk6833-s-v1.0-k419-bsp.xml --reference=/automount/repo_mirror/mirror --depth=1 "/>
+        </branch>
+        <branch name="mtk6833-s-v1.0-dint ">
+          <repo cmd="repo init -u git@huizhou.gitweb.com:mtk/manifest -m mtk6833-s-v1.0-dint.xml  --reference=/automount/repo_mirror/mirror --depth=1"/>
+        </branch>
+        
+        <build>
+          <version ver="new" cmd=" ./tclMake  -o=TARGET_BUILD_VARIANT=userdebug    levin new"/>
+          <version ver="target_only" cmd=" source build/envsetup.sh ; export OUT_DIR=out ; lunch vnd_levin-userdebug ;   chooseconfig phone tcl ; make vnd_images krn_images -j24 "/>
+          <version ver="target_no_merge" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug Challenger_Stylu target_no_merge"/>
+          <version ver="merge_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug   levin merge_only"/>
+        </build>
+      </Project>
+      <Project name="Odin_5G_TMO">
+        <branch name="MP">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-odintmo_k419-mp-v12.0-gcs.xml --reference=/home/android/mirror"/>
+        </branch>
+        <branch name="DINT">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:gcs_sz/manifest.git -m mt6833-s0-v1.0-dint-gcs.xml --reference=/home/android/mirror "/>
+        </branch>
+        <build>
+          <version ver="daily" cmd="source build/envsetup.sh; choosesecimagekey odin_5G_tmo; ./tclMake -o=TARGET_BUILD_VARIANT=userdebug,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true odintmo_k419 new "/>
+          <version ver="appli" cmd="source build/envsetup.sh; choosesecimagekey odin_5G_tmo ;choosesignapkkey odin_5G_tmo; ./tclMake -o=TCT_EFUSE=true,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=user,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=false odintmo_k419 new"/>
+          <version ver="mini" cmd="source build/envsetup.sh ; choosesecimagekey odin_5G_tmo;./tclMake -o=TCT_EFUSE=false,ANTI_ROLLBACK=0,TARGET_BUILD_MODEM=true,TARGET_BUILD_VARIANT=userdebug,MP_BRANCH_VALUE=1,TARGET_BUILD_MMITEST=true,MMITEST_PRODUCT_CODE=9183W,MMITEST_SIM_NUM=1 odintmo_k419 new"/>
+          <version ver="target_only" cmd=" ./tclMake -o=TARGET_BUILD_VARIANT=userdebug odintmo_k419 target_only"/>
+          <version ver="target_no_merge" cmd="./tclMake -o=TARGET_BUILD_VARIANT=userdebug odintmo_k419 target_no_merge"/>
+          <version ver="merge_only" cmd=" ./tclMake -o=TARGET_BUILD_VARIANT=userdebug odintmo_k419 merge_only"/>
+        </build>
+      </Project>
+      <Project name="Passat_5G">
+        <branch name="alps-release-s0.bsp-default-import">
+          <repo cmd="repo init -u git@huizhou.gitweb.com:mtk/manifest -m  alps-release-s0.bsp-V7-import.xml  --reference=/automount/repo_mirror/mirror --depth=1"/>
+        </branch>
+        <branch name="mtk6833-s-v1.0-bsp">
+          <repo cmd="repo init -u git@ningbo.gitweb.com:mtk/manifest -m mtk6833-s-v1.0-bsp.xml"/>
+        </branch>
+        <branch name="mtk6833-s-v2.0-mp">
+          <repo cmd="repo init -u git@shenzhen.gitweb.com:mtk/manifest.git -m mtk6833-s-v2.0-mp.xml   --reference=/automount/repo_mirror/mirror"/>
+        </branch>
+        <build>
+          <version ver="new" cmd=" ./tclMake  -o=TARGET_BUILD_VARIANT=userdebug passat_5g new "/>
+          <version ver="target_only" cmd=" ./tclMake  -o=TARGET_BUILD_VARIANT=userdebug passat_5g  target_only"/>
+          <version ver="merge_only" cmd="./tclMake  -o=TARGET_BUILD_VARIANT=userdebug passat_5g merge_only"/>
         </build>
       </Project>
     </MTK6833_S>

@@ -1,4 +1,4 @@
-#include "utils/parseXml/parseXml.h"
+﻿#include "utils/parseXml/parseXml.h"
 #include <QObject>
 #include <QVector>
 #include <QMultiMap>
@@ -173,7 +173,7 @@ QStringList ParseXml::searchBuildVer(const QString projectName, ProjectInfo *pro
                 res.append(itBuild->keys().first());
             }
             //add ninja
-            res.append("ninja");
+//            res.append("ninja");
             return res;
         }
     }

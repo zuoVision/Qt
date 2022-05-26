@@ -1,6 +1,7 @@
-#include "commoncommand.h"
+﻿#include "commoncommand.h"
 
 #include <QDebug>
+#include <QThread>
 
 #define MY_TAG "CommonCommand"
 #define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"

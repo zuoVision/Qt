@@ -1,4 +1,4 @@
-#ifndef GENERAL_H
+﻿#ifndef GENERAL_H
 #define GENERAL_H
 
 #include <QMainWindow>
@@ -30,9 +30,11 @@ enum ProcessTag{
     COMMAND_3,              //3
     SIMPLEPERF_ = 1<<2,     //4
     XTS_        = 2<<2,     //8
+    XTS_FINDCTS,
     SSH_        = 3<<2,     //12
     SSH_LOGIN,              //13
     SSH_LOGOUT,
+    SSH_FNINJA,
 };
 
 struct METADATA{

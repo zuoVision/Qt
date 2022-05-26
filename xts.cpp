@@ -1,4 +1,4 @@
-#include "xts.h"
+﻿#include "xts.h"
 #include "cmd.h"
 
 #include <QDataStream>
@@ -75,9 +75,8 @@ void Xts::init_connect()
             mXtsProcessor,SLOT(start()));
     connect(this,SIGNAL(process(QString)),
             mXtsProcessor,SLOT(process(QString)));
-//    qRegisterMetaType<ptrFunc>("ptrFunc");
-//    connect(this,SIGNAL(process(QString,ptrFunc)),
-//            mXtsProcessor,SLOT(process(QString,ptrFunc)));
+    connect(this,SIGNAL(process(QString,METADATA*)),
+            mXtsProcessor,SLOT(process(QString,METADATA*)));
     connect(this,SIGNAL(stop()),
             mXtsProcessor,SLOT(stop()));
     connect(this,SIGNAL(kill()),
@@ -96,7 +95,9 @@ void Xts::init_connect()
     qRegisterMetaType<QProcess::ExitStatus>("QProcess::ExitStatus");
     connect(mXtsProcessor,SIGNAL(onSubmitExitStatus(QProcess::ExitStatus)),
             this,SLOT(onReciveExitStatus(QProcess::ExitStatus)));
-
+//    qRegisterMetaType<METADATA>("METADATA");
+    connect(mXtsProcessor,SIGNAL(onSubmitMetadata(METADATA*)),
+            this,SLOT(onReciveMetadata(METADATA*)));
 }
 
 
@@ -194,22 +195,41 @@ void Xts::init_connect()
  */
 void Xts::run(const QString arg1, const QString arg2, QString arg3, QString arg4)
 {
-        //arg1 deprecated
-        cout << arg1 <<arg2 <<arg3 <<arg4;
-        if (mXtsProcessor->getState() != ProcessState::NotRunning)
-            return emit onSubmitInfo("please wait!");
-        m_ctsCommand = arg2;
-        if(!arg3.isEmpty()) {
-            arg3 = QString(" -m %1").arg(arg3);
-        }
-        if(!arg4.isEmpty()){
-            arg4 = QString(" -t %1").arg(arg4);
-            cout << arg4;
-        }
-        QString cmd = m_ctsSuite +" "+arg2+arg3+arg4;
-        cout << cmd;
-        emit onSubmitInfo(mXtsProcessor->mUserName+cmd);
-        emit process(cmd);
+    if(arg1.isEmpty() ||arg2.isEmpty() ||arg3.isEmpty() || mXtsProcessor->getState() == ProcessState::NotRunning){
+        emit onSubmitInfo("Warning : command is empty or process is running!");
+    }
+    //arg1 deprecated
+    cout << arg1 <<arg2 <<arg3 <<arg4;
+    if (mXtsProcessor->getState() != ProcessState::NotRunning)
+        return emit onSubmitInfo("please wait!");
+    m_ctsCommand = arg2;
+    if(!arg3.isEmpty()) {
+        arg3 = QString(" -m %1").arg(arg3);
+    }
+    if(!arg4.isEmpty()){
+        arg4 = QString(" -t %1").arg(arg4);
+        cout << arg4;
+    }
+    QString cmd = m_ctsSuite +" "+arg2+arg3+arg4;
+    cout << cmd;
+    emit onSubmitInfo(color.GREEN.arg(mXtsProcessor->mUserName)+cmd);
+    emit process(cmd);
+}
+
+/**
+ * @brief Xts::run
+ * @param cmd
+ * @param matadata
+ */
+void Xts::run(const QString cmd, METADATA *matadata)
+{
+   cout;
+   if(!cmd.isEmpty() && mXtsProcessor->getState() == ProcessState::NotRunning){
+       emit process(cmd,matadata);
+       onSubmitInfo(color.GREEN.arg(mXtsProcessor->mUserName)+cmd);
+   }else{
+       onSubmitInfo("Warning : command is empty or process is running!");
+   }
 }
 
 /**
@@ -234,22 +254,22 @@ void Xts::onReciveOutput(QString output)
         emit stop();
         m_ctsComplete = true;
     }
-    if (m_flag && output.contains("cts-tradefed")) {
-        QStringList res = output.split("\n").filter("cts-tradefed");
-        if(res.isEmpty()){
-            emit onSubmitOutput("Warning : No suite detected, please reselect cts suite!");
-            m_flag = false;
-            return;
-        }
-        if(res.size()>1){
-            emit onSubmitOutput("Warning : Multiple suite detected, please reselect cts suite!");
-            m_flag = false;
-            m_ctsSuite.clear();
-            return;
-        }
-        m_ctsSuite = res.first();
-        return;
-    }
+//    if (m_flag && output.contains("cts-tradefed")) {
+//        QStringList res = output.split("\n").filter("cts-tradefed");
+//        if(res.isEmpty()){
+//            emit onSubmitOutput("Warning : No suite detected, please reselect cts suite!");
+//            m_flag = false;
+//            return;
+//        }
+//        if(res.size()>1){
+//            emit onSubmitOutput("Warning : Multiple suite detected, please reselect cts suite!");
+//            m_flag = false;
+//            m_ctsSuite.clear();
+//            return;
+//        }
+//        m_ctsSuite = res.first();
+//        return;
+//    }
     emit onSubmitOutput(output);
 }
 
@@ -300,6 +320,31 @@ void Xts::onReciveExitStatus(QProcess::ExitStatus exitStatus)
 {
     cout << exitStatus;
     emit onSubmitExitStatus(XTS,exitStatus);
+}
+
+/**
+ * @brief Xts::onReciveMetadata
+ * @param metadata
+ */
+void Xts::onReciveMetadata(METADATA *metadata)
+{
+    cout;
+    QStringList res = metadata->output.split("\n").filter("cts-tradefed");
+    if(res.isEmpty()){
+        emit onSubmitOutput("Warning : No suite detected, please reselect cts suite!");
+        m_flag = false;
+        return;
+    }
+    if(res.size()>1){
+        emit onSubmitOutput("Warning : Multiple suite detected, please reselect cts suite!");
+        m_flag = false;
+        m_ctsSuite.clear();
+        return;
+    }
+    m_ctsSuite = res.first();
+    cout<<m_ctsSuite;
+
+    emit onSubmitMetadata(metadata);
 }
 
 

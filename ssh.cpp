@@ -1,4 +1,4 @@
-#include "ssh.h"
+﻿#include "ssh.h"
 #include "cmd.h"
 
 #include <QDebug>
@@ -115,12 +115,29 @@ void Ssh::logout()
  */
 void Ssh::run(QString cmd)
 {
+    cout << cmd << mSshProcessor->getState();
     if(!cmd.isEmpty() && mSshProcessor->getState() == ProcessState::NotRunning){
         emit process(cmd);
         onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
     }else{
         onSubmitInfo("Warning : command is empty or process is running!");
     }
+}
+
+/**
+ * @brief Ssh::run
+ * @param cmd
+ * @param metadata
+ */
+void Ssh::run(QString cmd, METADATA *metadata)
+{
+   cout;
+   if(!cmd.isEmpty() && mSshProcessor->getState() == ProcessState::NotRunning){
+       emit process(cmd,metadata);
+       onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
+   }else{
+       onSubmitInfo("Warning : command is empty or process is running!");
+   }
 }
 
 /**

@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+﻿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -54,6 +54,7 @@ public:
 
     QCompleter      *cmd_completer;
     QCompleter      *test_completer;
+    QCompleter      *lib_completer;
     FileOperation   *fileOperation = new FileOperation(this);
     MyTableView     *mtv = new MyTableView();
     QLineEdit       *lineEdit_filter;
@@ -67,6 +68,7 @@ public:
     QLabel          *m_sim_status;
     QLabel          *m_xts_status;
     QLabel          *m_ssh_status;
+    QLabel          *m_hint_status;
     QPixmap         *led_red;
     QPixmap         *led_green;
     QPixmap         *led_yellow;
@@ -82,6 +84,7 @@ protected:
     QStringList                 m_nativeCmdList;
     QStringList                 m_customCmdList;
     QStringList                 m_ctsTestList;
+    QStringList                 m_sshLibList;
     QProcess::ProcessState      m_processState=QProcess::ProcessState::NotRunning;
     QString                     m_statusbarMsg="Process Not Running";
     Document                    m_doc;
@@ -118,15 +121,15 @@ private:
     void logoutSuccess();
 
 signals:
-    void sig_sendToXts(QString);
+//    void sig_sendToXts(QString);
     void sig_sendToBatterystats(QString);
     void sig_sendToBatterystats(QProcess::ProcessState,QString);
 
 private slots:
     void slotReciveDocument();
     void slo_batterystats(QString cmd);
-    void slo_reciveMessage(QString msg);
-    void slo_reciveMessage(QProcess::ProcessState state,QString tag);
+//    void slo_reciveMessage(QString msg);
+//    void slo_reciveMessage(QProcess::ProcessState state,QString tag);
 
     void slo_openDocument();
     void moveCursorToEnd();

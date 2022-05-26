@@ -1,4 +1,4 @@
-#include "ProcessorImpl.h"
+﻿#include "ProcessorImpl.h"
 
 
 #include <QDebug>
@@ -119,7 +119,7 @@ void ProcessorImpl::process(QString cmd)
  */
 void ProcessorImpl::process(QString cmd,METADATA *metadata)
 {
-    cout << " + ";
+    cout << " + md";
     mMetadata = metadata;
     cout << mMetadata;
     mProcessor->start(BASH,CMD << cmd);
@@ -207,9 +207,11 @@ ProcessorImpl::ProcessState ProcessorImpl::getState()
 void ProcessorImpl::onOutputListener()
 {
     mOutput = mProcessor->readAllStandardOutput();
-//    cout << mOutput;
+    cout << mOutput;
+    //TODO: '\n' can not used!
     //remove endwith "\n"
-    mOutput.replace(QRegExp("\n$"), "");
+//    mOutput.replace(QRegExp("\n$"), " ");
+//    cout << mOutput;
     emit onSubmitOutput(mOutput);
 }
 
@@ -221,7 +223,7 @@ void ProcessorImpl::onErrorListener()
     mError = mProcessor->readAllStandardError();
     cout << mError;
     //remove endwith "\n"
-    mError.replace(QRegExp("\n$"), "");
+    mError.replace(QRegExp("\n$"), " ");
     emit onSubmitError(mError);
 }
 
@@ -243,11 +245,13 @@ void ProcessorImpl::onFinishedListener(int exitCode, QProcess::ExitStatus exitSt
 {
    cout << exitCode << exitStatus;
    emit onSubmitExitStatus(exitStatus);
+   cout << mMetadata;
    if(mMetadata){
        mMetadata->output = mOutput;
        mMetadata->error = mError;
        mMetadata->state = mState;
        mMetadata->exitStatus = exitStatus;
+       cout<<mMetadata->tag<<mMetadata->output<<mMetadata->error;
        emit onSubmitMetadata(mMetadata);
        mMetadata=nullptr;
    }

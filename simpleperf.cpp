@@ -1,4 +1,4 @@
-#include "simpleperf.h"
+﻿#include "simpleperf.h"
 #include "cmd.h"
 
 
@@ -140,9 +140,9 @@ void Simpleperf::runRecord()
         return emit onSubmitInfo("please wait!");
     emit onSubmitInfo(mSimProcessor->mUserName+RECORD);
 
-    QString cmd1 = "adb shell rm /data/local/tmp/perf.data";
+    QString cmd1 = "adb shell rm data/local/tmp/perf.data";
     QString cmd2 = PERFIX RECORD;
-    QString cmd3 = "adb pull /data/local/tmp/perf.data";
+    QString cmd3 = "adb pull data/local/tmp/perf.data " SIMPLEPERFDATAPATH;
     run(cmd1+";"+cmd2+";"+cmd3);
 
 }
@@ -184,15 +184,14 @@ void Simpleperf::runFlamegraph()
     cout;
     if (m_state != QProcess::ProcessState::NotRunning)
         return emit onSubmitInfo("please wait!");
-    QString cmd1 = "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
-    QString cmd2 = "FlameGraph/flamegraph.pl out.folded > graph.svg";
-    run(cmd1+";"+cmd2);
-    if(QDesktopServices::openUrl(QUrl("graph.svg"))){
+//    QString cmd1 = "FlameGraph/stackcollapse-perf.pl out.perf > out.folded";
+//    QString cmd2 = "FlameGraph/flamegraph.pl out.folded > graph.svg";
+//    run(cmd1+";"+cmd2);
+    run(FLAMEGRAPH);
+    if(QDesktopServices::openUrl(QUrl("simpleperf_data/graph.svg"))){
         emit onSubmitInfo("FlameGraph Opened");
-//        emit sig_sendToMainWindow("<font color=\"#00cc00\">FlameGraph Opened  </font>");
     }else {
         emit onSubmitInfo("FlameGraph open Failed !");
-//        emit sig_sendToMainWindow("<font color=\"#ee0000\">Open FlameGraph Failed !</font> ");
     }
 }
 
@@ -212,9 +211,9 @@ void Simpleperf::run(QString cmd)
 {
     if(!cmd.isEmpty() && mSimProcessor->getState() == ProcessState::NotRunning){
         emit process(cmd);
-        onSubmitInfo(color.GREEN.arg(mSimProcessor->mUserName)+cmd);
+        emit onSubmitInfo(color.GREEN.arg(mSimProcessor->mUserName)+cmd);
     }else{
-        onSubmitInfo("Warning : command is empty or process is running!");
+        emit onSubmitInfo("Warning : command is empty or process is running!");
     }
 }
 

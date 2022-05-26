@@ -11,6 +11,7 @@
         <file>config/simpleperf.md</file>
         <file>config/test_result_full.xml</file>
         <file>config/project.xml</file>
+        <file>config/lib_list.txt</file>
     </qresource>
     <qresource prefix="/icon">
         <file>icon/superman.ico</file>
