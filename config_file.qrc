@@ -12,6 +12,7 @@
         <file>config/test_result_full.xml</file>
         <file>config/project.xml</file>
         <file>config/lib_list.txt</file>
+        <file>config/oneclick.ini</file>
     </qresource>
     <qresource prefix="/icon">
         <file>icon/superman.ico</file>

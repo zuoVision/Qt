@@ -5,10 +5,10 @@
 #define TEST1                   "ping baidu.com"
 #define TEST2                   "pwd"
 
-//COMMAND
+//COMMON
 #define DATABASE                "config/native_cmd_list.txt"
-#define HINT                    "        Hint : press 'Ctrl + D' to stop!"
-
+#define HINT                    "\t\t Hint : press 'Ctrl + D' to stop!"
+#define INITCONFIG              "config/oneclick.ini"    //不能使用:/config/config/oneclick.ini,会导致数据不更新,具体原因不得而知
 
 //ADB
 #define ADBDEVICES              "adb devices"

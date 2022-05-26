@@ -106,9 +106,9 @@ void CommonCommand::run(QString cmd)
 {
     if(!cmd.isEmpty() && mCcdProcessor->getState() == ProcessState::NotRunning){
         emit process(cmd);
-        onSubmitInfo(color.GREEN.arg(mCcdProcessor->mUserName)+cmd);
+        emit onSubmitInfo(color.GREEN.arg(mCcdProcessor->mUserName)+cmd);
     }else{
-        onSubmitInfo("Warning : command is empty or process is running!");
+        emit onSubmitInfo("Warning : command is empty or process is running!");
     }
 }
 

@@ -36,8 +36,9 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+    initConfigrationWrite();
     fileOperation->saveDataBase(DATABASE,&m_customCmdList);
+    delete ui;
 }
 
 void MainWindow::initUi()
@@ -121,6 +122,7 @@ void MainWindow::initEnvironment()
     lib_completer->setModel(new QStringListModel(m_sshLibList,this));
     ui->lineEdit_lib->setCompleter(lib_completer);
     //
+    initConfigrationRead();
     loadCtsResulotion();
     loadProjectInfo();
 }
@@ -233,6 +235,40 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         cout <<"CTRL + F";
         onContrlSearchBar();
     }
+}
+
+/**
+ * @brief MainWindow::initConfigration
+ */
+void MainWindow::initConfigrationRead()
+{
+    cout;
+    QSettings *mInitConfigRead = new QSettings(INITCONFIG, QSettings::IniFormat);
+    ui->lineEdit_cmd->setText(mInitConfigRead->value("/ccd/cmd").toString());
+    ui->checkBox_savecmd->setChecked(mInitConfigRead->value("/ccd/saveCommand").toBool());
+    cout << mInitConfigRead->value("/ccd/saveCommand").toBool();
+    ui->lineEdit_recfilename->setText(mInitConfigRead->value("/sim/fileName").toString());
+    ui->lineEdit_ctssuite->setText(mInitConfigRead->value("/xts/ctsSuite/").toString());
+    ui->lineEdit_ssh->setText(mInitConfigRead->value("/ssh/ip").toString());
+    ui->spinBox_j->setValue(mInitConfigRead->value("/ssh/j/").toInt());
+    delete mInitConfigRead;
+}
+
+/**
+ * @brief MainWindow::initConfigrationWrite
+ */
+void MainWindow::initConfigrationWrite()
+{
+   cout;
+   QSettings *mInitConfigWrite = new QSettings(INITCONFIG, QSettings::IniFormat);
+   cout << ui->lineEdit_cmd->text();
+   mInitConfigWrite->setValue("/ccd/cmd",ui->lineEdit_cmd->text());
+   mInitConfigWrite->setValue("/ccd/saveCommand",ui->checkBox_savecmd->isChecked());
+   mInitConfigWrite->setValue("/sim/fileName",ui->lineEdit_recfilename->text());
+   mInitConfigWrite->setValue("/xts/ctsSuite",ui->lineEdit_ctssuite->text());
+   mInitConfigWrite->setValue("/ssh/ip",ui->lineEdit_ssh->text());
+   mInitConfigWrite->setValue("/ssh/j",ui->spinBox_j->value());
+   delete mInitConfigWrite;
 }
 
 //void MainWindow::resizeEvent(QResizeEvent *event)

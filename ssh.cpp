@@ -118,9 +118,9 @@ void Ssh::run(QString cmd)
     cout << cmd << mSshProcessor->getState();
     if(!cmd.isEmpty() && mSshProcessor->getState() == ProcessState::NotRunning){
         emit process(cmd);
-        onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
+        emit onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
     }else{
-        onSubmitInfo("Warning : command is empty or process is running!");
+        emit onSubmitInfo("Warning : command is empty or process is running!");
     }
 }
 
@@ -134,9 +134,9 @@ void Ssh::run(QString cmd, METADATA *metadata)
    cout;
    if(!cmd.isEmpty() && mSshProcessor->getState() == ProcessState::NotRunning){
        emit process(cmd,metadata);
-       onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
+       emit onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
    }else{
-       onSubmitInfo("Warning : command is empty or process is running!");
+       emit onSubmitInfo("Warning : command is empty or process is running!");
    }
 }
 

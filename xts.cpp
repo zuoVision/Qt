@@ -226,9 +226,9 @@ void Xts::run(const QString cmd, METADATA *matadata)
    cout;
    if(!cmd.isEmpty() && mXtsProcessor->getState() == ProcessState::NotRunning){
        emit process(cmd,matadata);
-       onSubmitInfo(color.GREEN.arg(mXtsProcessor->mUserName)+cmd);
+       emit onSubmitInfo(color.GREEN.arg(mXtsProcessor->mUserName)+cmd);
    }else{
-       onSubmitInfo("Warning : command is empty or process is running!");
+       emit onSubmitInfo("Warning : command is empty or process is running!");
    }
 }
 

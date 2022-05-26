@@ -14,6 +14,7 @@
 #include <QThreadPool>
 #include <QCompleter>
 #include <QTableWidget>
+#include <QSettings>
 
 #include <utils/parseXml/parseXml.h>
 
@@ -108,6 +109,8 @@ protected:
     void initConnect();
     void keyPressEvent(QKeyEvent *event);
 //    void resizeEvent(QResizeEvent *event);
+    void initConfigrationRead();
+    void initConfigrationWrite();
     void onContrlSearchBar();
     void loadCtsResulotion();
     void loadProjectInfo();
