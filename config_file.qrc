@@ -26,5 +26,20 @@
         <file>icon/red.ico</file>
         <file>icon/led_red1.ico</file>
         <file>icon/yellow.ico</file>
+        <file>icon/home.ico</file>
+        <file>icon/inferno_small.png</file>
+        <file>icon/link.ico</file>
+        <file>icon/sshlogin.ico</file>
+        <file>icon/sshlogout.ico</file>
+        <file>icon/unlink.ico</file>
+        <file>icon/android.ico</file>
+        <file>icon/blaze.ico</file>
+        <file>icon/cmd.ico</file>
+        <file>icon/ssh.svg</file>
+        <file>icon/start.ico</file>
+        <file>icon/ssh1.svg</file>
+        <file>icon/download.svg</file>
+        <file>icon/compute.png</file>
+        <file>icon/compute2.png</file>
     </qresource>
 </RCC>

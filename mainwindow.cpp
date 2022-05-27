@@ -43,7 +43,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::initUi()
 {
-//    ui->checkBox_savecmd->setCheckState(Qt::Checked);
+    setWindowState(Qt::WindowMaximized);
     setWindowIcon(QIcon(":/icon/icon/superman.ico"));
 
     //status bar
@@ -145,6 +145,8 @@ void MainWindow::initConnect()
             this,SLOT(onReciveState(int,QProcess::ProcessState)));
     connect(ccd,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
             this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
+    connect(ccd,SIGNAL(onSubmitMetadata(METADATA*)),
+            this,SLOT(onReciveMetadata(METADATA*)));
 
     //simpleperf
     connect(&m_doc,SIGNAL(closed()),
@@ -605,6 +607,8 @@ void MainWindow::onReciveMetadata(METADATA *metadata)
            cout<<metadata->output;
            ui->comboBox_buildversion->addItem(mNinjaFile.split("/").last().replace("\n"," "));
        }
+   }else if(metadata->tag==COMMAND_SCREEN_RECORD){
+       cout;
    }
 }
 
@@ -911,8 +915,12 @@ void MainWindow::on_pushButton_screencapture_clicked()
 void MainWindow::on_pushButton_screenrecord_clicked()
 {
     cout ;
-//    QString record = QString("/storage/record_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".mp4");
-//    ccd->run(SCREENRECORD+record+QString(";adb pull %1 .").arg(record));
+    QString path = "record";
+    QDir dir(path);
+    METADATA *md = new METADATA;
+    md->tag=COMMAND_SCREEN_RECORD;
+    QString record = QString("/storage/record_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".mp4");
+    ccd->run(SCREENRECORD+record+QString(";adb pull %1 record/").arg(record),md);
 }
 
 

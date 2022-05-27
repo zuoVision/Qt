@@ -76,9 +76,8 @@ void CommonCommand::init_connect()
             mCcdProcessor,SLOT(start()));
     connect(this,SIGNAL(process(QString)),
             mCcdProcessor,SLOT(process(QString)));
-//    qRegisterMetaType<ptrFunc>("ptrFunc");
-//    connect(this,SIGNAL(process(QString,ptrFunc)),
-//            mCcdProcessor,SLOT(process(QString,ptrFunc)));
+    connect(this,SIGNAL(process(QString,METADATA*)),
+            mCcdProcessor,SLOT(process(QString,METADATA*)));
     connect(this,SIGNAL(stop()),
             mCcdProcessor,SLOT(stop()));
     connect(this,SIGNAL(kill()),
@@ -110,6 +109,22 @@ void CommonCommand::run(QString cmd)
     }else{
         emit onSubmitInfo("Warning : command is empty or process is running!");
     }
+}
+
+/**
+ * @brief CommonCommand::run
+ * @param cmd
+ * @param metadata
+ */
+void CommonCommand::run(QString cmd, METADATA *metadata)
+{
+   cout;
+   if(!cmd.isEmpty() && mCcdProcessor->getState() == ProcessState::NotRunning){
+       emit process(cmd,metadata);
+       onSubmitInfo(color.GREEN.arg(mCcdProcessor->mUserName)+cmd);
+   }else{
+       onSubmitInfo("Warning : command is empty or process is running!");
+   }
 }
 
 /**
@@ -171,4 +186,14 @@ void CommonCommand::onReciveExitStatus(QProcess::ExitStatus exitStatus)
 {
     cout << exitStatus;
     emit onSubmitExitStatus(COMMAND,exitStatus);
+}
+
+/**
+ * @brief CommonCommand::onReciveMetadata
+ * @param metadata
+ */
+void CommonCommand::onReciveMetadata(METADATA *metadata)
+{
+    cout;
+    emit onSubmitMetadata(metadata);
 }

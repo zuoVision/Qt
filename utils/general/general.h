@@ -25,7 +25,7 @@ enum Tag{
  */
 enum ProcessTag{
     COMMAND_    = 0,        //0
-    COMMAND_1,              //1
+    COMMAND_SCREEN_RECORD,  //1
     COMMAND_2,              //2
     COMMAND_3,              //3
     SIMPLEPERF_ = 1<<2,     //4

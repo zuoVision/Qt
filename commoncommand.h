@@ -1,4 +1,4 @@
-#ifndef COMMONCOMMAND_H
+﻿#ifndef COMMONCOMMAND_H
 #define COMMONCOMMAND_H
 
 #include <QObject>
@@ -28,6 +28,7 @@ public:
 
 public:
     void run(QString cmd);
+    void run(QString cmd,METADATA* metadata);
     void terminal();
 //signals:
 //    void start();
@@ -46,6 +47,7 @@ signals:
     void create();
     void start();
     void process(QString);
+    void process(QString,METADATA*);
     void stop();
     void kill();
     void exit();
@@ -56,6 +58,7 @@ signals:
     void onSubmitInfo(QString);
     void onSubmitState(int,QProcess::ProcessState);
     void onSubmitExitStatus(int,QProcess::ExitStatus);
+    void onSubmitMetadata(METADATA*);
 
 private slots:
     void onReciveOutput(QString output);
@@ -63,6 +66,7 @@ private slots:
     void onReciveInfo(QString info);
     void onReciveState(QProcess::ProcessState state);
     void onReciveExitStatus(QProcess::ExitStatus exitStatus);
+    void onReciveMetadata(METADATA* metadata);
 };
 
 #endif // COMMONCOMMAND_H

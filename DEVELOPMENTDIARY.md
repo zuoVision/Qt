@@ -3,7 +3,6 @@ Qt project
 
 将本地代码提交至git
 - git push git@github.com:zuoVision/Qt.git master
-- git push https://github.com/zuoVision/Qt.git master
 - git push -u master master
 
 将远程代码同步至本地
@@ -132,9 +131,3 @@ Qt project
 2022年5月22日
 * 删除回调函数callback,callback函数需要声明成静态函数，就不能使用Mainwindow类的函数、指针（如ui->），试过将this指针传递到callback,效果不好容易crash,原因不明
 * 创建结构体METADATA结构体用于processImpl传递处理结果至Mainwindow,MainWindow进行判断命令是否执行成功
-
-2022年5月26日
-* 完善各模块功能
-
-2022年5月27日
-* 新增icon
