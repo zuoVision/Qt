@@ -41,5 +41,6 @@
         <file>icon/download.svg</file>
         <file>icon/compute.png</file>
         <file>icon/compute2.png</file>
+        <file>icon/folder.svg</file>
     </qresource>
 </RCC>

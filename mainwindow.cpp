@@ -248,7 +248,6 @@ void MainWindow::initConfigrationRead()
     QSettings *mInitConfigRead = new QSettings(INITCONFIG, QSettings::IniFormat);
     ui->lineEdit_cmd->setText(mInitConfigRead->value("/ccd/cmd").toString());
     ui->checkBox_savecmd->setChecked(mInitConfigRead->value("/ccd/saveCommand").toBool());
-    cout << mInitConfigRead->value("/ccd/saveCommand").toBool();
     ui->lineEdit_recfilename->setText(mInitConfigRead->value("/sim/fileName").toString());
     ui->lineEdit_ctssuite->setText(mInitConfigRead->value("/xts/ctsSuite/").toString());
     ui->lineEdit_ssh->setText(mInitConfigRead->value("/ssh/ip").toString());

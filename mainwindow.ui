@@ -51,7 +51,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -2123,7 +2123,7 @@
                </property>
                <property name="icon">
                 <iconset resource="config_file.qrc">
-                 <normaloff>:/icon/icon/home.ico</normaloff>:/icon/icon/home.ico</iconset>
+                 <normaloff>:/icon/icon/folder.svg</normaloff>:/icon/icon/folder.svg</iconset>
                </property>
               </widget>
              </item>
@@ -2422,7 +2422,7 @@
      <x>0</x>
      <y>0</y>
      <width>768</width>
-     <height>19</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

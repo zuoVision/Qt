@@ -26,6 +26,9 @@ public:
 private:
     void init();
     void initConnect();
+    void initConfigrationRead();
+    void initConfigrationWrite();
+
     void onCreate();
     void onStart();
     void onStats();
