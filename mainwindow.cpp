@@ -211,8 +211,8 @@ void MainWindow::initConnect()
             this,SLOT(slo_batterystats(QString)));
     connect(this,SIGNAL(sig_sendToBatterystats(QString)),
             batterystats,SLOT(slo_reciveMessage(QString)));
-    connect(this,SIGNAL(sig_sendToBatterystats(QProcess::ProcessState,QString)),
-            batterystats,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
+    connect(this,SIGNAL(sig_sendToBatterystats(QProcess::ProcessState,int)),
+            batterystats,SLOT(slo_reciveMessage(QProcess::ProcessState,int)));
 
 }
 
@@ -246,9 +246,14 @@ void MainWindow::initConfigrationRead()
 {
     cout;
     QSettings *mInitConfigRead = new QSettings(INITCONFIG, QSettings::IniFormat);
-    ui->lineEdit_cmd->setText(mInitConfigRead->value("/ccd/cmd").toString());
+//    ui->lineEdit_cmd->setText(mInitConfigRead->value("/ccd/cmd").toString());
     ui->checkBox_savecmd->setChecked(mInitConfigRead->value("/ccd/saveCommand").toBool());
+//<<<<<<< HEAD
+//    cout << mInitConfigRead->value("/ccd/saveCommand").toBool();
+//    ui->lineEdit_recfilename->setText(mInitConfigRead->value("/sim/fileName").toString());
+//=======
     ui->lineEdit_recfilename->setText(mInitConfigRead->value("/sim/fileName").toString());
+//>>>>>>> 4e737d6682331b52ebc05eea513dc24a739a7d38
     ui->lineEdit_ctssuite->setText(mInitConfigRead->value("/xts/ctsSuite/").toString());
     ui->lineEdit_ssh->setText(mInitConfigRead->value("/ssh/ip").toString());
     ui->spinBox_j->setValue(mInitConfigRead->value("/ssh/j/").toInt());
@@ -263,9 +268,9 @@ void MainWindow::initConfigrationWrite()
    cout;
    QSettings *mInitConfigWrite = new QSettings(INITCONFIG, QSettings::IniFormat);
    cout << ui->lineEdit_cmd->text();
-   mInitConfigWrite->setValue("/ccd/cmd",ui->lineEdit_cmd->text());
+//   mInitConfigWrite->setValue("/ccd/cmd",ui->lineEdit_cmd->text());
    mInitConfigWrite->setValue("/ccd/saveCommand",ui->checkBox_savecmd->isChecked());
-   mInitConfigWrite->setValue("/sim/fileName",ui->lineEdit_recfilename->text());
+//   mInitConfigWrite->setValue("/sim/fileName",ui->lineEdit_recfilename->text());
    mInitConfigWrite->setValue("/xts/ctsSuite",ui->lineEdit_ctssuite->text());
    mInitConfigWrite->setValue("/ssh/ip",ui->lineEdit_ssh->text());
    mInitConfigWrite->setValue("/ssh/j",ui->spinBox_j->value());
@@ -423,8 +428,10 @@ void MainWindow::on_pushButton_record_clicked()
     QDir dir(path);
     if(!dir.exists()) dir.mkpath(path);
     if(getRecordParams()){
+        cout;
         simpleperf->runRecord(&m_recordParams);
     }else{
+        cout;
         simpleperf->runRecord();
     }
 }
@@ -439,10 +446,10 @@ void MainWindow::on_pushButton_flamegraph_clicked()
     simpleperf->runFlamegraph();
 }
 
-void MainWindow::on_pushButton_quickgeneration_clicked()
-{
-    simpleperf->runQuickGeneration();
-}
+//void MainWindow::on_pushButton_quickgeneration_clicked()
+//{
+//    simpleperf->runQuickGeneration();
+//}
 
 void MainWindow::on_pushButton_statclear_clicked()
 {
@@ -493,6 +500,7 @@ void MainWindow::onReciveOutput(QString output)
     cout << output;
     ui->textEdit->setTextColor(QColor(0, 0, 255));
     ui->textEdit->append(output);
+    emit sig_sendToBatterystats(output);
 }
 
 /**
@@ -502,6 +510,9 @@ void MainWindow::onReciveOutput(QString output)
 void MainWindow::onReciveError(QString error)
 {
     cout << error;
+    if(error.contains("find: ")){
+        return;
+    }
     ui->textEdit->setTextColor(QColor(255, 0, 0));
     ui->textEdit->append(error);
 }
@@ -524,9 +535,11 @@ void MainWindow::onReciveInfo(QString info)
 void MainWindow::onReciveState(int tag,QProcess::ProcessState state)
 {
     cout << state;
+
     switch (tag) {
          case COMMAND:
              cout << COMMAND;
+             emit sig_sendToBatterystats(state,tag);
              if(state == ProcessState::Starting)    m_ccd_status->setPixmap(*led_blue);
              if(state == ProcessState::Running)     m_ccd_status->setPixmap(*led_green);
              if(state == ProcessState::NotRunning)  m_ccd_status->setPixmap(*led_grey);
@@ -614,12 +627,13 @@ void MainWindow::onReciveMetadata(METADATA *metadata)
 void MainWindow::on_pushButton_loadctssuite_clicked()
 {
     m_ctsSuite = m_doc.selectDirectory("");
-    ui->lineEdit_ctssuite->setText(m_ctsSuite);
-    METADATA *md = new METADATA;
-    md->tag=XTS_FINDCTS;
-    cout << md;
-    xts->run(FINDCTSSUITE.arg(m_ctsSuite),md);
-//    emit sig_sendToXts(m_ctsSuite);
+    if(!m_ctsSuite.isEmpty()){
+        ui->lineEdit_ctssuite->setText(m_ctsSuite);
+        METADATA *md = new METADATA;
+        md->tag=XTS_FINDCTS;
+        cout << md;
+        xts->run(FINDCTSSUITE.arg(m_ctsSuite),md);
+    }
 }
 
 void MainWindow::on_comboBox_ctscommand_currentTextChanged(const QString &arg1)

@@ -68,7 +68,7 @@ signals:
 private slots:
     void onCount();
     void slo_reciveMessage(QString result);
-    void slo_reciveMessage(QProcess::ProcessState state,QString tag);
+    void slo_reciveMessage(QProcess::ProcessState state,int tag);
 
     void on_pushButton_open_clicked();
     void on_pushButton_dumpdata_clicked();

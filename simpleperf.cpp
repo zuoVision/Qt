@@ -198,11 +198,11 @@ void Simpleperf::runFlamegraph()
 /**
  * @brief Simpleperf::runQuickGeneration
  */
-void Simpleperf::runQuickGeneration()
-{
-    cout;
-//    process();
-}
+//void Simpleperf::runQuickGeneration()
+//{
+//    cout;
+////    process();
+//}
 
 /**
  * @brief Simpleperf::run 执行Simpleperf命令

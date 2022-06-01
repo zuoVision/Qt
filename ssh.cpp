@@ -134,7 +134,7 @@ void Ssh::run(QString cmd, METADATA *metadata)
    cout;
    if(!cmd.isEmpty() && mSshProcessor->getState() == ProcessState::NotRunning){
        emit process(cmd,metadata);
-       emit onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
+//       emit onSubmitInfo(color.GREEN.arg(mSshProcessor->mUserName)+cmd);
    }else{
        emit onSubmitInfo("Warning : command is empty or process is running!");
    }

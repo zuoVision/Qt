@@ -126,7 +126,7 @@ private:
 signals:
 //    void sig_sendToXts(QString);
     void sig_sendToBatterystats(QString);
-    void sig_sendToBatterystats(QProcess::ProcessState,QString);
+    void sig_sendToBatterystats(QProcess::ProcessState,int);
 
 private slots:
     void slotReciveDocument();
@@ -177,7 +177,7 @@ private slots:
     void on_pushButton_record_clicked();
     void on_pushButton_report_clicked();
     void on_pushButton_flamegraph_clicked();
-    void on_pushButton_quickgeneration_clicked();
+//    void on_pushButton_quickgeneration_clicked();
     void on_pushButton_statclear_clicked();
     void on_pushButton_recclear_clicked();
 

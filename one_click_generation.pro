@@ -4,6 +4,12 @@ QT       += core gui svg
 #高于4版本添加widget
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+#应用程序可双击执行，没有这行，只能在命令行./OneClick运行
+QMAKE_LFLAGS += -no-pie
+
+#icon
+RC_ICONS += icon/superman.ico
+
 #应用程序名
 TARGET = OneClick
 

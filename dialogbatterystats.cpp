@@ -1,11 +1,10 @@
-#include "dialogbatterystats.h"
+﻿#include "dialogbatterystats.h"
 #include "ui_dialogbatterystats.h"
 #include "cmd.h"
 #include "document.h"
 
 #include <QDebug>
 #include <QMessageBox>
-#include <QSettings>
 #include <QThread>
 #define MY_TAG "DialogBatterystats"
 #define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
@@ -24,7 +23,6 @@ DialogBatterystats::DialogBatterystats(QWidget *parent) :
 
 DialogBatterystats::~DialogBatterystats()
 {
-    initConfigrationWrite();
     delete ui;
 }
 
@@ -38,8 +36,6 @@ void DialogBatterystats::init()
     ui->label_batteryhistorianurl->setToolTip(QString("open with browser"));
     ui->label_batteryhistorianurl->setOpenExternalLinks(true);
     ui->progressBar_timer->hide();
-
-    initConfigrationRead();
 }
 
 /**
@@ -50,36 +46,6 @@ void DialogBatterystats::initConnect()
     connect(timer,SIGNAL(timeout()),
             this,SLOT(onCount()));
 
-}
-
-/**
- * @brief DialogBatterystats::initConfigrationRead
- */
-void DialogBatterystats::initConfigrationRead()
-{
-   cout;
-   QSettings *mInitConfigRead = new QSettings(INITCONFIG, QSettings::IniFormat);
-   cout << mInitConfigRead->value("/batteryStats/dataPath").toString();
-   ui->lineEdit_path->setText(mInitConfigRead->value("/batteryStats/dataPath").toString());
-   ui->radioButton_auto->setChecked(mInitConfigRead->value("/batteryStats/auto").toBool());
-   ui->radioButton_manul->setChecked(mInitConfigRead->value("/batteryStats/manual").toBool());
-   ui->spinBox_time->setValue(mInitConfigRead->value("/batteryStats/time").toInt());
-   ui->checkBox_reset->setChecked(mInitConfigRead->value("/batteryStats/reset").toBool());
-}
-
-/**
- * @brief DialogBatterystats::initConfigrationWrite
- */
-void DialogBatterystats::initConfigrationWrite()
-{
-    cout;
-    QSettings *mInitConfigWrite = new QSettings(INITCONFIG, QSettings::IniFormat);
-    mInitConfigWrite->setValue("/batteryStats/dataPath",ui->lineEdit_path->text());
-    cout << ui->lineEdit_path->text();
-    mInitConfigWrite->setValue("/batteryStats/auto",ui->radioButton_auto->isChecked());
-    mInitConfigWrite->setValue("/batteryStats/manual",ui->radioButton_manul->isCheckable());
-    mInitConfigWrite->setValue("/batteryStats/time",ui->spinBox_time->value());
-    mInitConfigWrite->setValue("/batteryStats/reset",ui->checkBox_reset->isChecked());
 }
 
 /**
@@ -310,7 +276,7 @@ void DialogBatterystats::slo_reciveMessage(QString result)
  * @param state
  * @param tag
  */
-void DialogBatterystats::slo_reciveMessage(QProcess::ProcessState state, QString tag)
+void DialogBatterystats::slo_reciveMessage(QProcess::ProcessState state, int tag)
 {
     cout << state << tag;
     mState = state;

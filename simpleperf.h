@@ -1,4 +1,4 @@
-#ifndef SIMPLEPERF_H
+﻿#ifndef SIMPLEPERF_H
 #define SIMPLEPERF_H
 
 #include <QKeyEvent>
@@ -34,7 +34,7 @@ public:
     void runRecord(std::map<QString,QString>* recordParams);
     void runReport();
     void runFlamegraph();
-    void runQuickGeneration();
+//    void runQuickGeneration();
 
 public:
     void run(QString cmd);
