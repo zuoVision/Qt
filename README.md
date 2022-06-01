@@ -9,10 +9,11 @@
 * XTS测试一键执行，测试结果解析，并针对fail项给出历史解决方案供参考
 
 ## 开发工具
-* Qt5.12
+* Qt5
 
 ## 支持平台
-* Linux
+* Linux（推荐）
+* Windows(待打包)
 
 ## 软件实现原理
 运用QThread启动多线程，实现主线程（界面）和子线程（processor）分离，运用QProcess (The QProcess class is used to start external programs and to communicate with them)启动/bin/bash脚本，在UI界面输入命令或点击按钮将命令通过发送信号（emit signal）的形式传递至processor，然后由processor启动bash执行命令，并将执行结果、状态、output同样已信号的方式返回至UI，显示在textEdit。
