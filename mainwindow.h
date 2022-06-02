@@ -15,6 +15,9 @@
 #include <QCompleter>
 #include <QTableWidget>
 #include <QSettings>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 
 #include <utils/parseXml/parseXml.h>
 
@@ -102,6 +105,9 @@ protected:
     ParseXml                    mParseXml;
     QString                     mNinjaFile;
     METADATA*                   mMetadata;
+
+    //network
+    QNetworkAccessManager*      mNetManager;
 
 protected:
     void initUi();
@@ -197,5 +203,9 @@ private slots:
     void on_comboBox_buildversion_currentTextChanged(const QString &arg1);
     void on_pushButton_build_clicked();
     void on_pushButton_browse_clicked();
+
+    //network requset
+    void onNetworkRequestFinished(QNetworkReply* reply);
+    void on_pushButton_network_clicked();
 };
 #endif // MAINWINDOW_H

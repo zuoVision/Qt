@@ -51,7 +51,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -447,6 +447,13 @@
              </property>
              <property name="text">
               <string>battery stats</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QPushButton" name="pushButton_network">
+             <property name="text">
+              <string>network test</string>
              </property>
             </widget>
            </item>
@@ -2103,7 +2110,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset>
+                <iconset resource="config_file.qrc">
                  <normaloff>:/icon/icon/folder.ico</normaloff>:/icon/icon/folder.ico</iconset>
                </property>
               </widget>
@@ -2411,7 +2418,7 @@
      <x>0</x>
      <y>0</y>
      <width>820</width>
-     <height>19</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

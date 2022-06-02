@@ -94,6 +94,9 @@ void MainWindow::initUi()
 
 void MainWindow::initEnvironment()
 {
+    //network manager
+    mNetManager = new QNetworkAccessManager(this);
+
     //cmd命令行自动补全
     cmd_completer = new QCompleter();
     //最多显示数
@@ -213,6 +216,10 @@ void MainWindow::initConnect()
             batterystats,SLOT(slo_reciveMessage(QString)));
     connect(this,SIGNAL(sig_sendToBatterystats(QProcess::ProcessState,int)),
             batterystats,SLOT(slo_reciveMessage(QProcess::ProcessState,int)));
+
+    //network request
+    connect(mNetManager,SIGNAL(finished(QNetworkReply*)),
+           this,SLOT(onNetworkRequestFinished(QNetworkReply*)));
 
 }
 
@@ -1083,7 +1090,7 @@ void MainWindow::on_comboBox_localproject_currentTextChanged(const QString &arg1
         ui->comboBox_buildversion->addItems(buildVer);
     }
 
-    QString cmd = "ssh %1 'timeout 5 find ~/%2/out -name combined-*.ninja'";
+    QString cmd = "ssh %1 'timeout 3 find ~/%2/out -maxdepth 1 -name combined-*.ninja'";
     METADATA *md = new METADATA();
     md->tag=SSH_FNINJA;
     ssh->run(cmd.arg(ui->lineEdit_ssh->text()).arg(arg1),md);
@@ -1132,5 +1139,22 @@ void MainWindow::on_pushButton_browse_clicked()
     QString CMD = QString("ssh -X %1 nautilus");
     Ssh *nautilus =  new Ssh();
     nautilus->run(CMD.arg(ui->lineEdit_ssh->text()));
-//    ssh->run(CMD.arg(ui->lineEdit_ssh->text()));
+    //    ssh->run(CMD.arg(ui->lineEdit_ssh->text()));
+}
+
+/**
+ * @brief MainWindow::onNetworkRequestFinished
+ */
+void MainWindow::onNetworkRequestFinished(QNetworkReply *reply)
+{
+//    cout << reply->readAll();
+    ui->textEdit->append(reply->readAll());
+
+}
+
+void MainWindow::on_pushButton_network_clicked()
+{
+    cout;
+    QString url = "http://10.92.35.16:8080/source/";
+    mNetManager->get(QNetworkRequest(QUrl(url)));
 }

@@ -1,0 +1,1160 @@
+﻿#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "cmd.h"
+
+#include <QDesktopServices>
+#include <QLabel>
+#include <QListView>
+#include <QMessageBox>
+#include <QStringListModel>
+#include <QTableView>
+#include <QXmlStreamReader>
+#include <QVBoxLayout>
+
+#include <QDir>
+#include <QTime>
+#include <stdlib.h>
+
+#define MY_TAG          "MainWindow"
+#define cout   qDebug() << MY_TAG <<"[" << __FUNCTION__ <<":" << __LINE__<<"]"
+
+
+
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+    initUi();
+    initEnvironment();
+    initConnect();
+    cout << QThread::currentThreadId();
+//    m_userName = ccd->ccd_cpt->m_userName;
+//    cout << m_userName;
+}
+
+MainWindow::~MainWindow()
+{
+    initConfigrationWrite();
+    fileOperation->saveDataBase(DATABASE,&m_customCmdList);
+    delete ui;
+}
+
+void MainWindow::initUi()
+{
+    setWindowState(Qt::WindowMaximized);
+    setWindowIcon(QIcon(":/icon/icon/superman.ico"));
+
+    //status bar
+    m_ccd_status = new QLabel("command",this);
+    m_sim_status = new QLabel("simpleperf",this);
+    m_xts_status = new QLabel("xts",this);
+    m_ssh_status = new QLabel("ssh",this);
+    m_hint_status = new QLabel();
+    m_ccd_status->setFixedSize(20,20);
+    m_sim_status->setFixedSize(20,20);
+    m_xts_status->setFixedSize(20,20);
+    m_ssh_status->setFixedSize(20,20);
+    led_red = new QPixmap(":/icon/icon/red.ico");
+    led_green = new QPixmap(":/icon/icon/green.ico");
+    led_yellow = new QPixmap(":/icon/icon/yellow.ico");
+    led_grey = new QPixmap(":/icon/icon/grey.ico");
+    led_blue = new QPixmap(":/icon/icon/blue.ico");
+    led_red->scaled(m_ccd_status->size(), Qt::KeepAspectRatio);
+    led_green->scaled(m_ccd_status->size(), Qt::KeepAspectRatio);
+    led_yellow->scaled(m_ccd_status->size(), Qt::KeepAspectRatio);
+    m_ccd_status->setScaledContents(true);
+    m_sim_status->setScaledContents(true);
+    m_xts_status->setScaledContents(true);
+    m_ssh_status->setScaledContents(true);
+    m_hint_status->setScaledContents(true);
+    m_ccd_status->setPixmap(*led_grey);
+    m_sim_status->setPixmap(*led_grey);
+    m_xts_status->setPixmap(*led_grey);
+    m_ssh_status->setPixmap(*led_grey);
+    ui->statusbar->addWidget(m_ccd_status);
+    ui->statusbar->addWidget(m_sim_status);
+    ui->statusbar->addWidget(m_xts_status);
+    ui->statusbar->addWidget(m_ssh_status);
+
+
+    ui->textEdit->setReadOnly(true);
+    ui->label_simpleperfdoc->setText(SIMPLEPERFDOC);
+
+    mtv->setParent(ui->tab_xts);
+    ui->tab_xts->layout()->addWidget(mtv);
+
+    //find lineEdit
+    lineEdit_filter = new QLineEdit(ui->dockWidget_output);
+    lineEdit_filter->setPlaceholderText("Filter");
+    lineEdit_filter->setClearButtonEnabled(true);
+    lineEdit_filter->hide();
+}
+
+void MainWindow::initEnvironment()
+{
+    //network manager
+    mNetManager = new QNetworkAccessManager(this);
+
+    //cmd命令行自动补全
+    cmd_completer = new QCompleter();
+    //最多显示数
+    cmd_completer->setMaxVisibleItems(10);
+    //匹配大小写不敏感
+    cmd_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    fileOperation->loadDataBase(DATABASE,&m_nativeCmdList);
+    cmd_completer->setModel(new QStringListModel(m_nativeCmdList,this));
+    ui->lineEdit_cmd->setCompleter(cmd_completer);
+
+    //cts test自动补全
+    test_completer = new QCompleter();
+    test_completer->setMaxVisibleItems(10);
+    test_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    test_completer->setFilterMode(Qt::MatchContains);
+    fileOperation->loadDataBase(CTSTESTLIST,&m_ctsTestList);
+    test_completer->setModel(new QStringListModel(m_ctsTestList,this));
+    ui->lineEdit_ctstest->setCompleter(test_completer);
+
+    //ssh lib自动补全
+    lib_completer = new QCompleter();
+    lib_completer->setMaxVisibleItems(10);
+    lib_completer->setCaseSensitivity(Qt::CaseInsensitive);
+    lib_completer->setFilterMode(Qt::MatchContains);
+    fileOperation->loadDataBase(LIBLIST,&m_sshLibList);
+    lib_completer->setModel(new QStringListModel(m_sshLibList,this));
+    ui->lineEdit_lib->setCompleter(lib_completer);
+    //
+    initConfigrationRead();
+    loadCtsResulotion();
+    loadProjectInfo();
+}
+
+void MainWindow::initConnect()
+{
+//    cout;
+    //help
+    connect(ui->actionDocument,SIGNAL(triggered()),
+            this,SLOT(slo_openDocument()));
+
+    //commonCommand
+    connect(ccd,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(ccd,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(ccd,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(ccd,SIGNAL(onSubmitState(int,QProcess::ProcessState)),
+            this,SLOT(onReciveState(int,QProcess::ProcessState)));
+    connect(ccd,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
+    connect(ccd,SIGNAL(onSubmitMetadata(METADATA*)),
+            this,SLOT(onReciveMetadata(METADATA*)));
+
+    //simpleperf
+    connect(&m_doc,SIGNAL(closed()),
+            this,SLOT(slotReciveDocument()));
+    connect(simpleperf,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(simpleperf,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(simpleperf,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(simpleperf,SIGNAL(onSubmitState(int,QProcess::ProcessState)),
+            this,SLOT(onReciveState(int,QProcess::ProcessState)));
+    connect(simpleperf,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
+
+    //XTS
+//    connect(this,SIGNAL(sig_sendToXts(QString)),
+//            xts,SLOT(slo_reciveMainWindow(QString)));
+//    connect(xts,SIGNAL(sig_sendToMainWindow(QString)),
+//            this,SLOT(slo_reciveMessage(QString)));
+//    connect(xts,SIGNAL(sig_sendToMainWindow(QProcess::ProcessState,QString)),
+//            this,SLOT(slo_reciveMessage(QProcess::ProcessState,QString)));
+    connect(xts,SIGNAL(onShowCtsResult()),
+            this,SLOT(onShowCtsResult()));
+    connect(xts,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(xts,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(xts,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(xts,SIGNAL(onSubmitState(int,QProcess::ProcessState)),
+            this,SLOT(onReciveState(int,QProcess::ProcessState)));
+    connect(xts,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
+    connect(xts,SIGNAL(onSubmitMetadata(METADATA*)),
+            this,SLOT(onReciveMetadata(METADATA*)));
+
+    //SSH
+    connect(ssh,SIGNAL(onSubmitOutput(QString)),
+            this,SLOT(onReciveOutput(QString)));
+    connect(ssh,SIGNAL(onSubmitError(QString)),
+            this,SLOT(onReciveError(QString)));
+    connect(ssh,SIGNAL(onSubmitInfo(QString)),
+            this,SLOT(onReciveInfo(QString)));
+    connect(ssh,SIGNAL(onSubmitState(int,QProcess::ProcessState)),
+            this,SLOT(onReciveState(int,QProcess::ProcessState)));
+    connect(ssh,SIGNAL(onSubmitExitStatus(int,QProcess::ExitStatus)),
+            this,SLOT(onReciveExitStatus(int,QProcess::ExitStatus)));
+    connect(ssh,SIGNAL(onSubmitMetadata(METADATA*)),
+            this,SLOT(onReciveMetadata(METADATA*)));
+
+    //cmd回车-> run button click
+    connect(ui->lineEdit_cmd,SIGNAL(returnPressed()),
+            this,SLOT(on_pushButton_run_clicked()));
+    connect(ui->textEdit,SIGNAL(textChanged()),
+            this,SLOT(moveCursorToEnd()));
+    connect(lineEdit_filter,SIGNAL(textChanged(const QString)),
+            this,SLOT(onTextFilter()));
+
+    //battery historian
+    connect(batterystats,SIGNAL(sig_batterystat(QString)),
+            this,SLOT(slo_batterystats(QString)));
+    connect(this,SIGNAL(sig_sendToBatterystats(QString)),
+            batterystats,SLOT(slo_reciveMessage(QString)));
+    connect(this,SIGNAL(sig_sendToBatterystats(QProcess::ProcessState,int)),
+            batterystats,SLOT(slo_reciveMessage(QProcess::ProcessState,int)));
+
+    //network request
+    connect(mNetManager,SIGNAL(finished(QNetworkReply*)),
+           this,SLOT(onNetworkRequestFinished(QNetworkReply*)));
+
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    //TODO:ctrl + D no response
+    if((event->modifiers() == Qt::ControlModifier) &&
+       (event->key() == Qt::Key_D))
+    {
+        cout <<"CTRL + D" << ui->tabWidget->currentIndex();
+        if(ui->tabWidget->currentIndex()==0)
+            ccd->terminal();
+        if(ui->tabWidget->currentIndex()==1)
+            simpleperf->terminal();
+        if(ui->tabWidget->currentIndex()==2)
+            xts->terminal();
+        if(ui->tabWidget->currentIndex()==3)
+            ssh->terminal();
+    }
+    if(event->modifiers() == Qt::ControlModifier &&
+       event->key() == Qt::Key_F){
+        cout <<"CTRL + F";
+        onContrlSearchBar();
+    }
+}
+
+/**
+ * @brief MainWindow::initConfigration
+ */
+void MainWindow::initConfigrationRead()
+{
+    cout;
+    QSettings *mInitConfigRead = new QSettings(INITCONFIG, QSettings::IniFormat);
+//    ui->lineEdit_cmd->setText(mInitConfigRead->value("/ccd/cmd").toString());
+    ui->checkBox_savecmd->setChecked(mInitConfigRead->value("/ccd/saveCommand").toBool());
+//<<<<<<< HEAD
+//    cout << mInitConfigRead->value("/ccd/saveCommand").toBool();
+//    ui->lineEdit_recfilename->setText(mInitConfigRead->value("/sim/fileName").toString());
+//=======
+    ui->lineEdit_recfilename->setText(mInitConfigRead->value("/sim/fileName").toString());
+//>>>>>>> 4e737d6682331b52ebc05eea513dc24a739a7d38
+    ui->lineEdit_ctssuite->setText(mInitConfigRead->value("/xts/ctsSuite/").toString());
+    ui->lineEdit_ssh->setText(mInitConfigRead->value("/ssh/ip").toString());
+    ui->spinBox_j->setValue(mInitConfigRead->value("/ssh/j/").toInt());
+    delete mInitConfigRead;
+}
+
+/**
+ * @brief MainWindow::initConfigrationWrite
+ */
+void MainWindow::initConfigrationWrite()
+{
+   cout;
+   QSettings *mInitConfigWrite = new QSettings(INITCONFIG, QSettings::IniFormat);
+   cout << ui->lineEdit_cmd->text();
+//   mInitConfigWrite->setValue("/ccd/cmd",ui->lineEdit_cmd->text());
+   mInitConfigWrite->setValue("/ccd/saveCommand",ui->checkBox_savecmd->isChecked());
+//   mInitConfigWrite->setValue("/sim/fileName",ui->lineEdit_recfilename->text());
+   mInitConfigWrite->setValue("/xts/ctsSuite",ui->lineEdit_ctssuite->text());
+   mInitConfigWrite->setValue("/ssh/ip",ui->lineEdit_ssh->text());
+   mInitConfigWrite->setValue("/ssh/j",ui->spinBox_j->value());
+   delete mInitConfigWrite;
+}
+
+//void MainWindow::resizeEvent(QResizeEvent *event)
+//{
+        //window size change listener
+//}
+
+void MainWindow::onContrlSearchBar()
+{
+    if(lineEdit_filter->isHidden()){
+        lineEdit_filter->setGeometry(60,0,100,25);
+        lineEdit_filter->show();
+        lineEdit_filter->setFocus();
+    }else {
+        lineEdit_filter->clear();
+        lineEdit_filter->hide();
+        onTextFilter();
+    }
+}
+
+void MainWindow::slotReciveDocument()
+{
+    ui->actionDocument->setEnabled(true);
+}
+
+void MainWindow::slo_batterystats(QString cmd)
+{
+    cout << cmd;
+    ccd->run(cmd);
+}
+
+//void MainWindow::slo_reciveMessage(QString msg)
+//{
+//    if(msg.startsWith("Warning")){
+//        QMessageBox::warning(this,"warning",msg);
+//        emit sig_sendToBatterystats(msg);
+//        return;
+//    }
+//    ui->textEdit->append(color.BLACK.arg(msg));
+//    emit sig_sendToBatterystats(msg);
+//}
+
+//void MainWindow::slo_reciveMessage(QProcess::ProcessState state,QString tag)
+//{
+//    if (state == QProcess::Running){
+//        if (tag == "CommonCommand"){
+//            m_ccd_status->setPixmap(*led_green);
+//            emit sig_sendToBatterystats(state,tag);
+//        }
+//        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_green);
+//        if (tag == "Xts") m_xts_status->setPixmap(*led_green);
+////            m_statusbarMsg = "    Process Running (you can input 'exit' to force quit!) ";
+//    }else if(state == QProcess::Starting){
+//        if (tag == "CommonCommand") {
+//            m_ccd_status->setPixmap(*led_blue);
+//            emit sig_sendToBatterystats(state,tag);
+//        }
+//        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_blue);
+//        if (tag == "Xts") m_xts_status->setPixmap(*led_blue);
+////            m_statusbarMsg = "    Process Starting ";
+//    }else{
+//        if (tag == "CommonCommand") {
+//            m_ccd_status->setPixmap(*led_grey);
+//            if(!ui->lineEdit_cmd->text().isEmpty()) ui->lineEdit_cmd->clear();
+//            emit sig_sendToBatterystats(state,tag);
+//        }
+//        if (tag == "Simpleperf") m_sim_status->setPixmap(*led_grey);
+//        if (tag == "Xts") m_xts_status->setPixmap(*led_grey);
+////            m_statusbarMsg = "    Process Not Running ";
+
+//    }
+//}
+
+void MainWindow::slo_openDocument()
+{
+    m_doc.show();
+    m_doc.onLoadDocument(":/config/README.mk");
+    ui->actionDocument->setEnabled(false);
+}
+
+void MainWindow::moveCursorToEnd()
+{
+    //移动光标到末尾
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.movePosition(QTextCursor::End);
+    ui->textEdit->setTextCursor(cursor);
+}
+
+void MainWindow::on_pushButton_run_clicked()
+{
+    //动态更新cmd_completer模型库
+    if(!m_nativeCmdList.contains(ui->lineEdit_cmd->text()) &&
+        ui->checkBox_savecmd->isChecked())
+    {
+        m_customCmdList << ui->lineEdit_cmd->text();
+        m_nativeCmdList << ui->lineEdit_cmd->text();
+        cmd_completer->setModel(new QStringListModel(m_nativeCmdList,this));
+    }
+    if(ui->lineEdit_cmd->text()=="clear") {
+        ui->textEdit->clear();
+        ui->lineEdit_cmd->clear();
+        return;
+    }
+    ccd->run(ui->lineEdit_cmd->text());
+    ui->lineEdit_cmd->clear();
+}
+
+void MainWindow::on_pushButton_devices_clicked()
+{
+    cout;
+    ccd->run(ADBDEVICES);
+}
+
+void MainWindow::on_pushButton_root_clicked()
+{
+    ccd->run(ADBROOT);
+}
+
+void MainWindow::on_pushButton_remount_clicked()
+{
+    ccd->run(ADBREMOUNT);
+}
+
+void MainWindow::on_pushButton_oemunlock_clicked()
+{
+    QMessageBox::information(this,"Info","Make sure 'OEM unlocking' turn on!");
+    ccd->run(ADBOEMUNLOCK);
+}
+
+void MainWindow::on_pushButton_list_clicked()
+{
+    cout;
+    simpleperf->runList();
+}
+
+void MainWindow::on_pushButton_stat_clicked()
+{
+//    cout;
+    if(getStatParams()){
+        simpleperf->runStat(&m_statParams);
+    }else{
+        simpleperf->runStat();
+
+    }
+}
+
+void MainWindow::on_pushButton_record_clicked()
+{
+//    cout;
+    QString path = SIMPLEPERFDATAPATH;
+    QDir dir(path);
+    if(!dir.exists()) dir.mkpath(path);
+    if(getRecordParams()){
+        cout;
+        simpleperf->runRecord(&m_recordParams);
+    }else{
+        cout;
+        simpleperf->runRecord();
+    }
+}
+
+void MainWindow::on_pushButton_report_clicked()
+{
+    simpleperf->runReport();
+}
+
+void MainWindow::on_pushButton_flamegraph_clicked()
+{
+    simpleperf->runFlamegraph();
+}
+
+//void MainWindow::on_pushButton_quickgeneration_clicked()
+//{
+//    simpleperf->runQuickGeneration();
+//}
+
+void MainWindow::on_pushButton_statclear_clicked()
+{
+    ui->lineEdit_statpid->clear();
+    ui->lineEdit_stattid->clear();
+    ui->spinBox_statduration->setValue(10);
+    ui->checkBox_statsw->setCheckState(Qt::CheckState::Unchecked);
+    ui->lineEdit_statevent->clear();
+    ui->lineEdit_statcpu->clear();
+}
+
+void MainWindow::on_pushButton_recclear_clicked()
+{
+    ui->lineEdit_recpid->clear();
+    ui->lineEdit_rectid->clear();
+    ui->spinBox_recduration->setValue(10);
+    ui->checkBox_recsw->setCheckState(Qt::CheckState::Unchecked);
+    ui->lineEdit_recevent->clear();
+    ui->lineEdit_reccpu->clear();
+    ui->lineEdit_recfilename->clear();
+    ui->lineEdit_recfreq->clear();
+    ui->lineEdit_reccallgraph->clear();
+}
+
+void MainWindow::on_comboBox_completeregular_currentIndexChanged(const int &arg1)
+{
+    int offset = 1;
+    cmd_completer->setFilterMode(Qt::MatchFlags(arg1+offset));
+//    cout << cmd_completer->filterMode();
+}
+
+void MainWindow::onTextFilter()
+{
+//    cout<<lineEdit_filter->text();
+
+    QString keyWord = lineEdit_filter->text();
+    QTextDocument *document = ui->textEdit->document();
+    if(isHightlighted) document->undo();
+    isHightlighted = m_doc.searchHightlight(keyWord,document);
+}
+
+/**
+ * @brief MainWindow::onReciveOutput
+ * @param output
+ */
+void MainWindow::onReciveOutput(QString output)
+{
+    cout << output;
+    ui->textEdit->setTextColor(QColor(0, 0, 255));
+    ui->textEdit->append(output);
+    emit sig_sendToBatterystats(output);
+}
+
+/**
+ * @brief MainWindow::onReciveError
+ * @param error
+ */
+void MainWindow::onReciveError(QString error)
+{
+    cout << error;
+    if(error.contains("find: ")){
+        return;
+    }
+    ui->textEdit->setTextColor(QColor(255, 0, 0));
+    ui->textEdit->append(error);
+}
+
+/**
+ * @brief MainWindow::onReciveInfo
+ * @param info
+ */
+void MainWindow::onReciveInfo(QString info)
+{
+   cout << info;
+   ui->textEdit->setTextColor(QColor(0, 0, 0));
+   ui->textEdit->append(info);
+}
+
+/**
+ * @brief MainWindow::onReciveState
+ * @param state
+ */
+void MainWindow::onReciveState(int tag,QProcess::ProcessState state)
+{
+    cout << state;
+
+    switch (tag) {
+         case COMMAND:
+             cout << COMMAND;
+             emit sig_sendToBatterystats(state,tag);
+             if(state == ProcessState::Starting)    m_ccd_status->setPixmap(*led_blue);
+             if(state == ProcessState::Running)     m_ccd_status->setPixmap(*led_green);
+             if(state == ProcessState::NotRunning)  m_ccd_status->setPixmap(*led_grey);
+             break;
+         case SIMPLEPERF:
+             cout << SIMPLEPERF;
+             if(state == ProcessState::Starting)    m_sim_status->setPixmap(*led_blue);
+             if(state == ProcessState::Running)     m_sim_status->setPixmap(*led_green);
+             if(state == ProcessState::NotRunning)  m_sim_status->setPixmap(*led_grey);
+             break;
+         case XTS:
+             cout << XTS;
+             if(state == ProcessState::Starting)    m_xts_status->setPixmap(*led_blue);
+             if(state == ProcessState::Running)     m_xts_status->setPixmap(*led_green);
+             if(state == ProcessState::NotRunning)  m_xts_status->setPixmap(*led_grey);
+             break;
+         case SSH:
+             cout << SSH;
+             if(state == ProcessState::Starting)    m_ssh_status->setPixmap(*led_blue);
+             if(state == ProcessState::Running)     m_ssh_status->setPixmap(*led_green);
+             if(state == ProcessState::NotRunning)  m_ssh_status->setPixmap(*led_grey);
+             break;
+         default:
+             break;
+    }
+    if(state!=ProcessState::NotRunning){
+        m_hint_status->setText(HINT);
+        ui->statusbar->addWidget(m_hint_status);
+    }else{
+        m_hint_status->clear();
+    }
+}
+
+/**
+ * @brief MainWindow::onReciveExitStatus
+ * @param exitStatus
+ */
+void MainWindow::onReciveExitStatus(int tag,QProcess::ExitStatus exitStatus)
+{
+   cout << tag << exitStatus;
+   switch (tag) {
+        case COMMAND:
+            cout << COMMAND;
+            break;
+        case SIMPLEPERF:
+            cout << SIMPLEPERF;
+            break;
+        case XTS:
+            cout << XTS;
+            break;
+        case SSH:
+            cout << SSH;
+            break;
+        default:
+            break;
+   }
+}
+
+/**
+ * @brief MainWindow::onReciveMetadata
+ * @param metadata
+ */
+void MainWindow::onReciveMetadata(METADATA *metadata)
+{
+   cout << metadata->tag
+        << metadata->output
+        << metadata->error
+        << metadata->state
+        << metadata->exitStatus;
+   if(metadata->tag==SSH_LOGIN){
+       if(metadata->error.isEmpty()){
+           loginSuccess();
+       }
+   }else if(metadata->tag==SSH_FNINJA){
+       if(metadata->output.contains(".ninja")){
+           mNinjaFile = metadata->output;
+           cout<<metadata->output;
+           ui->comboBox_buildversion->addItem(mNinjaFile.split("/").last().replace("\n"," "));
+       }
+   }else if(metadata->tag==COMMAND_SCREEN_RECORD){
+       cout;
+   }
+}
+
+void MainWindow::on_pushButton_loadctssuite_clicked()
+{
+    m_ctsSuite = m_doc.selectDirectory("");
+    if(!m_ctsSuite.isEmpty()){
+        ui->lineEdit_ctssuite->setText(m_ctsSuite);
+        METADATA *md = new METADATA;
+        md->tag=XTS_FINDCTS;
+        cout << md;
+        xts->run(FINDCTSSUITE.arg(m_ctsSuite),md);
+    }
+}
+
+void MainWindow::on_comboBox_ctscommand_currentTextChanged(const QString &arg1)
+{
+    cout<<arg1;
+    if(arg1 == "list modules" || arg1 == "list results"){
+        ui->comboBox_ctsmodule->setCurrentIndex(1);
+        ui->comboBox_ctsmodule->setEnabled(false);
+        ui->lineEdit_ctstest->clear();
+        ui->lineEdit_ctstest->setEnabled(false);
+    }else{
+        ui->comboBox_ctsmodule->setEnabled(true);
+        ui->lineEdit_ctstest->setEnabled(true);
+    }
+}
+
+void MainWindow::on_pushButton_runcts_clicked()
+{
+    QString m_ctsSuite      = ui->lineEdit_ctssuite->text();
+    QString m_ctsCommand    = ui->comboBox_ctscommand->currentText();
+    QString m_ctsModule     = ui->comboBox_ctsmodule->currentText();
+    QString m_ctsTest       = ui->lineEdit_ctstest->text();
+    if(m_ctsSuite.isEmpty()){
+        QMessageBox::warning(this,"Warning","please select cts suite!");
+        return;
+    }
+    xts->run(m_ctsSuite,m_ctsCommand,m_ctsModule,m_ctsTest);
+}
+
+void MainWindow::on_pushButton_result_clicked()
+{
+    cout;
+    QString res = m_doc.openFile("*.xml");
+    if(!res.isEmpty()){
+        QFile file(res);
+        if(!file.exists()){
+            QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(res));
+            return;
+        }
+        if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        {
+            QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
+            return;
+        }
+        ui->textEdit->append("Open Result : "+res);
+        if(fileOperation->readXml(&file))
+        {
+            mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
+        }
+        file.close();
+    }
+}
+
+void MainWindow::on_pushButton_log_clicked()
+{
+    if (ui->lineEdit_ctssuite->text().isEmpty())
+    {
+        QMessageBox::warning(this,"warning","please choose cts suite ...");
+        return;
+    }
+    QString path = ui->lineEdit_ctssuite->text()+"/logs/latest/";
+    if(!QDesktopServices::openUrl(QUrl(path))){
+        QMessageBox::warning(this,"warning",QString("open folder failed#{%1}").arg(path));
+    }
+}
+
+void MainWindow::onShowCtsResult()
+{
+#if 0
+    QDesktopServices::openUrl(QUrl(ui->comboBox_ctssuite->currentText()+"../../../results/latest/test_result.html"));
+#endif
+    int index = xts->m_ctsSuite.lastIndexOf("/");
+    QString res = xts->m_ctsSuite.left(index) + "/../results/latest/test_result.xml";
+    cout << res;
+    QFile file(res);
+    if(!file.exists()){
+        QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(res));
+        return;
+    }
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(res));
+        return;
+    }
+    ui->textEdit->append("Open Result : "+res);
+    if(fileOperation->readXml(&file)){
+        mtv->setData(fileOperation->m_testResult,fileOperation->m_totalTests,fileOperation->m_pass);
+    }
+
+    file.close();
+}
+
+void MainWindow::loadCtsResulotion()
+{
+    QString csv = CTSRESULOTION;
+    QFile file(csv);
+    if(!file.exists()){
+        QMessageBox::warning(this,"warning",QString("file not found!(%1)").arg(csv));
+        return;
+    }
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        QMessageBox::warning(this,"warning",QString("file open failed!(%1)").arg(csv));
+        return;
+    }
+    if(!fileOperation->readCsv(&file)){
+        ui->textEdit->append("cts resulotion load fail ...");
+    }
+    file.close();
+}
+
+/**
+ * @brief MainWindow::loadProjectInfo
+ */
+void MainWindow::loadProjectInfo()
+{
+    cout << PROJECTFILE;
+
+    mProjectInfo = mParseXml.parseProjectXml(PROJECTFILE);
+    if (mProjectInfo.isEmpty()) {
+        cout << "项目为空!";
+    }else{
+        ui->comboBox_project->clear();
+        for(QVector<PROJECT>::iterator it = mProjectInfo.begin();
+            it!=mProjectInfo.end();it++){
+            ui->comboBox_project->addItem(it->projectName);
+        }
+    }
+}
+
+bool MainWindow::getStatParams()
+{
+    cout;
+    m_statParams = {
+        {"app",""},
+        {"pid",""},
+        {"tid",""},
+        {"systemwide",""},
+        {"interval",""},
+        {"event",""},
+        {"duration"," --duration 10"},
+        {"sort",""},
+        {"cpu",""},
+    };
+    bool flag=false;
+    if(!ui->lineEdit_statapp->text().isEmpty()) {
+        m_statParams["app"] = " --app " + ui->lineEdit_statapp->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_statpid->text().isEmpty()){
+        m_statParams["pid"] = " -p " + ui->lineEdit_statpid->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_stattid->text().isEmpty()){
+        m_statParams["tid"] = " -t " + ui->lineEdit_stattid->text();
+        flag = true;
+    }
+    if(ui->checkBox_statsw->checkState()==Qt::Checked) {
+        m_statParams["systemwide"] = " -a ";
+        flag = true;
+    }
+    if(!ui->lineEdit_statinterval->text().isEmpty()) {
+        m_statParams["interval"] = " --interval " + ui->lineEdit_statinterval->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_statevent->text().isEmpty()) {
+        m_statParams["event"] = " -e " + ui->lineEdit_statevent->text();
+        flag = true;
+    }
+    if(ui->spinBox_statduration->value()!=10 &&
+       ui->spinBox_statduration->value()!=0)
+    {
+        m_statParams["duration"] = " --duration " + ui->spinBox_statduration->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_statsort->text().isEmpty()) {
+        m_statParams["sort"] = " --sort " + ui->lineEdit_statsort->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_statcpu->text().isEmpty()) {
+        m_statParams["cpu"] = " --cpu " + ui->lineEdit_statcpu->text();
+        flag = true;
+    }
+    return flag;
+}
+
+bool MainWindow::getRecordParams()
+{
+    cout;
+    m_recordParams = {
+        {"app",""},
+        {"pid",""},
+        {"tid",""},
+        {"systemwide",""},
+        {"event",""},
+        {"group",""},
+        {"toc",""},
+        {"callgraph",""},
+        {"cpu",""},
+        {"frequent",""},
+        {"duration"," --duration 10"},
+        {"filename"," -o data/local/tmp/perf.data "},
+    };
+    bool flag=false;
+    if(!ui->lineEdit_recapp->text().isEmpty()){
+        m_recordParams["app"] = " --app " + ui->lineEdit_recapp->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_recpid->text().isEmpty()){
+        m_recordParams["pid"] = " -p " + ui->lineEdit_recpid->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_rectid->text().isEmpty()){
+        m_recordParams["tid"] = " -t " + ui->lineEdit_rectid->text();
+        flag = true;
+    }
+    if(ui->checkBox_recsw->checkState()==Qt::Checked) {
+        m_recordParams["systemwide"] = " -a ";
+        flag = true;
+    }
+    if(!ui->lineEdit_recevent->text().isEmpty()) {
+        m_recordParams["event"] = " -e " + ui->lineEdit_recevent->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_recgroup->text().isEmpty()) {
+        m_recordParams["group"] = " --group " + ui->lineEdit_recgroup->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_rectoc->text().isEmpty()) {
+        m_recordParams["toc"] = " --trace-offcpu " + ui->lineEdit_rectoc->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_reccallgraph->text().isEmpty()) {
+        m_recordParams["callgraph"] = " --call-graph " + ui->lineEdit_reccallgraph->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_reccpu->text().isEmpty()) {
+        m_recordParams["cpu"] =  " --cpu " + ui->lineEdit_reccpu->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_recfreq->text().isEmpty()) {
+        m_recordParams["frequent"] = " -f " + ui->lineEdit_recfreq->text();
+        flag = true;
+    }
+    if(ui->spinBox_recduration->value()!=10 &&
+       ui->spinBox_recduration->value()!=0)
+    {
+        m_recordParams["duration"] = " --duration " + ui->spinBox_recduration->text();
+        flag = true;
+    }
+    if(!ui->lineEdit_recfilename->text().isEmpty()) {
+        m_recordParams["filename"] = " -o " + ui->lineEdit_recfilename->text();
+        flag = true;
+    }
+    return flag;
+}
+
+/**
+ * @brief MainWindow::loginSuccess
+ */
+void MainWindow::loginSuccess()
+{
+    cout ;
+    QFile file(SSHROOTDIR);
+    ui->comboBox_localproject->addItems(fileOperation->readTxt(&file));
+    ui->lineEdit_ssh->setEnabled(false);
+    ui->pushButton_login->setEnabled(false);
+    ui->pushButton_logout->setEnabled(true);
+    ui->pushButton_browse->setEnabled(true);
+    ui->pushButton_download->setEnabled(true);
+    ui->pushButton_build->setEnabled(true);
+}
+
+/**
+ * @brief MainWindow::logoutSuccess
+ */
+void MainWindow::logoutSuccess()
+{
+    cout ;
+}
+
+void MainWindow::on_pushButton_screencapture_clicked()
+{
+    QString img = QString("storage/img_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".png");
+    cout << img;
+    QString path = "capture";
+    QDir dir(path);
+    if(!dir.exists()) dir.mkpath(path);
+    ccd->run(SCREENCAPTURE+img+QString(";adb pull %1 %2").arg(img).arg(path));
+}
+
+void MainWindow::on_pushButton_screenrecord_clicked()
+{
+    cout ;
+    QString path = "record";
+    QDir dir(path);
+    METADATA *md = new METADATA;
+    md->tag=COMMAND_SCREEN_RECORD;
+    QString record = QString("/storage/record_%1%2").arg(QDateTime::currentDateTime().toString("yyyyMMddhhmmss")).arg(".mp4");
+    ccd->run(SCREENRECORD+record+QString(";adb pull %1 record/").arg(record),md);
+}
+
+
+
+void MainWindow::on_pushButton_fastboot_clicked()
+{
+    ccd->run(FASTBOOT);
+}
+
+void MainWindow::on_pushButton_clearlogcat_clicked()
+{
+    ccd->run(CLEARLOGCAT);
+}
+
+void MainWindow::on_pushButton_adbrestart_clicked()
+{
+    ccd->run(ADBRESTART);
+}
+
+void MainWindow::on_pushButton_sentest_clicked()
+{
+    ccd->run(SENTEST);
+}
+
+void MainWindow::on_pushButton_killcamera_clicked()
+{
+    ccd->run(KILLCAMERASERVER);
+}
+
+void MainWindow::on_pushButton_dumpcamera_clicked()
+{
+    ccd->run(DUMPCAMERA);
+}
+
+void MainWindow::on_pushButton_property_clicked()
+{
+    ccd->run(PROPERTY);
+}
+
+void MainWindow::on_pushButton_drawid_clicked()
+{
+    ccd->run(DRAWID);
+}
+
+void MainWindow::on_pushButton_opencamera_clicked()
+{
+    ccd->run(OPENCAMERA);
+}
+
+void MainWindow::on_pushButton_takepicture_clicked()
+{
+    ccd->run(TAKEPICTURE);
+}
+
+void MainWindow::on_pushButton_screensize_clicked()
+{
+    ccd->run(SCREENSIZE);
+}
+
+void MainWindow::on_pushButton_cpuinfo_clicked()
+{
+    ccd->run(CPUINFO);
+}
+
+void MainWindow::on_pushButton_clear_clicked()
+{
+    ui->textEdit->clear();
+}
+
+void MainWindow::on_pushButton_batterystats_clicked()
+{
+    batterystats->show();
+}
+
+void MainWindow::on_pushButton_login_clicked()
+{
+
+    //list root dir : ls -d */
+
+    QString CMD = QString("ssh %1 'ls -d */' > %2");
+    mMetadata = new METADATA;
+    mMetadata->tag=SSH_LOGIN;
+
+    ssh->login(CMD.arg(ui->lineEdit_ssh->text()).arg(SSHROOTDIR),mMetadata);
+}
+
+void MainWindow::on_pushButton_logout_clicked()
+{
+    mMetadata = new METADATA;
+    mMetadata->tag=SSH_LOGOUT;
+    ssh->logout();
+    ui->comboBox_localproject->clear();
+    ui->comboBox_buildversion->clear();
+    ui->textEdit->append(color.BLACK.arg(QString("Connection to %1 closed.").arg(ui->lineEdit_ssh->text())));
+    ui->lineEdit_ssh->setEnabled(true);
+    ui->pushButton_login->setEnabled(true);
+    ui->pushButton_logout->setEnabled(false);
+    ui->pushButton_browse->setEnabled(false);
+    ui->pushButton_download->setEnabled(false);
+    ui->pushButton_build->setEnabled(false);
+}
+
+void MainWindow::on_comboBox_project_currentTextChanged(const QString &arg1)
+{
+//    cout << arg1;
+    QStringList branchList;
+    branchList = mParseXml.searchBranch(arg1,&mProjectInfo);
+    if(!branchList.isEmpty()){
+        ui->comboBox_branch->clear();
+        ui->comboBox_branch->addItems(branchList);
+    }
+}
+
+void MainWindow::on_pushButton_download_clicked()
+{
+//    cout << ui->comboBox_project->currentText() << ui->comboBox_branch->currentText();
+    if(ui->comboBox_project->currentText().isEmpty() ||
+       ui->comboBox_branch->currentText().isEmpty()){
+        QMessageBox::warning(this,"warning","please select project & branch!");
+        return;
+    }
+    QString downloadCmd = QString("ssh %1 'mkdir %2 && cd %2 && %3 && %4 -j %5'");
+    QString repoCmd;
+    repoCmd = mParseXml.searchRepo(ui->comboBox_project->currentText(),
+                                  ui->comboBox_branch->currentText(),
+                                  &mProjectInfo);
+    if(!repoCmd.isEmpty()){
+        ssh->run(downloadCmd.arg(ui->lineEdit_ssh->text())
+                            .arg(ui->comboBox_project->currentText().replace(" ","\\ "))
+                            .arg(repoCmd)
+                            .arg(REPOSYNC)
+                            .arg(ui->spinBox_j->text()));
+    }
+}
+
+/**
+ * @brief MainWindow::on_comboBox_localproject_currentTextChanged
+ * @param arg1
+ */
+void MainWindow::on_comboBox_localproject_currentTextChanged(const QString &arg1)
+{
+//    cout << arg1;
+    ui->comboBox_buildversion->clear();
+    QStringList buildVer;
+    buildVer = mParseXml.searchBuildVer(arg1,&mProjectInfo);
+    if(!buildVer.isEmpty()){        
+        ui->comboBox_buildversion->addItems(buildVer);
+    }
+
+    QString cmd = "ssh %1 'timeout 3 find ~/%2/out -maxdepth 1 -name combined-*.ninja'";
+    METADATA *md = new METADATA();
+    md->tag=SSH_FNINJA;
+    ssh->run(cmd.arg(ui->lineEdit_ssh->text()).arg(arg1),md);
+}
+
+/**
+ * @brief MainWindow::on_comboBox_buildversion_currentTextChanged
+ * @param arg1
+ */
+void MainWindow::on_comboBox_buildversion_currentTextChanged(const QString &arg1)
+{
+    if(arg1.contains("ninja")){
+        ui->lineEdit_lib->setEnabled(true);
+    }else{
+        ui->lineEdit_lib->setEnabled(false);
+    }
+}
+
+/**
+ * @brief MainWindow::on_pushButton_build_clicked
+ */
+void MainWindow::on_pushButton_build_clicked()
+{
+    cout;
+    QString CMD = QString("ssh %1 'cd %2 && %3'");
+    QString buildCmd;
+    if(ui->comboBox_buildversion->currentText().contains("ninja")){
+        buildCmd = QString(NINJA)+"out/"+ui->comboBox_buildversion->currentText()+ui->lineEdit_lib->text().replace(QRegExp(".so$"), " ");
+    }else{
+        buildCmd = mParseXml.searchBuildCmd(ui->comboBox_localproject->currentText(),
+                                                ui->comboBox_buildversion->currentText(),
+                                                &mProjectInfo);
+    }
+    if(!buildCmd.isEmpty()){
+        ssh->run(CMD.arg(ui->lineEdit_ssh->text())
+                    .arg(ui->comboBox_localproject->currentText())
+                    .arg(buildCmd));
+    }
+}
+
+/**
+ * @brief MainWindow::on_pushButton_browse_clicked
+ */
+void MainWindow::on_pushButton_browse_clicked()
+{
+    QString CMD = QString("ssh -X %1 nautilus");
+    Ssh *nautilus =  new Ssh();
+    nautilus->run(CMD.arg(ui->lineEdit_ssh->text()));
+    //    ssh->run(CMD.arg(ui->lineEdit_ssh->text()));
+}
+
+/**
+ * @brief MainWindow::onNetworkRequestFinished
+ */
+void MainWindow::onNetworkRequestFinished(QNetworkReply *reply)
+{
+//    cout << reply->readAll();
+    ui->textEdit->append(reply->readAll());
+
+}
+
+void MainWindow::on_pushButton_network_clicked()
+{
+    cout;
+    QString url = "http://10.92.32.12/RDhzKM/17-Camera%20Lab/D-%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6/";
+    mNetManager->get(QNetworkRequest(QUrl(url)));
+}

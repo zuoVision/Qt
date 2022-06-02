@@ -1,5 +1,5 @@
 #模块
-QT       += core gui svg
+QT       += core gui svg network
 
 #高于4版本添加widget
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
